@@ -1,0 +1,36 @@
+favicon: /favicon.ico
+
+
+# Nav Menus
+menu:
+    Index: /
+    Archives: /archives
+
+# Nav Shortcut Icons
+nav_icons:
+    - ['/images/github.svg', 'https://github.com/mirsery']
+    - ['/images/rss.svg', '/atom.xml']
+
+# Friend Links
+friend_links:
+    - ['github', 'https://github.com/mirsery', 'https://github.com/mirsery']
+    - ['weibo', 'https://weibo.com/lengyekuyu', 'https://weibo.com/lengyekuyu']
+
+
+# About
+about_info:
+    name: "mirsery"
+    bio: "Have a nice day."
+    avatar: "/images/avatar.png"
+
+# Comment
+# e.g disqus: seansun
+disqus: mirsery
+duoshuo: mirsery@163.com
+
+# Analytics
+google_analytics: mirsery
+tencent_analytics: 
+ 
+# Copyright Infomation
+startyear: 2015
