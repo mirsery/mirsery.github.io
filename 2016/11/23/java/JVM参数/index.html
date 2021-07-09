@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> JVM参数 · mirsery</title><meta name="description" content="JVM参数 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a href="/" target="_self" class="li component-nav-item"><p>INDEX</p></a><a href="/archives" target="_self" class="li component-nav-item"><p>ARCHIVES</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img src="/images/github.svg" class="icon"></a><a href="/atom.xml" target="_blank"><img src="/images/rss.svg" class="icon"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post"><article class="post-block"><h1 class="post-title">JVM参数</h1><div class="post-info">Nov 23, 2016</div><div class="post-content"><h1><span id="jvm-参数">jvm 参数</span></h1><h2><span id="1-xxprintgcdetails-打印gc回收的细节">1、-XX:+PrintGCDetails   打印GC回收的细节</span></h2><p>1.4.0引入，默认不启用<br>打印格式例如：<br>[Full GC (System) [Tenured: 0K-&gt;2394K(466048K), 0.0624140 secs] 30822K-&gt;2394K(518464K), [Perm : 10443K-&gt;10443K(16384K)], 0.0625410 secs] [Times: user=0.05 sys=0.01, real=0.06 secs]<br>该选项可通过 com.sun.management.HotSpotDiagnosticMXBean API 和 Jconsole 动态启用。</p>
+<h2><span id="2-xxsurvivorratio8-eden与survivor的占用比例">2、-XX:SurvivorRatio=8 Eden与Survivor的占用比例</span></h2><p>例{如8表示，一个survivor区占用 1/8 的Eden内存，即1/10的新生代内存，为什么不是1/9？<br>因为我们的新生代有2个survivor，即S1和S2。所以survivor总共是占用新生代内存的 2/10，Eden与新生代的占比则为 8/10。</p>
+<h2><span id="3-xxheapdumppathjava_pidhprof-堆内存快照的存储文件路径">3、-XX:HeapDumpPath=./java_pid<pid>.hprof 堆内存快照的存储文件路径</pid></span></h2><p>什么是堆内存快照？<br>当java进程因OOM或crash被OS强制终止后，会生成一个hprof（Heap PROFling）格式的堆内存快照文件。该文件用于线下调试，诊断，查找问题。<br>文件名一般为<br>java_<pid><em><date></date></em><time>_heapDump.hprof<br>解析快照文件，可以使用 jhat, eclipse MAT，gdb等工具。</time></pid></p>
+<h2><span id="4-xx-heapdumponoutofmemoryerror-在oom时输出一个dumpcore文件记录当时的堆内存快照">4、-XX:-HeapDumpOnOutOfMemoryError 在OOM时，输出一个dump.core文件，记录当时的堆内存快照</span></h2><h2><span id="5-xxmaxpermsize64m-perm俗称方法区占整个堆内存的最大值">5、-XX:MaxPermSize=64m Perm（俗称方法区）占整个堆内存的最大值</span></h2><h2><span id="6-java-xmx3550m-xms3550m-xmn2g-xss128k">6、java -Xmx3550m -Xms3550m -Xmn2g -Xss128k</span></h2><ul>
+<li><p>-Xmx3550m ：设置JVM最大可用内存为3550M</p>
+</li>
+<li><p>-Xms3550m ：设置JVM初始内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</p>
+</li>
+<li><p>-Xmn2g ： 设置年轻代大小为2G。整个JVM内存大小 = 年轻代大小 + 年老代大小 持久代一般固定大小为64M，所以增大年轻代后，将会缩小年老代大小。此值对系统性能影响较大，Sum官方推荐配置为整个堆的3/8。</p>
+</li>
+<li><p>-Xss128k ： 设置每个线程的堆栈大小。JDK5.0以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。根据应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。</p>
+</li>
+</ul>
+<h2><span id="7-xxnewratio4-xxmaxtenuringthreshold0">7、-XX:NewRatio=4  -XX:MaxTenuringThreshold=0</span></h2><ul>
+<li><p>-XX:NewRatio=4:设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1：4，年轻代占整个堆栈的1/5</p>
+</li>
+<li><p>-XX:MaxTenuringThreshold=0：设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概率。</p>
+</li>
+</ul>
+<h2><span id="8-xxpretenuresizethreshold-只对serial和parnew收集器有效">8、-XX:PretenureSizeThreshold （只对Serial和ParNew收集器有效）</span></h2><ul>
+<li>-XX:PretenureSizeThreshold 大于此设置值的对象直接在老年代分配，这样的目的是避免在Eden区以及两个Survivor区之间发生大量的内存复制(新生代采用复制算法收集内存)</li>
+</ul>
+</div></article></div><div data-thread-key="2016/11/23/java/JVM参数/" data-title="JVM参数" data-url="https://mirsery.github.io/2016/11/23/java/JVM%E5%8F%82%E6%95%B0/" data-author-key="1" class="ds-thread"></div><div id="disqus_thread"></div></div><script>var duoshuoQuery = {short_name:"mirsery@163.com"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/11/23/java/JVM参数/';
+var disqus_title = 'JVM参数';
+var disqus_url = 'https://mirsery.github.io/2016/11/23/java/JVM参数/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//mirsery.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a href="/2016/11/23/java/JVM%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E9%80%89%E6%8B%A9/" class="prev">PREV</a><a href="/2016/10/17/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a>.</p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

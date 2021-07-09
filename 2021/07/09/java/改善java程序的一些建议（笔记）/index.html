@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 改善java程序的一些建议（笔记） · mirsery</title><meta name="description" content="改善java程序的一些建议（笔记） - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a href="/" target="_self" class="li component-nav-item"><p>INDEX</p></a><a href="/archives" target="_self" class="li component-nav-item"><p>ARCHIVES</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img src="/images/github.svg" class="icon"></a><a href="/atom.xml" target="_blank"><img src="/images/rss.svg" class="icon"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post"><article class="post-block"><h1 class="post-title">改善java程序的一些建议（笔记）</h1><div class="post-info">Jul 9, 2021</div><div class="post-content"><p>##不使用stop方法停止线程<br>stop是一个过时的方法。Thread类的stop方法会根据线程状态来判断是终结线程还是设置线程为不可运行的状态，对于未启动的线程(线程状态为NEW)来说，会设置其标志位为不可启动，而其他的状态则是直接停止。<br>在新的jdk中如果当时线程的状态不是NEW，则会抛出IllegalThreadStateException异常。<br>stop会直接关闭所有的子线程并不保证子线程的逻辑完整性。<br>##使用线程异常处理器提升系统的可靠性<br>在jdk1.5之后添加一个setUncaughtExceptionHandler方法，实现了线程异常捕捉和处理。构建高可用的服务需要我们在出现异常的时候捕捉异常，并重启一个新的线程进行工作。在生产环境中我们需要注意以下三个比较重要的问题:</p>
+<ul>
+<li>共享资源锁定<br>  如果异常产生的原因是资源被锁定，自动重启应用只会增加系统的负担，无法提供不间断的服务。例如一个即时通信服务器(XMPP server)出现信息不能写入的情况，即使重启服务也无法解决问题，对此最好的解决方法就是停止所有的线程释放资源。</li>
+<li>脏数据引起的系统逻辑混乱<br>  异常的产生中断了正在执行的业务逻辑，特别是如果正在执行一个原子操作(像即时通信服务器中的用户验证和签到这两个事情因该在同一个操作中处理，不允许出现验证成功但签到不成功的情况)，但如果此时抛出了运行期异常就可能会破坏正常的业务逻辑，例如如果用户的验证通过了，但是签到不成功的情况，在这情况下应该重启应用服务器，虽然可以提供服务但是对部分用户则产生了逻辑异常。</li>
+<li>内存溢出<br>  线程异常了，但由于该线程创建的对象并不会马上回收，如果在重新启动新的线程在创建一批对象，特别是加入了场景接管，就非常危险了，例如通过即时通信服务重启一个线程必须保证原在线用户的<code>透明性</code>(用户不会察觉服务的重启)，在这种情况下就需要在线程启动初始化的时候加载大量对象以保证用户的状态信息，但是如果线程反复重启很可能引起OutOfMemory内存泄漏问题。<br>##volatile不能保证数据的同步性<br>volatile只能保证工作内存中的数据是从主内存中读取的最新的值，但是并不能保证数据的同步性。<br>(1）第一个时间片段<br>A线程获得执行机会，因为有关键字volatile修饰，所以它从主内存中获得count的最新值998，接下来的事情又分为两种类型：<br>如果是单CPU，此时调度器暂停A线程执行，出让执行机会给B线程，于是B线程也获得了count的最新值998。<br>如果是多CPU，此时线程A继续执行，而线程B也同时获得count的最新值998。<br>（2）第二个时间片段<br>如果是单CPU, B线程执行完加1动作（这是一个原子处理），count的值为999，由于是volatile类型的变量，所以直接写入主内存，然后A线程继续执行，计算的结果也是999，重新写入主内存中。<br>如果是多CPU, A线程执行完加1动作后修改主内存的变量count为999，线程B执行完毕后也修改主内存中的变量为999。<br>这两个时间片段执行完毕后，原本期望的结果为1000，但运行后的值却为999，这表示出现了线程不安全的情况。这也是我们要说明的：volatile关键字并不能保证线程安全，它只能保证当线程需要该变量的值时能够获得最新的值，而不能保证多个线程修改的安全性。<br>##异步运算考虑使用Callable接口<br>多线程应用实现的方式有三种:<br>1、 继承Thread类<br>2、 实现Runnable接口<br>3、 实现callable接口<br>  实现callable接口表示他是一个可调度的任务，需要调用执行器Executor来执行。callable允许抛出异常以及允许有返回值。<br>##Lock和Synchronized的区别</li>
+<li>Lock(显式锁)<br>  显式锁是对象级别的锁，是跟随对象的，简单的说把Lock定义为多线程类的私有属性是起不到资源互斥作用的，除非把Lock定义为所有线程的共享变量。<ul>
+<li>Lock锁支持更细粒度的锁控制</li>
+<li>Lock是无阻塞锁<pre><code>      当线程A持有锁的时候，线程B也期望获得锁，此时如果程序中使用的是显式锁则线程B为等待状态(在通常情况中也认         为该线程被阻塞了)，若使用的是内部锁则为阻塞状态。
+</code></pre>
+</li>
+<li>Lock可以实现公平锁<pre><code>     什么叫非公平锁呢？当一个线程A持有锁，而线程B、C处于阻塞（或等待）状态时，若线程A释放锁，JVM将从线程B、C中随机选择一个线程持有锁并使其获得执行权，这叫做非公平锁（因为它抛弃了先来后到的顺序）；若JVM选择了等待时间最长的一个线程持有锁，则为公平锁（保证每个线程的等待时间均衡）。需要注意的是，即使是公平锁，JVM也无法准确做到“公平”，在程序中不能以此作为精确计算。
+</code></pre>
+显式锁默认是非公平锁，但可以在构造函数中加入参数true来声明出公平锁，而synchronized实现的是非公平锁，它不能实现公平锁。</li>
+<li>Lock是代码级的，synchronized是JVM级的<pre><code>      Lock是通过编码实现的，synchronized是在运行期由JVM解释的，相对来说synchronized的优化可能性更高，毕竟是在最核心部分支持的，Lock的优化则需要用户自行考虑。
+</code></pre>
+显式锁和内部锁的功能各不相同，在性能上也稍有差别，但随着JDK的不断推进，相对来说，显式锁使用起来更加便利和强大，在实际开发中选择哪种类型的锁就需要根据实际情况考虑了：灵活、强大则选择Lock，快捷、安全则选择synchronized。<br>##使用CountDownLatch协调子线程<br>CountDownLatch的作用是一个计数器，每个线程在运行完毕之后都会执行countDown表示自己已经结束，这对于多个子任务的计算特别有效，比如一个异步任务需要拆分成10个子任务执行，主任务必须知道子任务是否完成，所有子任务完成后才能进行合并运算，从而保证了一个主任务的逻辑正确性。<br>##CycliBarrier让多线程个齐步走<br>CyclicBarrier关卡可以让所有线程全部处于等待状态（阻塞），然后在满足条件的情况下继续执行，这就好比是一条起跑线，不管是如何到达起跑线的，只要到达这条起跑线就必须等待其他人员，待人员到齐后再各奔东西，CyclicBarrier关注的是汇合点的信息，而不在乎之前或之后做何处理。</li>
+</ul>
+</li>
+</ul>
+</div></article></div><div data-thread-key="2021/07/09/java/改善java程序的一些建议（笔记）/" data-title="改善java程序的一些建议（笔记）" data-url="https://mirsery.github.io/2021/07/09/java/%E6%94%B9%E5%96%84java%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BB%BA%E8%AE%AE%EF%BC%88%E7%AC%94%E8%AE%B0%EF%BC%89/" data-author-key="1" class="ds-thread"></div><div id="disqus_thread"></div></div><script>var duoshuoQuery = {short_name:"mirsery@163.com"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/07/09/java/改善java程序的一些建议（笔记）/';
+var disqus_title = '改善java程序的一些建议（笔记）';
+var disqus_url = 'https://mirsery.github.io/2021/07/09/java/改善java程序的一些建议（笔记）/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//mirsery.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a href="/2021/07/09/java/springboot%E8%87%AA%E5%8A%A8%E5%8C%96%E9%85%8D%E7%BD%AE/" class="prev">PREV</a><a href="/2021/07/09/java/%E7%83%AD%E9%83%A8%E7%BD%B2%E7%9A%84%E7%AE%80%E5%8D%95%E5%8E%9F%E7%90%86/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a>.</p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
