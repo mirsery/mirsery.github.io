@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Swagger-ui 使用 · mirsery</title><meta name="description" content="Swagger-ui 使用 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a href="/" target="_self" class="li component-nav-item"><p>INDEX</p></a><a href="/archives" target="_self" class="li component-nav-item"><p>ARCHIVES</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img src="/images/github.svg" class="icon"></a><a href="/atom.xml" target="_blank"><img src="/images/rss.svg" class="icon"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post"><article class="post-block"><h1 class="post-title">Swagger-ui 使用</h1><div class="post-info">Jul 12, 2021</div><div class="post-content"><h1><span id="swagger-ui-使用">Swagger-ui 使用</span></h1><!-- toc -->
+
+<ul>
+<li><a href="#%E5%BC%95%E5%85%A5%E7%9B%B8%E5%85%B3%E4%BE%9D%E8%B5%96jar%E5%8C%85">引入相关依赖jar包</a></li>
+<li><a href="#%E5%90%AF%E7%94%A8-swagger">启用 swagger</a></li>
+<li><a href="#controller-%E6%B7%BB%E5%8A%A0%E6%8F%8F%E8%BF%B0%E4%BF%A1%E6%81%AF">Controller 添加描述信息</a></li>
+<li><a href="#%E6%8E%A5%E5%8F%A3%E6%B7%BB%E5%8A%A0%E6%8F%8F%E8%BF%B0%E4%BF%A1%E6%81%AF">接口添加描述信息</a></li>
+<li><a href="#%E7%BB%99%E5%AE%9E%E4%BD%93%E7%B1%BB%E6%B7%BB%E5%8A%A0%E6%8F%8F%E8%BF%B0%E4%BF%A1%E6%81%AF">给实体类添加描述信息</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="引入相关依赖jar包">引入相关依赖jar包</span></h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.springfox<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>springfox-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2><span id="启用-swagger">启用 swagger</span></h2><p>下面是swagger-ui 配置样例:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> springfox.documentation.builders.ApiInfoBuilder;<br><span class="hljs-keyword">import</span> springfox.documentation.builders.PathSelectors;<br><span class="hljs-keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;<br><span class="hljs-keyword">import</span> springfox.documentation.service.ApiInfo;<br><span class="hljs-keyword">import</span> springfox.documentation.service.ApiKey;<br><span class="hljs-keyword">import</span> springfox.documentation.service.AuthorizationScope;<br><span class="hljs-keyword">import</span> springfox.documentation.service.SecurityReference;<br><span class="hljs-keyword">import</span> springfox.documentation.service.SecurityScheme;<br><span class="hljs-keyword">import</span> springfox.documentation.spi.DocumentationType;<br><span class="hljs-keyword">import</span> springfox.documentation.spi.service.contexts.SecurityContext;<br><span class="hljs-keyword">import</span> springfox.documentation.spring.web.plugins.Docket;<br><span class="hljs-keyword">import</span> springfox.documentation.swagger2.annotations.EnableSwagger2;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>:</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span>: misery</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@create</span>: 2021-06-04 16:26</span><br><span class="hljs-comment"> **/</span><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@EnableSwagger2</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SwaggerConfig</span> </span>&#123;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;swagger.enable:false&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> swagger2Enable;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Docket <span class="hljs-title">createRestApi</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Docket(DocumentationType.OAS_30).apiInfo(apiInfo())<br>                .enable(swagger2Enable)<br>                .groupName(<span class="hljs-string">&quot;所有&quot;</span>)<br>                .select()<br>                .apis(RequestHandlerSelectors.any())<br>                .paths(PathSelectors.any())<br>                .paths(PathSelectors.regex(<span class="hljs-string">&quot;(?!/error.*).*&quot;</span>))     <span class="hljs-comment">// 去除默认basicController</span><br>                .paths(PathSelectors.regex(<span class="hljs-string">&quot;(?!/actuator.*).*&quot;</span>))    <span class="hljs-comment">//去除actuator</span><br>                .build()<br>                .securityContexts(securityContext())<br>                .securitySchemes(security());<br>    &#125;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Docket <span class="hljs-title">appApi</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Docket(DocumentationType.OAS_30).apiInfo(apiInfo())<br>                .enable(swagger2Enable)<br>                .groupName(<span class="hljs-string">&quot;groupName&quot;</span>)<br>                .select()<br>                .apis(RequestHandlerSelectors.basePackage(<span class="hljs-string">&quot;com.xxxx.xxx&quot;</span>))<br>                .paths(PathSelectors.any())<br>                .build()<br>                .securityContexts(securityContext())<br>                .securitySchemes(security());<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> ApiInfo <span class="hljs-title">apiInfo</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ApiInfoBuilder()<br>                .title(<span class="hljs-string">&quot;title&quot;</span>)<br>                .description(<span class="hljs-string">&quot;description&quot;</span>)<br>                .version(<span class="hljs-string">&quot;0.0.1&quot;</span>)<br>                .build();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> List&lt;SecurityScheme&gt; <span class="hljs-title">security</span><span class="hljs-params">()</span> </span>&#123;<br>        SecurityScheme token = <span class="hljs-keyword">new</span> ApiKey(<span class="hljs-string">&quot;token&quot;</span>, <span class="hljs-string">&quot;token&quot;</span>, <span class="hljs-string">&quot;header&quot;</span>);<br>        List&lt;SecurityScheme&gt; securitySchemeList = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        securitySchemeList.add(token);<br>        <span class="hljs-keyword">return</span> securitySchemeList;<br>    &#125;<br><br>    <span class="hljs-function">List&lt;SecurityReference&gt; <span class="hljs-title">defaultAuth</span><span class="hljs-params">()</span> </span>&#123;<br>        AuthorizationScope authorizationScope<br>                = <span class="hljs-keyword">new</span> AuthorizationScope(<span class="hljs-string">&quot;global&quot;</span>, <span class="hljs-string">&quot;accessEverything&quot;</span>);<br>        AuthorizationScope[] authorizationScopes = <span class="hljs-keyword">new</span> AuthorizationScope[<span class="hljs-number">1</span>];<br>        authorizationScopes[<span class="hljs-number">0</span>] = authorizationScope;<br>        List&lt;SecurityReference&gt; lists = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        lists.add(<span class="hljs-keyword">new</span> SecurityReference(<span class="hljs-string">&quot;token&quot;</span>, authorizationScopes));<br>        <span class="hljs-keyword">return</span> lists;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> List&lt;SecurityContext&gt; <span class="hljs-title">securityContext</span><span class="hljs-params">()</span> </span>&#123;<br>        SecurityContext securityContext = SecurityContext.builder()<br>                .securityReferences(defaultAuth())<br>                .build();<br>        List&lt;SecurityContext&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        list.add(securityContext);<br>        <span class="hljs-keyword">return</span> list;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2><span id="controller-添加描述信息">Controller 添加描述信息</span></h2><p>@Api 可以对Controller进行描述</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Api(tags = &quot;xxx相关接口&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestController</span></span>&#123;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2><span id="接口添加描述信息">接口添加描述信息</span></h2><p>@ApiOperation 可以对接口进行描述</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GETMapping(&quot;/hi&quot;)</span><br><span class="hljs-meta">@ApiOperation(&quot;xxxxx接口&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">hello</span><span class="hljs-params">()</span></span>&#123;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p><em><strong>@ApiOperation 注解属性</strong></em></p>
+<table>
+<thead>
+<tr>
+<th>注解属性</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>String</td>
+<td>接口说明</td>
+</tr>
+<tr>
+<td>notes</td>
+<td>String</td>
+<td>接口发布说明</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>Stirng[]</td>
+<td>标签</td>
+</tr>
+<tr>
+<td>response</td>
+<td>Class&lt;?&gt;</td>
+<td>接口返回类型</td>
+</tr>
+<tr>
+<td>httpMethod</td>
+<td>String</td>
+<td>接口请求方式</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><em><strong>@ApiIgnore</strong></em><br>  Swagger 文档不会显示拥有该注解的接口。</p>
+</li>
+<li><p><em><strong>@ApiImplicitParams</strong></em><br>  用于描述接口的非对象参数集。</p>
+</li>
+<li><p><em><strong>@ApiImplicitParam</strong></em><br>  用于描述接口的非对象参数，一般与 <em><strong>@ApiImplicitParams</strong></em> 组合使用</p>
+</li>
+</ul>
+<table>
+    <tr>
+        <td rowspan="15">@ApiImplicitParam</td>
+    </tr>
+    <tr>
+        <td colspan="3">用在@ApiImplicitParams注解中，指定一个请求参数的各个方面</td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td colspan="2">参数名</td>
+    </tr>
+    <tr>
+       <td>value</td>
+        <td colspan="2">参数的汉字说明、解释</td>
+    </tr>
+    <tr>
+       <td>required</td>
+        <td colspan="2">参数是否必须传</td>
+    </tr>
+    <tr>
+       <td>dataType</td>
+       <td colspan="2">参数类型，默认String，其它值dataType="Integer"</td>
+    </tr>
+    <tr>
+       <td>defaultValue</td>
+        <td colspan="2">参数的默认值</td>
+    </tr>
+    <tr>
+       <td rowspan="8">paramType</td>
+   </tr>
+    <tr>
+       <td colspan="2">参数放在哪个地方</td>
+    </tr>
+ <tr>
+       <td>header</td>
+        <td>请求参数的获取@RequestHeader</td>
+ </tr>
+ <tr>
+       <td>header</td>
+        <td>请求参数的获取@RequestHeader</td>
+ </tr>
+ <tr>
+       <td>query</td>
+        <td>请求参数的获取@RequestParam</td>
+ </tr>
+ <tr>
+       <td>path</td>
+        <td>请求参数的获取@PathVariable</td>
+ </tr>
+ <tr>
+       <td>body</td>
+        <td>请求参数的获取@RequestBody</td>
+ </tr>
+ <tr>
+       <td>form</td>
+        <td>普通表单提交</td>
+ </tr>
+
+</table>
+
+<h2><span id="给实体类添加描述信息">给实体类添加描述信息</span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@ApiModel(&quot;用户实体&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Entity</span> </span>&#123;<br>    <span class="hljs-meta">@ApiModelProperty(&quot;用户 id&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> id;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>@ApiModelProperty 主要属性</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>注解属性</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>String</td>
+<td>字段说明</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>重写字段名称</td>
+</tr>
+<tr>
+<td>dataType</td>
+<td>Stirng</td>
+<td>重写字段类型</td>
+</tr>
+<tr>
+<td>required</td>
+<td>boolean 是否必填</td>
+<td></td>
+</tr>
+<tr>
+<td>example</td>
+<td>Stirng</td>
+<td>举例说明</td>
+</tr>
+<tr>
+<td>hidden</td>
+<td>boolean</td>
+<td>是否在文档中隐藏该字段</td>
+</tr>
+<tr>
+<td>allowEmptyValue</td>
+<td>boolean</td>
+<td>是否允许为空</td>
+</tr>
+<tr>
+<td>allowableValues</td>
+<td>String</td>
+<td>该字段允许的值，当我们 API 的某个参数为枚举类型时，使用这个属性就可以清楚地告诉 API 使用者该参数所能允许传入的值</td>
+</tr>
+</tbody></table>
+</div></article></div><div data-thread-key="2021/07/12/java/Swagger-ui 使用/" data-title="Swagger-ui 使用" data-url="https://mirsery.github.io/2021/07/12/java/Swagger-ui%20%E4%BD%BF%E7%94%A8/" data-author-key="1" class="ds-thread"></div><div id="disqus_thread"></div></div><script>var duoshuoQuery = {short_name:"mirsery@163.com"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/07/12/java/Swagger-ui 使用/';
+var disqus_title = 'Swagger-ui 使用';
+var disqus_url = 'https://mirsery.github.io/2021/07/12/java/Swagger-ui 使用/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//mirsery.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a href="/2021/07/12/java/Springcloud%20eureka%20%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E6%90%AD%E5%BB%BA/" class="prev">上一篇</a><a href="/2021/07/12/java/fastjson%E7%9A%84%E4%B8%80%E4%BA%9B%E7%94%A8%E6%B3%95/" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a>.</p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
