@@ -5,6 +5,7 @@ tags:
 	- 网络安全
 categories:
 	- web
+excerpt: 'xss（cross-site scripting,简称xss）跨站脚本攻击是一种迫使web站点回显可执行代码的攻击技术，而这些可执行代码由攻击者提供...'	
 ---
 
 # xss和csrf攻击

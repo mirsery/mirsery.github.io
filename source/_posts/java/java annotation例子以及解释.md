@@ -4,11 +4,11 @@ tags:
   - annotation
 categories: 
   - java
+excerpt: 'From Core Java SE9 for the Impatient Annotations are tags that you insert into your source code so that some tool can process them. The tools can operate on the source level, or they can process class files into which the compiler has placed annotations....'  
 ---
 
 # Annotation 
-From Core Java SE9 for the Impatient
-Annotations are tags that you insert into your source code so that some tool can process them. The tools can operate on the source level, or they can process class files into which the compiler has placed annotations.
+From Core Java SE9 for the Impatient Annotations are tags that you insert into your source code so that some tool can process them. The tools can operate on the source level, or they can process class files into which the compiler has placed annotations.
 Annotations do not change the way your programs are compiled. The Java compiler generates the same virtual machine instructions with or without the annotations.
 To benefit from annotations, you need to select a processing tool and use annotations that your processing tool understands, before you can apply that tool to your code.
 There is a wide range of uses for annotations. For example, JUnit uses annotations to mark methods that execute tests and to specify how the tests should be run. The Java Persistence Architecture uses annotations to define mappings between classes and database tables, so that objects can be persisted automatically without the developer having to write SQL queries.
