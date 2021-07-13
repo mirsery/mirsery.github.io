@@ -4,7 +4,7 @@
 
 # Site
 title: mirsery
-subtitle: ''
+subtitle: '兴趣使然博客'
 description: '瞎写写咯'
 keywords: '博客，个人，java随笔，go，php'
 author: mirsery
@@ -103,3 +103,14 @@ theme: prontera
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: 'git'
+
+
+category_generator:
+  per_page: 50
+  order_by: -date
+
+archive_generator:
+  per_page: 0
+
+tag_generator:
+  per_page: 0

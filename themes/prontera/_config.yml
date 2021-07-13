@@ -3,8 +3,11 @@ favicon: /favicon.ico
 
 # Nav Menus
 menu:
-    Index: /
+    Home: /
     Archives: /archives
+    Categories: /categories
+    Tags: /tags
+    About Me: /aboutme/index
 
 # Nav Shortcut Icons
 nav_icons:
