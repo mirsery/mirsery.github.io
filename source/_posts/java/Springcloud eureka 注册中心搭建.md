@@ -1,5 +1,6 @@
 ---
 title: SpringCloud eureka注册中心搭建
+date: 2021-05-04
 author: mirsery
 tags: 
     - springboot

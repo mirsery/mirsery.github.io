@@ -1,6 +1,7 @@
 ---
 title: 改善java程序的一些建议（笔记）
 author: mirsery
+date: 2018-07-09
 tags: 
     - 笔记
 categories: 

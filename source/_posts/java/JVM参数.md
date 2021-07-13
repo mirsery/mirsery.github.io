@@ -29,6 +29,7 @@ categories:
 java_<pid>_<date>_<time>_heapDump.hprof
 解析快照文件，可以使用 jhat, eclipse MAT，gdb等工具。
 
+
 ## 4、-XX:-HeapDumpOnOutOfMemoryError 在OOM时，输出一个dump.core文件，记录当时的堆内存快照
 
 ## 5、-XX:MaxPermSize=64m Perm（俗称方法区）占整个堆内存的最大值

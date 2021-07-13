@@ -1,6 +1,6 @@
 ---
 title: java内存模型
-date: 2016-06-24 10:24
+date: 2016-06-24 10:24:10
 tags: 
     - jvm
 categories: 

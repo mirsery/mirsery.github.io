@@ -1,6 +1,7 @@
 ---
 title: 归并排序
 author: mirsery
+date: 2016-04-05
 tags: 
   - 排序
 categories: 

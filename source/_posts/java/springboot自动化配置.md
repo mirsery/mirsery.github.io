@@ -3,6 +3,7 @@ title: springboot自动配置
 author: mirsery
 tags: 
     - springboot
+date: 2021-03-01    
 categories: 
     - java  
 ---

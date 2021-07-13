@@ -1,4 +1,12 @@
-## Java web Application
+---
+title: Java web Application
+date: 2018-09-06
+tags: 
+  - web
+categories: 
+  - java
+---
+# Java web Application
  ![](./_image/2018-10-29/0144FBEB-DFF4-4A59-8FDB-E52BA8108B77.png)
 Domain layer
     domain - > beans

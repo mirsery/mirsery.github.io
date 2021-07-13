@@ -1,6 +1,7 @@
 ---
 title: springCloud 常见配置
 author: mirsery
+date: 2020-02-21
 tags: 
     - springboot
 categories: 

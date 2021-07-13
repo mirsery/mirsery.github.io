@@ -1,10 +1,12 @@
 ---
 title: NIO SelectionKey 类解析
+date: 2021-01-06
 tags: 
   - nio
   - socket
 categories: 
   - java
+excerpt: 'A token representing the registration of a SelectableChannel with a Selector.....'  
 ---
 
 

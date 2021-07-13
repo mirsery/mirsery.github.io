@@ -1,6 +1,7 @@
 ---
 title: springboot 中新增异步任务
 author: mirsery
+date: 2020-01-03
 tags: 
     - 异步任务
     - springboot
@@ -15,9 +16,9 @@ springboot中使用支持异步任务开箱即用。
 1、首先在application中添加 ***@EnableAsync***注解
 2、新增一个compent组件，并且在application中添加其扫描包地址
 3、在新建的compent中使用***@Async**注解注释方法即可实现任务的异步调用。
-
+<br/>
 下面是示例代码
-
+<br/>
 1、WebTestApplication
 ```java
 @SpringBootApplication
@@ -29,7 +30,7 @@ public class WebTestApplication {
     }
 }
 ```
-
+<br/>
 2、TestController.java
 ```java
 @RestController

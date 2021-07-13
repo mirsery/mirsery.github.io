@@ -1,6 +1,7 @@
 ---
-title: Netty 断包/沾包问题解决方案
+title: Netty 断包/粘包问题解决方案
 author: mirsery
+date: 2018-09-06
 tags: 
   - netty
 categories: 

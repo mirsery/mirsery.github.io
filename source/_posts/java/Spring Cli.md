@@ -1,6 +1,7 @@
 ---
 title:  Developing the Spring Boot microservice using the CLI
 author: mirsery
+date: 2018-09-06
 tags: 
     - springboot
 categories: 

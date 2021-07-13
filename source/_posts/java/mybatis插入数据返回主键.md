@@ -1,6 +1,7 @@
 ---
 title: mybatis插入数据后返回自增主键id
 author: mirsery
+date: 2019-08-02
 tags: 
   - mybatis
   - sql
