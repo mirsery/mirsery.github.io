@@ -38,15 +38,31 @@ mixin postList()
 
 //- Post Page
 mixin post(item)
-    .post
-        article.post-block
+    if(page.type == 'categories')
+        - var categoriesList = list_categories({ show_count: true})
+        .archive
+            .h2 类别
+            if categoriesList
+                != categoriesList
+            else
+                p None.
+    else if(page.type == 'tags')
+        - var tagsList = list_tags({ show_count: true})
+        .archive
+            .h2 标签
+            if tagsList
+                != tagsList
+            else
+                p None.
+    else
+        .post.article.post-block
             h1.post-title
                 != item.title
             +postInfo(item)
             .post-content
-                != item.content
+                != item.content                  
 
-// Category Page
+//- Category Page
 
 mixin category()
     .archive
@@ -59,7 +75,7 @@ mixin category()
         - })
 
 
-// Tag Page
+//- Tag Page
 mixin tag()
     .archive
         h2.name= page.tag
