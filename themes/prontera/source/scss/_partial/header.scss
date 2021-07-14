@@ -2,7 +2,7 @@
 header {
     &.feature-header {
         @include size(100%, 70px);
-        background-color: white;
+        background-color: #44475a;
         box-shadow: 0px 0px 1px #ccc;
         padding: 0px 128px;
         display: flex;
