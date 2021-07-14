@@ -1,7 +1,7 @@
 extends partial/layout
 
 block container
-    include mixins/archiveList
+    include mixins/post
     +postList()
 
 block pagination
