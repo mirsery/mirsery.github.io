@@ -14,7 +14,7 @@ block container
         include partial/comment
 
     //- Comment
-    if theme.duoshuo
+    if theme.duoshuo && page.comments
         script.
             var duoshuoQuery = {short_name:"#{theme.duoshuo}"};
             (function() {
@@ -27,7 +27,7 @@ block container
             })();
 
 
-    if theme.disqus
+    if theme.disqus && page.comments
         script.
             var disqus_shortname = '#{theme.disqus}';
             var disqus_identifier = '#{page.path}';

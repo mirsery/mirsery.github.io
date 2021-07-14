@@ -1,5 +1,5 @@
-if theme.duoshuo
+if theme.duoshuo && page.comments
     .ds-thread(data-thread-key=page.path, data-title=page.title, data-url=page.permalink, data-author-key='1')
 
-if theme.disqus
+if theme.disqus && page.comments
     #disqus_thread
