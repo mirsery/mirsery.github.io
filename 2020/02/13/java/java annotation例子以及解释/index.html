@@ -36,17 +36,7 @@ It is arrerted that userId parameter is not null.<h3><span id="making-receivers-
 <h2><span id="defineing-annotations">defineing Annotations</span></h2><p>@Target(ElementType.METHOD)<br>@Retention(RetentionPolicy.RUNTIME)<br>public @interface Test {<br>    long timeout();<br>    …<br>}<br>The @interface declaration creates an actual Java interface. Tools that process annotations receive objects that implement the annotation interface. When the JUnit test runner tool gets an object that implements Test, it simply invokes the timeout method to retrieve the timeout element of a particular Test annotation.</p>
 <h2><span id="annotations-for-compilation">Annotations for Compilation</span></h2><p>The @Deprecated annotation can be attached to any items whose use is no longer encouraged. The compiler will warn when you use a deprecated item. This annotation has the same role as the @deprecated Javadoc tag. However, the annotation persists until runtime.</p>
 <h2><span id="annotations-for-managing-resources">Annotations for Managing Resources</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">@Resource(name=&quot;jdbc/employeedb&quot;)<br>private DataSource source;<br></code></pre></td></tr></table></figure>
-</div></div><div class="ds-thread" data-thread-key="2020/02/13/java/java annotation例子以及解释/" data-title="java Annotation示例" data-url="https://mirsery.github.io/2020/02/13/java/java%20annotation%E4%BE%8B%E5%AD%90%E4%BB%A5%E5%8F%8A%E8%A7%A3%E9%87%8A/" data-author-key="1"></div><div id="disqus_thread"></div></div><script>var duoshuoQuery = {short_name:"mirsery@163.com"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
-
-</script><script>var disqus_shortname = 'mirsery';
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2020/02/13/java/java annotation例子以及解释/';
 var disqus_title = 'java Annotation示例';
 var disqus_url = 'https://mirsery.github.io/2020/02/13/java/java annotation例子以及解释/';

@@ -9,17 +9,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestEventListerner</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ApplicationListener</span>&lt;<span class="hljs-title">TestEvent</span>&gt; </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Handle an application event.</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> event the event to respond to</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onApplicationEvent</span><span class="hljs-params">(TestEvent event)</span> </span>&#123;<br>        System.out.println(<span class="hljs-keyword">this</span>.getClass() + <span class="hljs-string">&quot; message is &quot;</span> + event.getMessage() + <span class="hljs-string">&quot;, source is :&quot;</span> + event.getSource());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h2><span id="事件发布">事件发布</span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">ApplicationContext applicationContext = SpringApplication.run(WebTestApplication.class, args);<br>TestEvent test = <span class="hljs-keyword">new</span> TestEvent(<span class="hljs-string">&quot;test-code&quot;</span>, <span class="hljs-string">&quot;测试事件发生&quot;</span>);<br>applicationContext.publishEvent(test);<br></code></pre></td></tr></table></figure>
-</div></div><div class="ds-thread" data-thread-key="2021/02/28/java/Springboot自带的事件驱动使用/" data-title="springboot自带的事件驱动模型使用" data-url="https://mirsery.github.io/2021/02/28/java/Springboot%E8%87%AA%E5%B8%A6%E7%9A%84%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E4%BD%BF%E7%94%A8/" data-author-key="1"></div><div id="disqus_thread"></div></div><script>var duoshuoQuery = {short_name:"mirsery@163.com"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
-
-</script><script>var disqus_shortname = 'mirsery';
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/02/28/java/Springboot自带的事件驱动使用/';
 var disqus_title = 'springboot自带的事件驱动模型使用';
 var disqus_url = 'https://mirsery.github.io/2021/02/28/java/Springboot自带的事件驱动使用/';

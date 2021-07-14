@@ -1,16 +1,6 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> springboot自带的md5摘要算法使用 · mirsery</title><meta name="description" content="springboot自带的md5摘要算法使用 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>HOME</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>ARCHIVES</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>CATEGORIES</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>TAGS</p></a><a class="li component-nav-item" href="/aboutme/index" target="_self"><p>ABOUT ME</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">springboot自带的md5摘要算法使用</h1><div class="post-info">2021年6月8日</div><div class="post-content"><h1><span id="springboot自带的md5摘要算法使用">springboot自带的md5摘要算法使用</span></h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.springframework.util.DigestUtils;<br><br>DigestUtils.md5DigestAsHex(<span class="hljs-string">&quot;需要摘要的字符串xxxxx&quot;</span>.getBytes()); 默认是采用的<span class="hljs-number">32</span>位的md5信息摘要算法<br><br>md5(str,<span class="hljs-number">32</span>)<br><br></code></pre></td></tr></table></figure>
-</div></div><div class="ds-thread" data-thread-key="2021/06/07/java/Springboot 框架自带的md5摘要/" data-title="springboot自带的md5摘要算法使用" data-url="https://mirsery.github.io/2021/06/07/java/Springboot%20%E6%A1%86%E6%9E%B6%E8%87%AA%E5%B8%A6%E7%9A%84md5%E6%91%98%E8%A6%81/" data-author-key="1"></div><div id="disqus_thread"></div></div><script>var duoshuoQuery = {short_name:"mirsery@163.com"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
-
-</script><script>var disqus_shortname = 'mirsery';
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/06/07/java/Springboot 框架自带的md5摘要/';
 var disqus_title = 'springboot自带的md5摘要算法使用';
 var disqus_url = 'https://mirsery.github.io/2021/06/07/java/Springboot 框架自带的md5摘要/';

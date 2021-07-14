@@ -13,17 +13,7 @@
 <li>如果一个类库被多个模块共用，可以为这个类库单独的创建一个模块，把其它模块需要用到的 Java 包声明为导出的。其它模块声明导入这些类。</li>
 <li>如果类库提供了 SPI 接口，并且利用线程上下文类加载器来加载 SPI 实现的 Java 类，有可能会找不到 Java 类。如果出现了 NoClassDefFoundError异常，首先检查当前线程的上下文类加载器是否正确。通过 Thread.currentThread().getContextClassLoader()就可以得到该类加载器。该类加载器应该是该模块对应的类加载器。如果不是的话，可以首先通过 class.getClassLoader()来得到模块对应的类加载器，再通过Thread.currentThread().setContextClassLoader()来设置当前线程的上下文类加载器。</li>
 </ul>
-</div></div><div class="ds-thread" data-thread-key="2019/05/29/java/类加载器/" data-title="类加载器" data-url="https://mirsery.github.io/2019/05/29/java/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/" data-author-key="1"></div><div id="disqus_thread"></div></div><script>var duoshuoQuery = {short_name:"mirsery@163.com"};
-(function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-})();
-
-</script><script>var disqus_shortname = 'mirsery';
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2019/05/29/java/类加载器/';
 var disqus_title = '类加载器';
 var disqus_url = 'https://mirsery.github.io/2019/05/29/java/类加载器/';
