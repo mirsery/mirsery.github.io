@@ -2,7 +2,7 @@
 header {
     &.feature-header {
         @include size(100%, 70px);
-        background-color: #44475a;
+        background-color: #282a36;
         box-shadow: 0px 0px 1px #ccc;
         padding: 0px 128px;
         display: flex;
@@ -45,7 +45,6 @@ header {
         }
         cursor: pointer;
         box-sizing: border-box;
-        @include animate(hover, background-color, #f1f1f1, 0.3s);
         & > p {
             @include size(100%, 100%);
             margin: 0;
@@ -54,8 +53,13 @@ header {
             line-height: 70px - 6px * 2;
             font-size: 18px;
             box-sizing: border-box;
+            &:hover {
+                color:#f1fa8c;
+                border-bottom: #f1fa8c 2px solid;
+            };
             &.selected {
-                border-bottom: $MAIN_COLOR 6px solid;
+                color:#f1fa8c;
+                border-bottom: #f1fa8c 2px solid;
             }
         }
     }
