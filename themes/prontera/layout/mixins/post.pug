@@ -46,3 +46,26 @@ mixin post(item)
             .post-content
                 != item.content
 
+// Category Page
+
+mixin category()
+    .archive
+        h2.name= page.category
+        - page.posts.each(function(item){
+            .post-item
+                +postInfo(item)
+                a.post-title-link(href= url_for(item.path))
+                    != item.title
+        - })
+
+
+// Tag Page
+mixin tag()
+    .archive
+        h2.name= page.tag
+        - page.posts.each(function(item){
+            .post-item
+                +postInfo(item)
+                a.post-title-link(href= url_for(item.path))
+                    != item.title
+        - })

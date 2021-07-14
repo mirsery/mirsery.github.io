@@ -114,3 +114,8 @@ archive_generator:
 
 tag_generator:
   per_page: 0
+
+easy_tags_plugin:
+  enable: true
+  tag_name_case: 1
+  sort_ignore_case: true
