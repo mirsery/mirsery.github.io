@@ -16,6 +16,7 @@ mixin posts()
                     +postInfo(item)
                     .post-content
                         != item.excerpt
+                    br
                     a.read-more(href= url_for(item.path))!= __('more')
         - })
 
@@ -41,7 +42,7 @@ mixin post(item)
     if(page.type == 'categories')
         - var categoriesList = list_categories({ show_count: true})
         .archive
-            .h2 类别
+            h2 类别
             if categoriesList
                 != categoriesList
             else
@@ -49,7 +50,7 @@ mixin post(item)
     else if(page.type == 'tags')
         - var tagsList = list_tags({ show_count: true})
         .archive
-            .h2 标签
+            h2 标签
             if tagsList
                 != tagsList
             else
