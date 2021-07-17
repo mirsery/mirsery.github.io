@@ -9,7 +9,8 @@ nav.component-nav
         each value, key in theme.menu
             - var re = /^(http|https):\/\/*/gi;
             - var tar = re.test(value) ? "_blank" : "_self"
-            - var act = !re.test(value) && "/"+page.current_url === value
+            - var full_value = value == "/" ? "/index.html": value+"/index.html"
+            - var act = !re.test(value) && (url_for(page.path) === full_value)
             a.li.component-nav-item(href=url_for(value) target=tar)
                 p(class={selected: act})
                     != key.toUpperCase()
