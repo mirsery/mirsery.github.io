@@ -83,10 +83,13 @@ public interface Condition {
     
   	void signalAll();
 }
-
 ```
 
-```await( )```方法会使当前线程等待，自动释放当前锁。当其他线程使用```signal( )``` 时，该线程必须要重新再次获取锁并继续执行。
+
+
+**await( )** 方法会使当前线程等待，自动释放当前锁。当其他线程使用 **signal( )** 时，该线程必须要重新再次获取锁并继续执行。
+
+
 
 ```java
 public class ReenterLockCondition implements Runnable {
@@ -126,6 +129,8 @@ public class ReenterLockCondition implements Runnable {
 
 
 As an example, suppose we have a bounded buffer which supports put and take methods. If a take is attempted on an empty buffer, then the thread will block until an item becomes available; if a put is attempted on a full buffer, then the thread will block until a space becomes available. We would like to keep waiting put threads and take threads in separate wait-sets so that we can use the optimization of only notifying a single thread at a time when items or spaces become available in the buffer. This can be achieved using two Condition instances.
+
+
 
 ```java
  class BoundedBuffer<E> {
@@ -167,5 +172,5 @@ As an example, suppose we have a bounded buffer which supports put and take meth
    }
 ```
 
-Jdk 中 ```java.util.concurrent.ArrayBlockingQueue ``` 同时也是利用Condition 来生产者和消费者队列。
+Jdk 中 ***java.util.concurrent.ArrayBlockingQueue*** 同时也是利用Condition 来生产者和消费者队列。
 
