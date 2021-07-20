@@ -7,7 +7,6 @@ tags:
 categories: 
     - java
 ---
-# ByteBuf 引用计数问题
 >  netty框架使用过程中关于ByteBuf 的处理
 > SImpleChannelInbound 会release ByteBuf，ChannelInboundHandlerAdapter 不会影响ByteBuf的引用计数
 
