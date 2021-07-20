@@ -8,7 +8,7 @@ categories:
 excerpt: 'xss（cross-site scripting,简称xss）跨站脚本攻击是一种迫使web站点回显可执行代码的攻击技术，而这些可执行代码由攻击者提供...'	
 ---
 
-# xss和csrf攻击
+<!-- toc -->
 
 ## xss
 xss（cross-site scripting,简称xss）跨站脚本攻击是一种迫使web站点回显可执行代码的攻击技术，而这些可执行代码由攻击者提供，被终端用户浏览器所加载执行。XSS的主要目的是获取客户端的Cookie或者其他网站用户识别客户端身份的敏感信息。获取到合法用户的信息后，攻击者可以假冒最终用户与网站进行交互。
