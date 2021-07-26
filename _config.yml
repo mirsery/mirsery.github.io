@@ -40,7 +40,14 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+
+post_asset_folder: true
+marked:
+  prependRoot: true
+  postAsset: true
+  headerIds: true
+  anchorAlias: true
+
 relative_link: false
 future: true
 highlight:
@@ -103,7 +110,6 @@ theme: prontera
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: 'git'
-
 
 category_generator:
   per_page: 50
