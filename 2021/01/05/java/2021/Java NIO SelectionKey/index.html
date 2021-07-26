@@ -20,7 +20,7 @@
 </ul>
 <!-- tocstop -->
 
-<h2 id="SelectionKey类解释以及用法"><a href="#SelectionKey类解释以及用法" class="headerlink" title="SelectionKey类解释以及用法"></a>SelectionKey类解释以及用法</h2><p><img src="./_image/2021/969959BD-AB3E-4F9B-9133-ACDF5C67AEF6.png"><br>以下是 <strong>javadoc</strong> 对 <strong>SelectionKey</strong> 的解释：<br>A token representing the registration of a SelectableChannel with a Selector.</p>
+<h2 id="SelectionKey类解释以及用法"><a href="#SelectionKey类解释以及用法" class="headerlink" title="SelectionKey类解释以及用法"></a>SelectionKey类解释以及用法</h2><p><img src="/./_image/2021/969959BD-AB3E-4F9B-9133-ACDF5C67AEF6.png"><br>以下是 <strong>javadoc</strong> 对 <strong>SelectionKey</strong> 的解释：<br>A token representing the registration of a SelectableChannel with a Selector.</p>
 <p>A selection key is created each time a channel is registered with a selector. A key remains valid until it is cancelled by invoking its cancel method, by closing its channel, or by closing its selector. Cancelling a key does not immediately remove it from its selector; it is instead added to the selector’s cancelled-key set for removal during the next selection operation. The validity of a key may be tested by invoking its isValid method.</p>
 <p>A selection key contains two operation sets represented as integer values. Each bit of an operation set denotes a category of selectable operations that are supported by the key’s channel.</p>
 <p>The interest set determines which operation categories will be tested for readiness the next time one of the selector’s selection methods is invoked. The interest set is initialized with the value given when the key is created; it may later be changed via the interestOps(int) method.</p>
