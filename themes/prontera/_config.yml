@@ -17,6 +17,7 @@ nav_icons:
 # Friend Links
 friend_links:
     - ['BlitheZhu','小朱的博客','https://blitheZhu.github.io']
+    - ['happyafa','阿发的博客','https://happyafa.github.io']
 
 
 # About
@@ -36,3 +37,8 @@ tencent_analytics:
  
 # Copyright Infomation
 startyear: 2015
+
+feed:
+  limit: 20
+  order_by: -date
+  icon: "/images/avatar.png"

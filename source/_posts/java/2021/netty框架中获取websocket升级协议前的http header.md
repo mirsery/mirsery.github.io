@@ -6,6 +6,7 @@ tags:
   - netty
 categories: 
   - java
+excerpt: '背景 目前服务器采用nginx进行反向代理部署，利用socketchannel获取的socketAddress为代理服务器的局域网ip'  
 ---
 
 
@@ -14,6 +15,7 @@ categories:
 
 ## 代理服务器的配置
 首先代理服务器需将真实的ip地址转发到反向代理的服务上，因此代理服务器需增加代理的请求头。下面是nginx作为代理服务器的样例配置项
+
 ```
 server {
     listen xx;
@@ -31,9 +33,9 @@ server {
       }
 }
 ```
-其中** proxy_set_header X-Real-IP $remote_addr;**将真实的客户端ip转发给代理服务中。
+其中 **proxy_set_header X-Real-IP $remote_addr;** 将真实的客户端ip转发给代理服务中。
 
-##netty框架中获取传递的**X-Real-IP**请求头地址
+## netty框架中获取传递的**X-Real-IP**请求头地址
 netty中需要在协议升级之前读取channel的请求头的内容，下面是实例代码。
 >  该handler需配置在**WebSocketServerProtocolHandler**之前**ChannelInboundHandlerAdapter**不会修改Bytebuf的引用计数问题，详情见[# ByteBuf 引用计数问题](./bytebuf-yin-yong-ji-shu-wen-ti)
 

@@ -9,6 +9,7 @@ tags:
 	- 线程
 categories:	
 	- java
+excerpt: 'Lock Support 是一个非常方便的线程阻塞工具，他可以在线程内任意位置让线程阻塞。与 **Thread.suspend()** 方法相比，他补充了由于 **resume( )** 方法发生导致线程无法继续执行的情况...'  
 ---
 
 > Lock Support 是一个非常方便的线程阻塞工具，他可以在线程内任意位置让线程阻塞。与 **Thread.suspend()** 方法相比，他补充了由于 **resume( )** 方法发生导致线程无法继续执行的情况。和**Object.wait( )**相比，他不需要先获得对象的锁，也不会抛出**InterruptedException**异常。

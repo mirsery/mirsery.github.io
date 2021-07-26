@@ -5,7 +5,10 @@ author: mirsery
 comments: true
 date: 2021-07-24 21:48:07
 tags:
+    - java
 categories:
+    - java
+excerpt: 'future 模式是多线程开发中比较常见的一种模式，他的核心思想是利用多线程来实现耗时操作的异步调用。主要利用多线程去处理耗时的任务，并支持异步回调...'    
 ---
 
 
