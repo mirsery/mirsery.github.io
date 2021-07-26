@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 文章迁移 · mirsery</title><meta name="description" content="文章迁移 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>HOME</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>ARCHIVES</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>CATEGORIES</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>TAGS</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">文章迁移</h1><div class="post-info">2021年7月9日</div><div class="post-content"><!-- toc -->
+
+<ul>
+<li><a href="#----------">关于分类和标签的处理</a></li>
+<li><a href="#hexo----------">hexo框架中使用分类和标签</a><ul>
+<li><a href="#-------">安装相应的插件</a></li>
+<li><a href="#-------">新增对应的文件</a></li>
+<li><a href="#---------">修改对应的文件内容</a></li>
+<li><a href="#----------">添加相对应的前端链接</a></li>
+<li><a href="#----">重要内容</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<p>从15年末开始，陆陆续续记录的一些文档因为某些不可抗力的原因，需要做一些迁移的工作。刚开始写博客的时候用的farbox，后来迁移到bitcron,现在要回归github pages。记录一次文档的迁移过程吧。</p>
+<h2 id="关于分类和标签的处理"><a href="#关于分类和标签的处理" class="headerlink" title="关于分类和标签的处理"></a>关于分类和标签的处理</h2><p>借用B乎上一个表格</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>分类</th>
+<th>标签</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>排他性</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>关系</td>
+<td>从属</td>
+<td>相关（关联）</td>
+</tr>
+<tr>
+<td>创建</td>
+<td>事先规划</td>
+<td>随时增加</td>
+</tr>
+<tr>
+<td>代价</td>
+<td>高</td>
+<td>低</td>
+</tr>
+</tbody></table>
+<p>满足排他性的归为分类，不满足排他性条件的归为标签。分类是固定的、严谨的；标签是自由的、有特色的、是可以修改和添加的。</p>
+<h2 id="hexo框架中使用分类和标签"><a href="#hexo框架中使用分类和标签" class="headerlink" title="hexo框架中使用分类和标签"></a>hexo框架中使用分类和标签</h2><h3 id="安装相应的插件"><a href="#安装相应的插件" class="headerlink" title="安装相应的插件"></a>安装相应的插件</h3><p>在项目根目录下执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo-generator-category --save<br><br>npm install hexo-generator-tag --save<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="新增对应的文件"><a href="#新增对应的文件" class="headerlink" title="新增对应的文件"></a>新增对应的文件</h3><p>在项目根目录下执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo new page tags<br><br>hexo new page categories<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="修改对应的文件内容"><a href="#修改对应的文件内容" class="headerlink" title="修改对应的文件内容"></a>修改对应的文件内容</h3><p>文件  <em><strong>./source/categories/index.md</strong></em> 修改后的内容：</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs md">---<br>title: categories<br>date: 2021-07-14 16:11:57<br>type: categories<br><span class="hljs-section">comments: false</span><br><span class="hljs-section">---</span><br><br></code></pre></td></tr></table></figure>
+
+<p>文件 <em><strong>./source/tags/index.md</strong></em> 修改后的内容：</p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs md">---<br>title: tags<br>date: 2021-07-14 16:12:05<br>type: tags<br><span class="hljs-section">comments: false</span><br><span class="hljs-section">---</span><br><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在写文章时需要在文章前标注相应的tag以及category。</p>
+</blockquote>
+<h3 id="添加相对应的前端链接"><a href="#添加相对应的前端链接" class="headerlink" title="添加相对应的前端链接"></a>添加相对应的前端链接</h3><p>一般情况下是在对应的主题的配置文件中，或者工程的配置文件中修改Menu值</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">menu:</span><br>    <span class="hljs-attr">Home:</span> <span class="hljs-string">/</span><br>    <span class="hljs-attr">Archives:</span> <span class="hljs-string">/archives</span><br>    <span class="hljs-attr">Categories:</span> <span class="hljs-string">/categories</span><br>    <span class="hljs-attr">Tags:</span> <span class="hljs-string">/tags</span><br><br></code></pre></td></tr></table></figure>
+<p>新增相应的分类和标签的地址，即可。</p>
+<h3 id="重要内容"><a href="#重要内容" class="headerlink" title="重要内容"></a>重要内容</h3><p>一般情况，如果按照上述操作即可实现分类和标签的归档。但是假如你当前使用的主题没有实现相应的模板则不能使用相应的功能。此时需要修改主题的模板文件来增强其分页和归档的功能。</p>
+<p>查看***./themes/XXX-theme/layout/category.pug<em><strong>和</strong></em>./themes/XXX-theme/layout/tag.pug***是否存在，这两个文件是选择某个分类或某个标签时，文章列表的渲染模板，其文件后缀可以为pug/ejs等。</p>
+<p>如果这两个文件存在，但是访问<code>/categories</code>或 <code>/tags</code>页面返回404，则说明对应的<code>./themes/XXX-theme/layout/post.pug</code> 文件中没有处理当前页为分类或者标签页的情况。</p>
+<p>以下是简单的处理方式：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-string">mixin</span> <span class="hljs-string">post(item)</span><br>    <span class="hljs-string">if(page.type</span> <span class="hljs-string">==</span> <span class="hljs-string">&#x27;categories&#x27;</span><span class="hljs-string">)</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">var</span> <span class="hljs-string">categoriesList</span> <span class="hljs-string">=</span> <span class="hljs-string">list_categories(&#123;</span> <span class="hljs-attr">show_count:</span> <span class="hljs-literal">true</span><span class="hljs-string">&#125;)</span><br>        <span class="hljs-string">.archive</span><br>            <span class="hljs-string">.h2</span> <span class="hljs-string">类别</span><br>            <span class="hljs-string">if</span> <span class="hljs-string">categoriesList</span><br>                <span class="hljs-type">!=</span> <span class="hljs-string">categoriesList</span><br>            <span class="hljs-string">else</span><br>                <span class="hljs-string">p</span> <span class="hljs-string">None.</span><br>    <span class="hljs-string">else</span> <span class="hljs-string">if(page.type</span> <span class="hljs-string">==</span> <span class="hljs-string">&#x27;tags&#x27;</span><span class="hljs-string">)</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">var</span> <span class="hljs-string">tagsList</span> <span class="hljs-string">=</span> <span class="hljs-string">list_tags(&#123;</span> <span class="hljs-attr">show_count:</span> <span class="hljs-literal">true</span><span class="hljs-string">&#125;)</span><br>        <span class="hljs-string">.archive</span><br>            <span class="hljs-string">.h2</span> <span class="hljs-string">标签</span><br>            <span class="hljs-string">if</span> <span class="hljs-string">tagsList</span><br>                <span class="hljs-type">!=</span> <span class="hljs-string">tagsList</span><br>            <span class="hljs-string">else</span><br>                <span class="hljs-string">p</span> <span class="hljs-string">None.</span><br>    <span class="hljs-string">else</span><br>        <span class="hljs-string">.post.article.post-block</span><br>            <span class="hljs-string">h1.post-title</span><br>                <span class="hljs-type">!=</span> <span class="hljs-string">item.title</span><br>            <span class="hljs-string">+postInfo(item)</span><br>            <span class="hljs-string">.post-content</span><br>                <span class="hljs-type">!=</span> <span class="hljs-string">item.content</span>      <br><br></code></pre></td></tr></table></figure>
+
+<p>具体的代码以及辅助函数的使用可以查看<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/helpers">hexo.io</a>中的帮助文档，实现了对应的处理方式就可以实现分类和标签页功能。同时也支持自定义对其进行渲染展示。</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/07/09/talk/2021/文章迁移/';
+var disqus_title = '文章迁移';
+var disqus_url = 'https://mirsery.github.io/2021/07/09/talk/2021/文章迁移/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/07/12/web/2021/xss%E5%92%8Ccsrf%E6%94%BB%E5%87%BB/">上一篇</a><a class="next" href="/2021/06/12/java/2021/java%E4%B8%AD%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2aop%E8%A7%A3%E6%9E%90/">下一篇</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
