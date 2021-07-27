@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> linux作业控制 · mirsery</title><meta name="description" content="linux作业控制 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>HOME</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>ARCHIVES</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>CATEGORIES</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>TAGS</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">linux作业控制</h1><div class="post-info">2018年6月8日</div><div class="post-content"><p>##显示作业列表 jobs<br> 在任何时候可以使用jobs命令来显示所有作业的列表。该命令的语法为：<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">jobs</span> [-1]<br></code></pre></td></tr></table></figure><br> 在大多是情况下，只需要输出命令本身:<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">jobs</span><br></code></pre></td></tr></table></figure><br> 如果需要查看作业的进程ID 以及作业号和命令名，则可以使用-l选项</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">jobs</span> -l<br></code></pre></td></tr></table></figure>
+<p> 如果不指定作业号这些指令在默认情况下会作用在当前作业。在大多数情况下</p>
+<p>##将作业提交至前台: fg<br>当需要将作业移至前台时，可以使用fg命令，使用该命令有下列三种形式:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">fg</span><br><span class="hljs-built_in">fg</span> % [job]<br>% [job]<br></code></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>作业号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%%</td>
+<td>当前作业</td>
+</tr>
+<tr>
+<td>%+</td>
+<td>当前作业</td>
+</tr>
+<tr>
+<td>%-</td>
+<td>前一个作业</td>
+</tr>
+<tr>
+<td>%n</td>
+<td>作业#n</td>
+</tr>
+<tr>
+<td>%name</td>
+<td>含有指定名的作业</td>
+</tr>
+<tr>
+<td>%?name</td>
+<td>命令中任意位置含有name的作业</td>
+</tr>
+</tbody></table>
+<p>##将作业移至后台 bg</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">bg</span> [%job]<br></code></pre></td></tr></table></figure></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2018/06/08/linux/linux作业控制/';
+var disqus_title = 'linux作业控制';
+var disqus_url = 'https://mirsery.github.io/2018/06/08/linux/linux作业控制/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2018/07/08/java/2018/%E6%94%B9%E5%96%84java%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BB%BA%E8%AE%AE%EF%BC%88%E7%AC%94%E8%AE%B0%EF%BC%89/">上一篇</a><a class="next" href="/2018/06/07/linux/unix%7Clinux%E5%91%BD%E4%BB%A4%E6%8A%80%E5%B7%A7/">下一篇</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 11个令人惊奇的linux命令 · mirsery</title><meta name="description" content="11个令人惊奇的linux命令 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>HOME</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>ARCHIVES</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>CATEGORIES</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>TAGS</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">11个令人惊奇的linux命令</h1><div class="post-info">2016年8月15日</div><div class="post-content"><ol>
+<li>命令行日常系快捷键</li>
+</ol>
+<p>如下的快捷方式非常有用，能够极大的提升你的工作效率：</p>
+<p>CTRL + U – 剪切光标前的内容<br>CTRL + K – 剪切光标至行末的内容<br>CTRL + Y – 粘贴<br>CTRL + E – 移动光标到行末<br>CTRL + A – 移动光标到行首<br>ALT + F – 跳向下一个空格<br>ALT + B – 跳回上一个空格<br>ALT + Backspace – 删除前一个单词<br>CTRL + W – 剪切光标后一个单词<br>Shift + Insert – 向终端内粘贴文本<br>那么为了让上述内容更易理解来看下面的这行命令。</p>
+<p>sudo apt-get intall programname<br>如你所见，命令中存在拼写错误，为了正常执行需要把“intall”替换成“install”。</p>
+<p>想象现在光标正在行末，我们有很多的方法将她退回单词install并替换它。</p>
+<p>我可以按两次ALT+B这样光标就会在如下的位置（这里用指代光标的位置）。</p>
+<p>sudo apt-get^intall programname<br>现在你可以按两下方向键并将“s”插入到install中去了。</p>
+<p>如果你想将浏览器中的文本复制到终端，可以使用快捷键”shift + insert”。</p>
+<ol start="2">
+<li>SUDO !!</li>
+</ol>
+<p>如果你还不知道这个命令，我觉得你应该好好感谢我，因为如果你不知道的话，那每次你在输入长串命令后看到“permission denied”后一定会痛苦不堪。</p>
+<p>sudo !!<br>如何使用sudo !!？很简单。试想你刚输入了如下命令：</p>
+<p>apt-get install ranger<br>一定会出现“Permission denied”，除非你已经登录了足够高权限的账户。</p>
+<p>sudo !! 就会用 sudo 的形式运行上一条命令。所以上一条命令就变成了这样：</p>
+<p>sudo apt-get install ranger<br>如果你不知道什么是sudo，戳这里。</p>
+<p>（警告！主页君强烈反对使用这个命令，因为如果万一上个命令存在一些笔误或者你搞错了哪条是上一条命令，那么有可能带来的后果是灾难性的！所以，千万不要执行这条命令！千万不要执行这条命令！千万不要执行这条命令！重要的事情重复三遍。）</p>
+<ol start="3">
+<li>暂停并在后台运行命令</li>
+</ol>
+<p>我曾经写过一篇如何在终端后台运行命令的指南。</p>
+<p>CTRL + Z – 暂停应用程序<br>fg – 重新将程序唤到前台<br>如何使用这个技巧呢?</p>
+<p>试想你正用nano编辑一个文件：</p>
+<p>sudo nano abc.txt<br>文件编辑到一半你意识到你需要马上在终端输入些命令，但是nano在前台运行让你不能输入。</p>
+<p>你可能觉得唯一的方法就是保存文件，退出 nano，运行命令以后在重新打开nano。</p>
+<p>其实你只要按CTRL + Z，前台的命令就会暂停，画面就切回到命令行了。然后你就能运行你想要运行命令，等命令运行完后在终端窗口输入“fg”就可以回到先前暂停的任务。</p>
+<p>有一个尝试非常有趣就是用nano打开文件，输入一些东西然后暂停会话。再用nano打开另一个文件，输入一些什么后再暂停会话。如果你输入“fg”你将回到第二个用nano打开的文件。只有退出nano再输入“fg”，你才会回到第一个用nano打开的文件。</p>
+<ol start="4">
+<li>使用nohup在登出SSH会话后仍运行命令</li>
+</ol>
+<p>如果你用ssh登录别的机器时，nohup命令真的非常有用。</p>
+<p>那么怎么使用nohup呢？</p>
+<p>想象一下你使用ssh远程登录到另一台电脑上，你运行了一条非常耗时的命令然后退出了ssh会话，不过命令仍在执行。而nohup可以将这一场景变成现实。</p>
+<p>举个例子，因为测试的需要，我用我的树莓派来下载发行版。我绝对不会给我的树莓派外接显示器、键盘或鼠标。</p>
+<p>一般我总是用SSH从笔记本电脑连接到树莓派。如果我在不用nohup的情况下使用树莓派下载大型文件，那我就必须等待到下载完成后，才能登出ssh会话关掉笔记本。可如果是这样，那我为什么要使用树莓派下文件呢？</p>
+<p>使用nohup的方法也很简单，只需如下例中在nohup后输入要执行的命令即可：</p>
+<p>nohup wget <a target="_blank" rel="noopener" href="http://mirror.is.co.za/mirrors/linuxmint.com/iso//stable/17.1/linuxmint-17.1-cinnamon-64bit.iso">http://mirror.is.co.za/mirrors/linuxmint.com/iso//stable/17.1/linuxmint-17.1-cinnamon-64bit.iso</a> &amp;<br>5. ‘在’特定的时间运行Linux命令</p>
+<p>‘nohup’命令在你用SSH连接到服务器，并在上面保持执行SSH登出前任务的时候十分有用。</p>
+<p>想一下如果你需要在特定的时间执行相同的命令，这种情况该怎么办呢？</p>
+<p>命令‘at’就能妥善解决这一情况。以下是‘at’使用示例。</p>
+<p>at 10:38 PM Fri<br>at&gt; cowsay ‘hello’<br>at&gt; CTRL + D<br>上面的命令能在周五下午10时38分运行程序cowsay。</p>
+<p>使用的语法就是‘at’后追加日期时间。当at&gt;提示符出现后就可以输入你想在那个时间运行的命令了。</p>
+<p>CTRL + D 返回终端。</p>
+<p>还有许多日期和时间的格式，都需要你好好翻一翻‘at’的man手册来找到更多的使用方式。</p>
+<ol start="6">
+<li>Man手册</li>
+</ol>
+<p>Man手册会为你列出命令和参数的使用大纲，教你如何使用她们。Man手册看起来沉闷呆板。（我思忖她们也不是被设计来娱乐我们的）。</p>
+<p>不过这不代表你不能做些什么来使她们变得漂亮些。</p>
+<p>export PAGER=most<br>你需要安装 ‘most’；她会使你的你的man手册的色彩更加绚丽。</p>
+<p>你可以用以下命令给man手册设定指定的行长：</p>
+<p>export MANWIDTH=80<br>最后，如果你有一个可用的浏览器，你可以使用-H在默认浏览器中打开任意的man页。</p>
+<p>man -H <command><br>注意啦，以上的命令只有在你将默认的浏览器设置到环境变量$BROWSER中了之后才效果哟。</p>
+<ol start="7">
+<li>使用htop查看和管理进程</li>
+</ol>
+<p>你用哪个命令找出电脑上正在运行的进程的呢？我敢打赌是‘ps’并在其后加不同的参数来得到你所想要的不同输出。</p>
+<p>安装‘htop’吧！绝对让你相见恨晚。</p>
+<p>htop在终端中将进程以列表的方式呈现，有点类似于Windows中的任务管理器。你可以使用功能键的组合来切换排列的方式和展示出来的项。你也可以在htop中直接杀死进程。</p>
+<p>在终端中简单的输入htop即可运行。</p>
+<p>htop<br>8. 使用ranger浏览文件系统</p>
+<p>如果说htop是命令行进程控制的好帮手，那么ranger就是命令行浏览文件系统的好帮手。</p>
+<p>你在用之前可能需要先安装，不过一旦安装了以后就可以在命令行输入以下命令启动她：</p>
+<p>ranger<br>在命令行窗口中ranger和一些别的文件管理器很像，但是相比上下结构布局，她是左右结构的，这意味着你按左方向键你将前进到上一个文件夹，而右方向键则会切换到下一个。</p>
+<p>在使用前ranger的man手册还是值得一读的，这样你就可以用快捷键操作ranger了。</p>
+<ol start="9">
+<li>取消关机</li>
+</ol>
+<p>无论是在命令行还是图形用户界面关机后，才发现自己不是真的想要关机。</p>
+<p>shutdown -c<br>需要注意的是，如果关机已经开始则有可能来不及停止关机。</p>
+<p>以下是另一个可以尝试命令：</p>
+<p>pkill shutdown</p>
+<ol start="10">
+<li>杀死挂起进程的简单方法</li>
+</ol>
+<p>想象一下，你正在运行的应用程序不明原因的僵死了。</p>
+<p>你可以使用‘ps -ef’来找到该进程后杀掉或者使用‘htop’。</p>
+<p>有一个更快、更容易的命令叫做xkill。</p>
+<p>简单的在终端中输入以下命令并在窗口中点击你想杀死的应用程序。</p>
+<p>xkill<br>那如果整个系统挂掉了怎么办呢？</p>
+<p>按住键盘上的‘alt’和‘sysrq’不放，然后慢慢输入以下键：</p>
+<p>REISUB<br>这样不按电源键你的计算机也能重启了。</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/08/15/linux/11个令人惊奇的linux命令/';
+var disqus_title = '11个令人惊奇的linux命令';
+var disqus_url = 'https://mirsery.github.io/2016/08/15/linux/11个令人惊奇的linux命令/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/08/23/linux/(%E8%BD%AC)linux%E4%B8%8B%E6%9F%A5%E7%9C%8B%E5%9C%A8%E7%BA%BF%E7%94%A8%E6%88%B7/">上一篇</a><a class="next" href="/2016/08/15/linux/linux%E5%9F%BA%E7%A1%80/">下一篇</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

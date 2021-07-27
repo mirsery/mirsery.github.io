@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> linux网络 · mirsery</title><meta name="description" content="linux网络 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>HOME</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>ARCHIVES</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>CATEGORIES</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>TAGS</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">linux网络</h1><div class="post-info">2018年7月13日</div><div class="post-content"><p>从程序员的角度来看，外部设备在unix中不过是普通的文件，通过正常的读写操作即可访问。但是对于网卡而言情况有些复杂。因为上述方案或者根本不能采用，或者会带来极大的困难。网卡的运作方式与普通的块设备和字符串完全不同。一个原因是（所有层次）使用了许多不同的通信协议，为建立连接所需要制定许多选项，且无法打开设备文件时完成这些任务。因此在/dev目录下没有与网卡对应的项。<br>在20世纪80年代BSD unix程序员采用一种称为套接字的特殊结构作用到网路实现的接口，这种方案现在已经成为工业标准。POSIX标准中也定义了套接字，因而Linux也实现了套接字。<br>套接字现在用于定义和建立网络连接以便可以使用inode的普通方法（读写操作）来访问网络。从程序员的角度上看，创建套接字的最终结果是一个文件描述符，它不仅提供所有的标准函数还包括几个增强的函数。用于实际数据交换的接口对于所有的协议和地址族都是同样的。<br>在创建套接字的时候不仅要区分地址和协议族还要区分基于流的通信和数据报的通信。（对面向流的套接字来说）同样重要的一点是套接字是为客户端程序建立的还是为服务端程序建立的。<br>##创建套接字<br>套接字不仅可以用于各种传输协议的ip连接，也可以用于内核支持的所有其他地址和协议类型（例如IPX、Appletalk、本地unix套接字、DECNet等等。）目前每个地址族都只支持一个协议族，而且只能区分面向流的通信和面向数据报的通信。套接字是使用socket库函数生成的。除了地址族和通信类型支持，可以使用第三个参数来选择协议，但是这是不必要的因为前两个参数已经唯一定义了协议，将第三个参数指定为0，即通知函数使用适当的默认协议。<br>CPU存储数值有两种惯例即大端序和小端序，为确保不同字节序的机器之间能够彼此通信显示定义了一种网络字节顺序，他等价于大端序。因此协议首部出现的数值都必须使用网络字节。<br>内核在分配输入和输出TCP/IP分组时必须注意到四元组的所有4个分量才能确保正确该任务成为多路复用。</p>
+<h2 id="数据报套接字"><a href="#数据报套接字" class="headerlink" title="数据报套接字"></a>数据报套接字</h2><ul>
+<li>UDP是面向分组的，在发送数据之前无需建立显示的连接</li>
+<li>分组可以在传输期间丢失，不保证数据一定能到达其目的地</li>
+<li>分组接受的次序不一定能够与发送的次序相同<br>分别使用TCP和UDP协议的金城可以同时使用相同的IP地址和端口号，在多路复用时内核会根据分组的传输协议类型将其转发到适当的进程。<br>##套接字缓冲区<br>在内核分析收到的网络分组时，底层协议的数据将传递到更高的层。发送数据时顺序相反，各种协议产生的数据（首部和净荷）依次向更低层传递直至最终发送。这些操作的速度对于网络子系统的性能有着决定性的影响因此内核采用的一种特殊的结构成为套接字缓冲区。套接字缓冲区用于在网络实现的各个层次之间交换数据而无需来回复制分组数据对性能的提升很可观。<br>##网络访问层</li>
+<li>网络设备的表示<br>在内核中每个网络设备都表示为net_device的一个实例，在分配并填充该结构的一个实例之后必须调用net/core/dev.c中的regeister_netdev函数将其注册到内核中去。<br>网络设备的命名</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>设备名称</th>
+<th>设备类别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ethX</td>
+<td>以太网适配器</td>
+</tr>
+<tr>
+<td>pppX</td>
+<td>通过调制解调器建立的PPP连接</td>
+</tr>
+<tr>
+<td>isdnX</td>
+<td>ISDN卡</td>
+</tr>
+<tr>
+<td>atmX</td>
+<td>异步传输模式，高速网卡接口</td>
+</tr>
+<tr>
+<td>lo</td>
+<td>环回设备用于本地计算机通信</td>
+</tr>
+</tbody></table>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2018/07/13/linux/linux网络/';
+var disqus_title = 'linux网络';
+var disqus_url = 'https://mirsery.github.io/2018/07/13/linux/linux网络/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2018/09/05/java/2018/Spring%20Cli/">上一篇</a><a class="next" href="/2018/07/13/linux/ubuntu%E4%B8%8B%E4%B8%BA%E5%8D%95%E4%B8%AA%E7%BD%91%E5%8D%A1%E9%85%8D%E7%BD%AE%E5%A4%9A%E4%B8%AAip/">下一篇</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> linux文件远程拷贝命令scp的使用 · mirsery</title><meta name="description" content="linux文件远程拷贝命令scp的使用 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>HOME</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>ARCHIVES</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>CATEGORIES</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>TAGS</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">linux文件远程拷贝命令scp的使用</h1><div class="post-info">2016年6月26日</div><div class="post-content"><p>在linux系统中，我们知道，要查看一个命令可以有两种方式：一种是通过 –help/-h；另一种是通过 man命令。为了简单，我们使用—help/-h来查看scp都有哪些选项。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">\# scp –help<br>scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file] [-l limit] [-o ssh_option] [-P port] [-S program] [[user@]host1:]file1 [...] [[user@]host2:]file2<br></code></pre></td></tr></table></figure>
+<p>我们看到scp包含以上所有的选项，下面我们分别介绍</p>
+<pre><code>-1 强制scp使用ssh1 协议。
+-2 强势scp使用ssh2 协议。
+-4 强制scp使用 IPV4格式地址。
+-6 强制scp使用IPV6格式地址。
+-B 使用批处理模式（传输之前不再询问密码或者口令）。
+-C 启用压缩模式，将-C传递给ssh协议，从而打开压缩功能。
+-p 保留源文件的修改时间、访问时间还有访问权限。
+-q 禁用传输进度条。-r 递归拷贝指定的整个文件夹。
+-c cipher 选择cipher方式来加密传输的数据，该选项将直接传递给ssh使用。
+-F ssh_config 指定一个可用来替代ssh的配置文件，该选项直接传递给ssh使用。
+-i identity_file 从指定的文件中读取用于RSA 验证的密钥，该选项直接传递给ssh使用。
+-l limit 限定用户可以使用的宽带，以Kbit/s为速度单位。
+-P port 这里的P是大写。指定连接远程主机用的端口。
+-S program 指定加密传输连接时使用的加密程序。
+-o ssh_option 使用在ssh_config(5)所用的格式将参数传递给ssh。
+</code></pre>
+<p>Scp使用示例</p>
+<p>例一</p>
+<p># scp /phppro/Db.php <a href="mailto:&#114;&#111;&#x6f;&#x74;&#64;&#49;&#57;&#x32;&#46;&#49;&#54;&#56;&#x2e;&#x31;&#x38;&#46;&#49;&#x33;&#x30;">&#114;&#111;&#x6f;&#x74;&#64;&#49;&#57;&#x32;&#46;&#49;&#54;&#56;&#x2e;&#x31;&#x38;&#46;&#49;&#x33;&#x30;</a>:/Db.php</p>
+<p>这种方式因为指定了用户名root，所以仅需要输入密码。这是将本地/phppro/Db.php文件远程拷贝到主机192.168.18.130的根目录下。</p>
+<p>例二</p>
+<p># scp /phppro/Db.php 192.168.18.130:/Db.php</p>
+<p>这种方式因为没有指定用户名，所以需要手动输入用户名和密码。注意，有的系统下如果你没有指定用户名，默认会是root用户。</p>
+<p>例三</p>
+<p># scp –r /phppro <a href="mailto:&#114;&#111;&#x6f;&#116;&#x40;&#x31;&#57;&#x32;&#46;&#49;&#54;&#x38;&#x2e;&#x31;&#56;&#46;&#x31;&#51;&#x30;">&#114;&#111;&#x6f;&#116;&#x40;&#x31;&#57;&#x32;&#46;&#49;&#54;&#x38;&#x2e;&#x31;&#56;&#46;&#x31;&#51;&#x30;</a>:/phppro</p>
+<p>递归拷贝整个文件夹的内容到目标文件夹内。同样，如果目标文件夹phppro不存在，会先创建该文件夹。</p>
+<p>Scp不用输入密码传输方式</p>
+<p>通过上面的使用示例我们发现，按照上面的方式每次都必须得输入密码，这样使用起来真的不是很方便。尤其是如果我们需要在脚本中使用该命令来实现自动拷贝的话，那问题就更尖锐了。所以说我们需要一种方式来实现不用输入密码进行传输。</p>
+<p>这时候我们可以使用下面的方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">\# ssh-keygen –t rsa<br>Generating public/private rsa key pair.<br>Enter file in which to save the key (/root/.ssh/id_rsa):<br>Enter passphrase (empty for no passphrase):<br>Enter same passphrase again:<br>Your identification has been saved in /root/.ssh/id_rsa.<br>Your public key has been saved in /root/.ssh/id_rsa.pub.<br>The key fingerprint is:<br>f6:f7:1d:1e:43:79:a9:72:ed:1c:60:e6:74:8b:a4:8c root@localhost.localdomain<br></code></pre></td></tr></table></figure>
+<p>我们看第二行（Enter file in which to save the key (/root/.ssh/id_rsa):），在这里会要求我们输入保存路径，直接回车，使用默认即可。再看第三行（Enter passphrase (empty for no passphrase): ）和第四行（Enter same passphrase again：），这里是要我们输入验证的口令，在这里输入的口令将取代目标主机指定账户的密码。也就是说如果我们指定了目标主机的root账户，该用户的密码是123456。而我们在口令设置那里设置了abcdef，那么在每次传输之前系统要求我们输入口令abcdef而不是root账户的密码123456。</p>
+<p>当然了，我们需要的是每次传输都不用输入任何的密码或口令。所以说，这里我们应该在第三行和第四行直接回车，不输入任何字串。</p>
+<p>上面的命令执行完以后，会在$HOME/.ssh/目录中生成三个文件：id_rsa（私钥文件）、id_rsa.pub（公钥文件）和knonw_hosts文件。接下来我们将id_rsa.pub（公钥文件）拷贝到目标主机的$HOME/.ssh 目录下面，拷贝完成以后将目标主机下的id_rsa.pub文件重命名为authorized_keys。这些都做完以后，再使用scp远程拷贝文件的时候就不再需要输入密码或者口令这些东西了。</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/06/26/linux/linux文件远程拷贝命令scp的使用/';
+var disqus_title = 'linux文件远程拷贝命令scp的使用';
+var disqus_url = 'https://mirsery.github.io/2016/06/26/linux/linux文件远程拷贝命令scp的使用/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/07/11/java/2016/Creating%20and%20running%20a%20daemon%20thread/">上一篇</a><a class="next" href="/2016/06/24/java/2016/%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95/">下一篇</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
