@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> JS定时器 · mirsery</title><meta name="description" content="JS定时器 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>HOME</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>ARCHIVES</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>CATEGORIES</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>TAGS</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">JS定时器</h1><div class="post-info">2018年9月21日</div><div class="post-content"><p>#定时器<br>定时器可以（available）在JavaScript中使用，但我们没说它是JavaScript自身的一个功能——定时器不是JavaScript的一项功能。定时器作为对象和方法的一部分，才能在浏览器中使用。也就是说，如果我们在非浏览器环境中使用JavaScript，很可能定时器就不存在了。我们不得不使用特定实现的功能（如Rhino中的线程），来实现我们自己的定时器版本。<br>定时器提供了一种让一段代码在一定毫秒之后，再异步执行的能力。由于JavaScript是单线程的特性（同一时间只能执行一处JavaScript代码），定时器提供了一种跳出这种限制的方法，以一种不太直观的方式来执行代码。<br>##定时器和线程是如何工作的<br>###设置定时器<br>JS提供了两种方式设置定时器 </p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>格式</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setTimeout</td>
+<td>id = setTimeout(fn,delay)</td>
+<td>启动一个定时器，在一段时间（delay）之后执行传入的callback，并返回该定时器的唯一标识</td>
+</tr>
+<tr>
+<td>clearTimeout</td>
+<td>clearTimeout(id)</td>
+<td>如果定时器还未触发，传入定时器标识即可取消（清除）该定时器</td>
+</tr>
+<tr>
+<td>setInterval</td>
+<td>id = setInterval(fn,delay)</td>
+<td>启动一个定时器，在每隔一段时间（delay）之后都执行传入的callback，并返回该定时器的唯一标识</td>
+</tr>
+<tr>
+<td>clearInterval</td>
+<td>clearInterval(id)</td>
+<td>传入间隔定时器标识，即可取消（清除）该间隔定时器</td>
+</tr>
+</tbody></table>
+<p>JavaScript定时器的操作方法（均为window的方法）</p>
+<p>这些方法允许我们设置和清楚定时器，可以让定时器在一个时间点后触发也可以每隔一段时间触发。</p>
+<blockquote>
+<p>注:JavaScript定时器的延时时间是不能保证的</p>
+</blockquote>
+<p>##执行线程中的定时器定时器执行<br>在<a href="">Web worker</a>可用之前，浏览器中所有的JS代码都是在单线程中执行的。<br><img src="/2018/09/21/%E5%89%8D%E7%AB%AF/JS%E5%AE%9A%E6%97%B6%E5%99%A8/2017-01-06-16-21-59.jpg"></p>
+<p>##timeout和interval之间的区别</p>
+<p><img src="/2018/09/21/%E5%89%8D%E7%AB%AF/JS%E5%AE%9A%E6%97%B6%E5%99%A8/2017-01-06-16-23-18.jpg"></p>
+<p>这两段代码功能似乎是相同的，但是在setTimeout()代码中要在前一个callback回调执行结束并延时10s(可能更多但不会更少)以后才能再次执行setTimeout(),而setInterval()则是每隔10ms就尝试执行callback回调，而不关注上一个callback是什么时候执行的。</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2018/09/21/前端/JS定时器/';
+var disqus_title = 'JS定时器';
+var disqus_url = 'https://mirsery.github.io/2018/09/21/前端/JS定时器/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2018/09/21/%E5%89%8D%E7%AB%AF/js%E5%AE%9E%E7%8E%B0%E6%97%A0%E9%99%90%E7%BF%BB%E9%A1%B5/">上一篇</a><a class="next" href="/2018/09/21/%E5%89%8D%E7%AB%AF/JavaScript%E4%BB%A3%E7%A0%81%E6%B1%82%E5%80%BC/">下一篇</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
