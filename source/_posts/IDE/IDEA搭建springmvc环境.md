@@ -1,7 +1,7 @@
 ---
 date: 2018-10-11 00:17:00
 status: public
-title: IDEA搭建springmvc 环境的两种方法
+title: IDEA搭建springmvc环境
 categories:
    - ide
 tags:
