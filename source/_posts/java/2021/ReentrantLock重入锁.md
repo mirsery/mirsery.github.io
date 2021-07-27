@@ -9,6 +9,7 @@ tags:
   - 锁
 categories:
   - java
+excerpt: '重入锁采用 ***java.util.concurrent.locks.ReentrantLock***类实现...'  
 ---
 
 

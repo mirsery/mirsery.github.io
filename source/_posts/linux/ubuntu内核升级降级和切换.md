@@ -10,6 +10,7 @@ tags:
     - ubuntu
 categories:
     - linux
+excerpt: 'ubuntu 内核版本切换、升级...'    
 ---
 
 

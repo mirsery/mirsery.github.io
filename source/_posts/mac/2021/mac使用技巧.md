@@ -9,6 +9,7 @@ tags:
 	- mac
 categories:
 	- mac
+excerpt: 'iCloud Drive同步中实现ignore功能'	
 ---
 
 
