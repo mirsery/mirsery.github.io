@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> ubuntu内核升级降级和切换 · mirsery</title><meta name="description" content="ubuntu内核升级降级和切换 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>HOME</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>ARCHIVES</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>CATEGORIES</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>TAGS</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ubuntu内核升级降级和切换</h1><div class="post-info">2021年7月27日</div><div class="post-content"><!-- toc -->
+
+<ul>
+<li><a href="#------">内核下载地址</a></li>
+<li><a href="#------">手动升级内核</a></li>
+<li><a href="#------">切换内核版本</a></li>
+</ul>
+<!-- tocstop -->
+
+<blockquote>
+<p>背景 笔者目前运行的系统是Ubuntu 20.04.2 LTS</p>
+</blockquote>
+<h2 id="内核下载地址"><a href="#内核下载地址" class="headerlink" title="内核下载地址"></a>内核下载地址</h2><p>下面是内核下载地址 <a target="_blank" rel="noopener" href="https://kernel.ubuntu.com/~kernel-ppa/mainline/">https://kernel.ubuntu.com/~kernel-ppa/mainline/</a></p>
+<p><img src="/2021/07/27/linux/ubuntu%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7%E9%99%8D%E7%BA%A7%E5%92%8C%E5%88%87%E6%8D%A2/BC9FEFBF-AE3C-4C86-95DB-36A36D1824F1.png"></p>
+<h2 id="手动升级内核"><a href="#手动升级内核" class="headerlink" title="手动升级内核"></a>手动升级内核</h2><p>选择对应的内核版本点进去，根据系统硬件的架构选择相应的目录。</p>
+<p><img src="/2021/07/27/linux/ubuntu%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7%E9%99%8D%E7%BA%A7%E5%92%8C%E5%88%87%E6%8D%A2/4145D291-1B70-4C41-99B8-5C2E15B2CE25.png"></p>
+<blockquote>
+<p>一般情况下pc都是选择amd64，arm板选择arm版本。</p>
+</blockquote>
+<p>下载对应的deb文件（headers、image、modules）即可。</p>
+<p>下载完成后，进入到下载目录，执行以下 命令安装内核文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo dpkg -i *.deb<br></code></pre></td></tr></table></figure>
+<p>留意安装过程中是否会有报错信息，安装完成后重启计算机，运行以下命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看当前计算机运行的内核版本号是否为你刚刚下载的版本号</span><br>uanme -a <br></code></pre></td></tr></table></figure>
+
+<h2 id="切换内核版本"><a href="#切换内核版本" class="headerlink" title="切换内核版本"></a>切换内核版本</h2><blockquote>
+<p>首先需要下载和安装你想要切换的内核版本，操作方法和上述步骤一致。</p>
+</blockquote>
+<p>下载并安装对应的内核文件之后，你可以运行以下命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">grep menuentry /boot/grub/grub.cfg<br></code></pre></td></tr></table></figure>
+<p>查看对应的系统中安装的内核版本的列表是否存在你刚刚安装的内核版本，如果没有则返回上一步核对安装过程中是否有纰漏。如果没有问题则复制你想要运行的内核版本的名称的全称。<br>修改<code>/etc/default/grub</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">GRUB_DEFALT=<span class="hljs-string">&quot;你刚刚复制的内核版本全名称&quot;</span><br></code></pre></td></tr></table></figure>
+<p>执行更新命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo update grub<br></code></pre></td></tr></table></figure>
+<p>看是否有报错信息，如果有保存信息，根据报错信息的提示进行修改。修改完成之后重复上一步的更新操作直至成功为止。然后重启电脑。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo reboot<br></code></pre></td></tr></table></figure>
+<p>重启电脑之后查看内核版本是否更换为对应的你所切换的版本，然后再次打开<code>/etc/default/grub</code>文件，将 GRUB_DEFALT值修改为原先的0.</p>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="next" href="/2021/07/27/mac/2021/mac%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/">下一篇</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
