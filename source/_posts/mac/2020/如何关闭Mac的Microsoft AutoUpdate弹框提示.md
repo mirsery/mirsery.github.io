@@ -1,5 +1,5 @@
 ---
-title: mac 改变lauchpad图标的大小
+title: 如何关闭Mac的Microsoft AutoUpdate弹框提示
 date: 2020-08-07 11:40:11
 author: mirsery
 tags: 
