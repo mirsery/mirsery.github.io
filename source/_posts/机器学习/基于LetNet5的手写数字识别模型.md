@@ -3,15 +3,14 @@ date: 2016-12-01 13:22
 status: public
 title: 基于 LeNet5 的 MNIST 手写数字识别模型
 tags: 
-    - 机器学习
+	- 机器学习
     - python
 categories:
     - 机器学习
 ---
 
-# （转）基于 LeNet5 的 MNIST 手写数字识别模型
 源码如下:
-```python:n
+```python
 # coding: utf-8
 
 # 基于 LeNet5 的 MNIST 手写数字识别模型

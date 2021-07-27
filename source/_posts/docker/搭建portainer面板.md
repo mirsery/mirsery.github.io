@@ -21,7 +21,7 @@ tags:
 [下载汉化包public.zip](/_attachments/2021-01-22/public.zip)
 
 ## 独立容器形式运行Portainer
-```bash:n
+```bash
 sudo docker run -d -p 9000:9000 \
 --restart=always  \
 -v /var/run/docker.sock:/var/run/docker.sock \
@@ -35,11 +35,11 @@ Portainer 的数据存放在内部/data 目录，这样容器重启的时候数�
 
 ## stack 方式启动
 - 下载stack文件
-```shell
+```bash
  curl -L https://downloads.portainer.io/portainer-agent-stack.yml -o portainer-agent-stack.yml
 ```
 - 以stack方式启动 
-```shell
+```bash
 docker stack deploy -c portainer-agent-stack.yml portainer
 ```
 

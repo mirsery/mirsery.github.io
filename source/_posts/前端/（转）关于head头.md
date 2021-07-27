@@ -3,9 +3,9 @@ date: 2018-09-21 16:53
 status: public
 title: html head头
 tags: 
-    - 前端
+  - 前端
 categories:
-    - 前端
+  - 前端
 ---
 
 [转自http://fex.baidu.com/blog/2014/10/html-head-tags/](http://fex.baidu.com/blog/2014/10/html-head-tags/)

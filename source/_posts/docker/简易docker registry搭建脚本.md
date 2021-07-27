@@ -10,9 +10,10 @@ tags:
 
 
 >  项目链接地址
-> 文件下载地址[easy-registry.zip](/_attachments/2021-05-12/easy-registry.zip)
+> 文件下载地址[easy-registry](https://github.com/mirsery/easy-docker-registry)
 
 ## 目录结构
+
 ├── certs
 │   ├── auth.cert
 │   └── auth.key
@@ -24,6 +25,7 @@ tags:
 ├── docker-compose.yml
 └── easy-satrt.sh
 
+
 ## step 1 工具环境准备
 - 安装docker、docker-compose工具。（略）
 - 安装openssl
@@ -32,6 +34,6 @@ tags:
 修改config->registry->config.yml  中的<my-registry-web>为当前部署的docker-web-ui的外网访问地址
 
 ##step3 在文件目录下执行脚本easy-satrt.sh
-```shell
+```bash
 ./easy-satrt.sh
 ```

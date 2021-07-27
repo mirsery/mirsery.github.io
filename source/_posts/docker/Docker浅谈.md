@@ -3,10 +3,9 @@ categories:
 	- docker
 tags: 
 	- docker	
-date: 2015-12-5 14:45
+date: 2015-12-5 14:45:10
 status: public
 title: Docker浅谈
-type: docker
 ---
 
 ###背景介绍
