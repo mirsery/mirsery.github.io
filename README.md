@@ -16,6 +16,10 @@ npm install
 ```sh
 npm run server
 ```
+## Clean
+```sh
+npm run clean
+```
 
 ## Deploy
 ```sh
