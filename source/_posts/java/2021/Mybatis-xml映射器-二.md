@@ -8,12 +8,14 @@ updated: 2021-08-24 15:09:18
 tags:
   - mybatis
 categories:
+  - java
+excerpt: 'Mybatis xml映射器insert、update 和 delete 标签...' 
 ---
 
 
 <!-- toc -->
-
-Mybatis xml映射器insert、update和delete 标签
+> 该文档摘抄自https://blog.mybatis.org。
+Mybatis xml映射器insert、update 和 delete 标签
 
 ```xml
 <insert

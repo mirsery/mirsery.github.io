@@ -14,6 +14,7 @@ categories:
 
 
 <!-- toc -->
+> 该文档摘抄自https://blog.mybatis.org。
 
 # Mybatis 参数映射
 

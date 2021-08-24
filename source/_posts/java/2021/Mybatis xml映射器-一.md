@@ -9,27 +9,16 @@ tags:
   - mybatis
 categories:
   - java
+excerpt: 'MyBatis select元素的使用以及结果映射...'  
 ---
-
 
 <!-- toc -->
 
-> MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过程以及高级映射。MyBatis 免除了几乎所有的 JDBC 代码以及设置参数和获取结果集的工作。MyBatis 可以通过简单的 XML 或注解来配置和映射原始类型、接口和 Java POJO（Plain Old Java Objects，普通老式 Java 对象）为数据库中的记录。
+> 该文档摘抄自https://blog.mybatis.org。MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过程以及高级映射。MyBatis 免除了几乎所有的 JDBC 代码以及设置参数和获取结果集的工作。MyBatis 可以通过简单的 XML 或注解来配置和映射原始类型、接口和 Java POJO（Plain Old Java Objects，普通老式 Java 对象）为数据库中的记录。
 
 
-# SQL 映射文件顶级元素
-
-- cache 该命名空间的缓存配置
-- cache-ref 引用其他命名空间的缓存配置
-- resultMap 描述如何从数据库结果集中加载对象
-- sql 可被其他语句引用的可重用语句块
-- insert 映射插入语句
-- update 映射更新语句
-- delete 映射删除语句
-- select 映射查询语句
-
-## select 标签
-- example
+# select 元素的属性
+## select 用法示例
 
 ```xml
 <select id="selectPerson" parameterType="int" resultType="hashmap">
@@ -52,8 +41,7 @@ categories:
   statementType="PREPARED"
   resultSetType="FORWARD_ONLY">
 ```
-<span>Select 元素的属性</span>
-
+## select 元素属性 
 |属性|描述|
 |---|---|
 |id|在命名空间中唯一的标识符可以用来引用这条语句|
@@ -70,7 +58,94 @@ categories:
 |resultOrdered|这个设置仅针对嵌套结果 select 语句：如果为 true，将会假设包含了嵌套结果集或是分组，当返回一个主结果行时，就不会产生对前面结果集的引用。 这就使得在获取嵌套结果集的时候不至于内存不够用。默认值：false。|
 |resultSets|这个设置仅适用于多结果集的情况。它将列出语句执行后返回的结果集并赋予每个结果集一个名称，多个名称之间以逗号分隔。|
 
-### 关联的多结果集(ResultSet) 
+# ResultSet 结果映射 
+> ResultMap 的设计思想是，对简单的语句做到零配置，对于复杂一点的语句，只需要描述语句之间的关系
+
+## ResultSet 简易用法示例
+```xml
+<select id="selectUsers" resultType="map">
+  select id, username, hashedPassword
+  from some_table
+  where id = #{id}
+</select>
+```
+上述代码片段，将数据库结果查询的列映射到**HashMap**上，使用**resultType**指定。在大部分情况下**HashMap**并不是一个很好的领域模型，一般业务中会采用**JavaBean**或**POJO**作为领域模型。以下是一个简易的JavaBean:
+```java
+package com.someapp.model;
+public class User {
+  private int id;
+  private String username;
+  private String hashedPassword;
+
+  public int getId() {
+    return id;
+  }
+  public void setId(int id) {
+    this.id = id;
+  }
+  public String getUsername() {
+    return username;
+  }
+  public void setUsername(String username) {
+    this.username = username;
+  }
+  public String getHashedPassword() {
+    return hashedPassword;
+  }
+  public void setHashedPassword(String hashedPassword) {
+    this.hashedPassword = hashedPassword;
+  }
+}
+```
+基于以上JavaBean规范，上面的类有3个属性:id,username,hashedPassword,这些属性会对应到select语句中的列名。这样的一个 JavaBean 可以被映射到 ResultSet，就像映射到 HashMap 一样简单。
+```java
+<select id="selectUsers" resultType="com.someapp.model.User">
+  select id, username, hashedPassword
+  from some_table
+  where id = #{id}
+</select>
+```
+可以采用类型别名，避免输入类的全限定名,例如：
+```xml
+<!-- mybatis-config.xml 中 -->
+<typeAlias type="com.someapp.model.User" alias="User"/>
+
+<!-- SQL 映射 XML 中 -->
+<select id="selectUsers" resultType="User">
+  select id, username, hashedPassword
+  from some_table
+  where id = #{id}
+</select>
+```
+在某些情况下，Mybatis会自动创建一个ResultMap，再根据结果的列名来映射JavaBean的属性上，如果列名和属性名不能匹配上，可以在select查询语句的时候设置列别名来完成匹配工作。
+```xml
+<select id="selectUsers" resultType="User">
+  select
+    user_id             as "id",
+    user_name           as "userName",
+    hashed_password     as "hashedPassword"
+  from some_table
+  where id = #{id}
+</select>
+```
+
+## ResultMap 简易用法示例
+
+```xml
+<resultMap id="userResultMap" type="User">
+  <id property="id" column="user_id" />
+  <result property="username" column="user_name"/>
+  <result property="password" column="hashed_password"/>
+</resultMap>
+
+<select id="selectUsers" resultMap="userResultMap">
+  select user_id, user_name, hashed_password
+  from some_table
+  where id = #{id}
+</select>
+```
+
+## ResultMap 属性
 
 |属性|描述|
 |---|---|
@@ -78,10 +153,24 @@ categories:
 |foreignColumn|指定外键对应的列名,指定的列将与父类型中**column**的给出的列匹配.|
 |resultSet|指定用于加载复杂类型的结果集名字。|
 
-高级结果映射
+- constructor - 用于在实例化类时，注入结果到构造方法中
+    - idArg - ID 参数；标记出作为 ID 的结果可以帮助提高整体性能
+    - arg - 将被注入到构造方法的一个普通结果
+- id – 一个 ID 结果；标记出作为 ID 的结果可以帮助提高整体性能
+- result – 注入到字段或 JavaBean 属性的普通结果
+- association – 一个复杂类型的关联；许多结果将包装成这种类型
+    - 嵌套结果映射 – 关联可以是 resultMap 元素，或是对其它结果映射的引用
+- collection – 一个复杂类型的集合
+    - 嵌套结果映射 – 集合可以是 resultMap 元素，或是对其它结果映射的引用
+- discriminator – 使用结果值来决定使用哪个 resultMap
+    - case – 基于某些值的结果映射
+        - 嵌套结果映射 – case 也是一个结果映射，因此具有相同的结构和元素；或者引用其它的结果映射
 
+
+## 高级结果映射
+> 实际使用过程中，数据库并不一定具备良好的第三范式和BCNF范式。
+下面是比较复杂的查询语句的映射示例
 ```xml
-<!-- 非常复杂的语句 -->
 <select id="selectBlogDetails" resultMap="detailedBlogResultMap">
   select
        B.id as blog_id,
@@ -145,27 +234,4 @@ categories:
     </discriminator>
   </collection>
 </resultMap>
-
 ```
-
-结果映射（resultMap）
-
-- constructor - 用于在实例化类时，注入结果到构造方法中
-    - idArg - ID 参数；标记出作为 ID 的结果可以帮助提高整体性能
-    - arg - 将被注入到构造方法的一个普通结果
-- id – 一个 ID 结果；标记出作为 ID 的结果可以帮助提高整体性能
-- result – 注入到字段或 JavaBean 属性的普通结果
-- association – 一个复杂类型的关联；许多结果将包装成这种类型
-    - 嵌套结果映射 – 关联可以是 resultMap 元素，或是对其它结果映射的引用
-- collection – 一个复杂类型的集合
-    - 嵌套结果映射 – 集合可以是 resultMap 元素，或是对其它结果映射的引用
-- discriminator – 使用结果值来决定使用哪个 resultMap
-    - case – 基于某些值的结果映射
-        - 嵌套结果映射 – case 也是一个结果映射，因此具有相同的结构和元素；或者引用其它的结果映射
-
-ResultMap 的属性列表       
-|属性|描述|
-|id|当前命名空间中的唯一标识|
-|type|类的完全限定名，或者一个类型别名（关于内置的类型别名，可以参考上述表格)
-|autoMapping|如果设置这个属性，MyBatis 将会为本结果映射开启或者关闭自动映射。 这个属性会覆盖全局的属性 autoMappingBehavior。默认值：未设置（unset）|
-
