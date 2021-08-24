@@ -13,7 +13,9 @@ mixin posts()
                     h2.post-title
                         a.post-title-link(href= url_for(item.path))
                             != item.title
-                    +postInfo(item)
+                    - var author = item.author == undefined ? __('author'): item.author
+                    - var time = item.date == undefined ? '未知': full_date(item.date, 'll')    
+                    .post-info 作者: #{author}         创建日期: #{time}
                     .post-content
                         != item.excerpt
                     br
