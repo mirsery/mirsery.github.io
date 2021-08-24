@@ -10,9 +10,10 @@ nav.component-nav
             - var tar = re.test(value) ? "_blank" : "_self"
             - var full_value = value == "/" ? "/index.html": value+"/index.html"
             - var act = !re.test(value) && (url_for(page.path) === full_value)
+            - var _key = key.toUpperCase()
             a.li.component-nav-item(href=url_for(value) target=tar)
                 p(class={selected: act})
-                    != key.toUpperCase()
+                    !=__(_key)
         ul.shortcut-icons
             each nav_item in theme.nav_icons
                 a(href=nav_item[1] target="_blank")
