@@ -6,9 +6,9 @@ comments: false
 date: 2021-08-24 09:28:54
 updated: 2021-08-24 09:28:54
 tags:
-    - mybatis
+  - mybatis
 categories:
-    - java
+  - java
 ---
 
 
@@ -28,7 +28,7 @@ categories:
 - delete 映射删除语句
 - select 映射查询语句
 
-## select 
+## select 标签
 - example
 
 ```xml
@@ -73,11 +73,13 @@ categories:
 ### 关联的多结果集(ResultSet) 
 
 |属性|描述|
+|---|---|
 |column|当使用多个结果集时，该属性指定结果集中用于与**foreignColumn**匹配的列（多个列名以逗号隔开),以识别关系中的父类型与子类型。|
 |foreignColumn|指定外键对应的列名,指定的列将与父类型中**column**的给出的列匹配.|
 |resultSet|指定用于加载复杂类型的结果集名字。|
 
 高级结果映射
+
 ```xml
 <!-- 非常复杂的语句 -->
 <select id="selectBlogDetails" resultMap="detailedBlogResultMap">
