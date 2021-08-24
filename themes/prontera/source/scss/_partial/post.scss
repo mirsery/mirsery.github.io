@@ -2,11 +2,20 @@
     padding-top: 1em;
 }
 
+
 .post-block {
     .post-title {
         margin: 0.65em 0;
         color: #50fa7b;
         font-size: 1.5em;
+        
+        .post-title-link {
+            color: #ffb86c;
+            &:hover {
+                color:#f1fa8c;
+                border-bottom: #f1fa8c 2px solid;
+            };
+        }
     }
 
     .post-info {
@@ -22,6 +31,13 @@
             font-size: 12px;
             color: white;
             background-color: #E36B6B;
+        }
+    }
+
+    .read-more {
+        &:hover {
+            color:#f1fa8c;
+            background: #44475a;
         }
     }
 }

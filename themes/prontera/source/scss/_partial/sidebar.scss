@@ -19,6 +19,10 @@
             color: #666666;
             font-size: 16px;
             font-weight: 200;
+            &:hover {
+                color: #50fa7b;
+                border-bottom: #f1fa8c 2px solid;
+            } 
         }
         .bio {
             padding-top: 14px;
