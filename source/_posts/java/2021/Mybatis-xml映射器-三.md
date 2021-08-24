@@ -10,6 +10,7 @@ tags:
     - 动态sql
 categories:
     - java
+excerpt: 'Mybatis的参数映射、字符串替换、动态sql、if、choose 等...'    
 ---
 
 
@@ -24,6 +25,7 @@ categories:
 ORDER BY ${columnName}
 ```
 如果你想**select**一个表，任意一个列数据时，可以写成如下方式:
+
 ```java
 @Select("select * from user where ${column} = #{value}")
 User findByColumn(@Param("column") String column, @Param("value") String value);
