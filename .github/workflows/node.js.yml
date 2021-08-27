@@ -12,12 +12,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     strategy:
       matrix:
         node-version: [16.3.0]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    
     steps:
+    - name: Checkout Repository master branch
+      uses: actions/checkout@main
+    
     - name: Setup Hexo Dependencies
       run: |
         npm install hexo-cli -g
