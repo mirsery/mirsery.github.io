@@ -110,7 +110,9 @@ theme: prontera
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: 'git'
+  type: git
+  repo: git@github.com:mirsery/mirsery.github.io.git
+  branch: github-pages
 
 category_generator:
   per_page: 50
