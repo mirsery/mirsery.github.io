@@ -36,8 +36,8 @@ jobs:
       run: | 
         git config --global user.name 'mirsery' 
         git config --global user.email 'mirsery@163.com'
+        
     - name: Deploy Hexo 
       run: |
         npm run clean
-        npm run generate 
         npm run deploy
