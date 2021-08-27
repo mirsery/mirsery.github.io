@@ -61,7 +61,9 @@ mixin post(item)
         .post.article.post-block
             h1.post-title
                 != item.title
-            +postInfo(item)
+            - var author = item.author == undefined ? __('author'): item.author
+            - var time = item.date == undefined ? '未知': full_date(item.date, 'll')      
+            .post-info 作者: #{author}         创建日期: #{time}
             .post-content
                 != item.content                  
 
