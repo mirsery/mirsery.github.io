@@ -38,6 +38,6 @@ jobs:
         git config --global user.email 'mirsery@163.com'
     - name: Deploy Hexo 
       run: |
-        hexo clean
-        hexo generate 
-        hexo deploy
+        npm run clean
+        npm run generate 
+        npm run deploy
