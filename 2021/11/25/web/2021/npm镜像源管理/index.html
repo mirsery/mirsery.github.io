@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> npm镜像源管理 · mirsery</title><meta name="description" content="npm镜像源管理 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">npm镜像源管理</h1><div class="post-info">作者: mirsery         创建日期: 2021年11月25日</div><div class="post-content"><!-- toc -->
+
+<ul>
+<li><a href="#----nrm">全局安装nrm</a></li>
+<li><a href="#--nrm">使用nrm</a></li>
+</ul>
+<!-- tocstop -->
+
+<p>国内由于众所周知的原因，在我们使用npm工具构建前端项目时总会发生一些令人沮丧的事情，每次都需要手动更换镜像源。nrm(npm registry manager)是npm的镜像源管理工具，有时候国外资源太慢，使用这个就可以快速地在 npm 源间切换。</p>
+<h2 id="全局安装nrm"><a href="#全局安装nrm" class="headerlink" title="全局安装nrm"></a>全局安装nrm</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">npm i -g nrm<br></code></pre></td></tr></table></figure>
+
+<h2 id="使用nrm"><a href="#使用nrm" class="headerlink" title="使用nrm"></a>使用nrm</h2><blockquote>
+<p>查看可用镜像源</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">nrm list<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>选择使用镜像源</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">nrm use &lt;name&gt;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>增加定制源</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">nrm add &lt;registry&gt; &lt;url&gt;<br></code></pre></td></tr></table></figure>
+<p>其中reigstry为源名，url为源的路径。</p>
+<blockquote>
+<p>删除镜像源</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">nrm del &lt;registry&gt;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>测试源速度</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">nrm test npm<br></code></pre></td></tr></table></figure></div></div></div></main><footer class="footer-container"><div class="paginator"><a class="next" href="/2021/11/18/web/2021/npm%E4%B8%8B%E8%BD%BD%E5%8C%85%E8%B7%AF%E5%BE%84%E8%AE%BE%E7%BD%AE/">下一篇</a></div><div class="copyright"><p>© 2015 - 2021 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
