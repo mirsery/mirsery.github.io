@@ -7,7 +7,7 @@ date: 2022-01-09 21:38:03
 updated: 2022-01-09 21:38:03
 tags:
 categories:
-excerpt: 
+excerpt: '常见的对象常见方法有4种：使用new关键字/使用clone方法/反射机制/反序列化'
 ---
 
 
@@ -52,39 +52,35 @@ public class Car implements Cloneable, Serializable {
 
 ```java
 public static void main(String[] args) throw Exception {
+    //new 关键字创建对象
+    Car car1 = new Car("mike1");
+    car1.run();
+    System.out.println("=================");
 
-        try {
-            //new 关键字创建对象
-            Car car1 = new Car("mike1");
-            car1.run();
-            System.out.println("=================");
+    //序列化
+    ObjectOutput objectOutput = new ObjectOutputStream(new FileOutputStream("Car"));
+    objectOutput.writeObject(car1);
+    objectOutput.close();
+    //
 
-            //序列化
-            ObjectOutput objectOutput = new ObjectOutputStream(new FileOutputStream("Car"));
-            objectOutput.writeObject(car1);
-            objectOutput.close();
-            //
+    //clone 创建对象
+    Car car2 = (Car) car1.clone();
+    car2.setName("mike2");
+    car2.run();
+    System.out.println("=================");
 
-            //clone 创建对象
-            Car car2 = (Car) car1.clone();
-            car2.setName("mike2");
-            car2.run();
-            System.out.println("=================");
+    //反射创建对象
+    Class carClass = Class.forName(Car.class.getName());
+    Car car3 = (Car) carClass.getDeclaredConstructor(new Class[]{String.class}).newInstance("mike3");
+    car3.run();
+    System.out.println("=================");
 
-            //反射创建对象
-            Class carClass = Class.forName(Car.class.getName());
-            Car car3 = (Car) carClass.getDeclaredConstructor(new Class[]{String.class}).newInstance("mike3");
-            car3.run();
-            System.out.println("=================");
-
-            //反序列化创建对象
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("Car"));
-            Car car4 = (Car) inputStream.readObject();
-            car4.setName("mike4");
-            car4.run();
-
-        }
-    }
+    //反序列化创建对象
+    ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("Car"));
+    Car car4 = (Car) inputStream.readObject();
+    car4.setName("mike4");
+    car4.run();
+}
 ```
 
 下面是测试代码输出结果
