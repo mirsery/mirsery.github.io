@@ -8,7 +8,7 @@
         margin: 0.65em 0;
         color: #50fa7b;
         font-size: 1.5em;
-        
+
         .post-title-link {
             color: #ffb86c;
             &:hover {
@@ -137,7 +137,7 @@
 
 code,
 pre {
-    border: 1px solid #eee;
+    //border: 1px solid #eee; 去除标签线
     font-size: 1em;
     background-color: #fcfcfc;
     font-family: 'Roboto Mono', Monaco, courier, monospace;
@@ -148,7 +148,7 @@ pre {
     margin: 1em 0;
     border-radius: 2px;
     line-height: 1.1em;
-    background-color: #f8f8f8;
+   /* background-color: #f8f8f8;*/
     overflow-x: auto;
     table, tr, td {
         width: 100%;

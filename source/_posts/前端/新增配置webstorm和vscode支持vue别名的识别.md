@@ -1,5 +1,5 @@
 ---
-title: 新增配置webstorm和vscode支持vue别名的识别.md
+title: 新增配置webstorm和vscode支持vue别名的识别
 toc: true
 author: mirsery
 comments: false
@@ -60,7 +60,7 @@ module.exports = {
 
 ## 为vscode配置别名识别
 在项目根目录创建**jsconfig.json**文件，内容大致如下所示:
-```js
+```json
 {
   "compilerOptions": {
     "emitDecoratorMetadata": true,

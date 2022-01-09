@@ -1,10 +1,11 @@
 $CONTENT_WIDTH: 1000px;
 $CONTENT_MIN_WIDTH: 300px;
 $MAIN_COLOR: #50fa7b;
+$purple:    #bd93f9;
 
 ::selection {
-    color: #FFFFFF;
-    background-color: $MAIN_COLOR;
+    color: #000000;
+    background-color: $purple;
 }
 
 html, body {
