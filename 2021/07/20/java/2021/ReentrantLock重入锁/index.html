@@ -9,18 +9,113 @@
 <!-- tocstop -->
 
 <p>重入锁采用 <em><strong>java.util.concurrent.locks.ReentrantLock</strong></em>类实现，下面是一段简单的重入锁的案例:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> ReentrantLock lock = <span class="hljs-keyword">new</span> ReentrantLock();<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;<br><br>   <span class="hljs-meta">@Override</span><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>       <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j=<span class="hljs-number">0</span>;j&lt;<span class="hljs-number">10000000</span>;j++)&#123;<br>           lock.lock();<br>           <span class="hljs-keyword">try</span>&#123;<br>               i++;<br>           &#125;<span class="hljs-keyword">finally</span> &#123;<br>               lock.unlock();<br>           &#125;<br>       &#125;<br>   &#125;<br><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>       SimpleReenterLock simpleReenterLock = <span class="hljs-keyword">new</span> SimpleReenterLock();<br>       Thread t1 = <span class="hljs-keyword">new</span> Thread(simpleReenterLock);<br>       Thread t2 = <span class="hljs-keyword">new</span> Thread(simpleReenterLock);<br>       t1.start();<br>       t2.start();<br>       t1.join();<br>       t2.join();<br>       System.out.println(i);<br>   &#125;<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">static</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();
+
+   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">0</span>;
+
+   <span class="meta">@Override</span>
+   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;
+       <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">10000000</span>;j++)&#123;
+           lock.lock();
+           <span class="keyword">try</span>&#123;
+               i++;
+           &#125;<span class="keyword">finally</span> &#123;
+               lock.unlock();
+           &#125;
+       &#125;
+   &#125;
+
+   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;
+       SimpleReenterLock simpleReenterLock = <span class="keyword">new</span> SimpleReenterLock();
+       Thread t1 = <span class="keyword">new</span> Thread(simpleReenterLock);
+       Thread t2 = <span class="keyword">new</span> Thread(simpleReenterLock);
+       t1.start();
+       t2.start();
+       t1.join();
+       t2.join();
+       System.out.println(i);
+   &#125;
+</code></pre>
 
 <h2 id="中断响应"><a href="#中断响应" class="headerlink" title="中断响应"></a>中断响应</h2><p>使用可重入锁的过程中，如果一个线程在等待锁，那么程序可以根据需求取消对锁的请求。下面是简单的例子：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> ReentrantLock lock1 = <span class="hljs-keyword">new</span> ReentrantLock();<br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> ReentrantLock lock2 = <span class="hljs-keyword">new</span> ReentrantLock();<br>   <span class="hljs-keyword">int</span> lock;<br><br><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">InitLock</span><span class="hljs-params">(<span class="hljs-keyword">int</span> lock)</span> </span>&#123;<br>       <span class="hljs-keyword">this</span>.lock = lock;<br>   &#125;<br><br>   <span class="hljs-meta">@Override</span><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>       <span class="hljs-keyword">try</span> &#123;<br>           <span class="hljs-keyword">if</span> (lock == <span class="hljs-number">1</span>) &#123;<br>               lock1.lockInterruptibly();<br>               Thread.sleep(<span class="hljs-number">500</span>);<br>               lock2.lockInterruptibly();<br><br>               System.out.println(<span class="hljs-string">&quot;handle &quot;</span>+lock);<br>           &#125;<span class="hljs-keyword">else</span> &#123;<br>               lock2.lockInterruptibly();<br>               Thread.sleep(<span class="hljs-number">500</span>);<br>               lock1.lockInterruptibly();<br><br>               System.out.println(<span class="hljs-string">&quot;handle &quot;</span>+lock);<br>           &#125;<br>       &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>           e.printStackTrace();<br>       &#125;<span class="hljs-keyword">finally</span> &#123;<br>           <span class="hljs-keyword">if</span>(lock1.isHeldByCurrentThread())&#123;<br>               lock1.unlock();<br>           &#125;<br>           <span class="hljs-keyword">if</span>(lock2.isHeldByCurrentThread())&#123;<br>               lock2.unlock();<br>               System.out.println(lock +<span class="hljs-string">&quot;-&quot;</span>+ Thread.currentThread().getId() + <span class="hljs-string">&quot;: thread exit!&quot;</span>);<br>           &#125;<br>       &#125;<br>   &#125;<br><br>   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>       InitLock initLock1 = <span class="hljs-keyword">new</span> InitLock(<span class="hljs-number">1</span>);<br>       InitLock initLock2 = <span class="hljs-keyword">new</span> InitLock(<span class="hljs-number">2</span>);<br>       Thread t1 = <span class="hljs-keyword">new</span> Thread(initLock1);<br>       Thread t2 = <span class="hljs-keyword">new</span> Thread(initLock2);<br>       t1.start();<br>       t2.start();<br>       Thread.sleep(<span class="hljs-number">1000</span>);<br>       t2.interrupt();<br>   &#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">static</span> ReentrantLock lock1 = <span class="keyword">new</span> ReentrantLock();
+   <span class="keyword">public</span> <span class="keyword">static</span> ReentrantLock lock2 = <span class="keyword">new</span> ReentrantLock();
+   <span class="keyword">int</span> lock;
+
+
+   <span class="function"><span class="keyword">public</span> <span class="title">InitLock</span><span class="params">(<span class="keyword">int</span> lock)</span> </span>&#123;
+       <span class="keyword">this</span>.lock = lock;
+   &#125;
+
+   <span class="meta">@Override</span>
+   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;
+       <span class="keyword">try</span> &#123;
+           <span class="keyword">if</span> (lock == <span class="number">1</span>) &#123;
+               lock1.lockInterruptibly();
+               Thread.sleep(<span class="number">500</span>);
+               lock2.lockInterruptibly();
+
+               System.out.println(<span class="string">&quot;handle &quot;</span>+lock);
+           &#125;<span class="keyword">else</span> &#123;
+               lock2.lockInterruptibly();
+               Thread.sleep(<span class="number">500</span>);
+               lock1.lockInterruptibly();
+
+               System.out.println(<span class="string">&quot;handle &quot;</span>+lock);
+           &#125;
+       &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+           e.printStackTrace();
+       &#125;<span class="keyword">finally</span> &#123;
+           <span class="keyword">if</span>(lock1.isHeldByCurrentThread())&#123;
+               lock1.unlock();
+           &#125;
+           <span class="keyword">if</span>(lock2.isHeldByCurrentThread())&#123;
+               lock2.unlock();
+               System.out.println(lock +<span class="string">&quot;-&quot;</span>+ Thread.currentThread().getId() + <span class="string">&quot;: thread exit!&quot;</span>);
+           &#125;
+       &#125;
+   &#125;
+
+   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;
+       InitLock initLock1 = <span class="keyword">new</span> InitLock(<span class="number">1</span>);
+       InitLock initLock2 = <span class="keyword">new</span> InitLock(<span class="number">2</span>);
+       Thread t1 = <span class="keyword">new</span> Thread(initLock1);
+       Thread t2 = <span class="keyword">new</span> Thread(initLock2);
+       t1.start();
+       t2.start();
+       Thread.sleep(<span class="number">1000</span>);
+       t2.interrupt();
+   &#125;</code></pre>
 
 <p>上述代码，很容易产生死锁。当t1线程申请lock1之后想申请lock2锁的时候，t2很容易提前申请到lock2，导致程序死锁。主程序触发t2的中断，使得t2线程释放资源，t1线程获得对应的lock2继续完成下面的代码任务。</p>
 <h2 id="锁申请等待限时"><a href="#锁申请等待限时" class="headerlink" title="锁申请等待限时"></a>锁申请等待限时</h2><p>除了采用中断的方式获取外部通知，避免死锁还有另一中方法就限时等待。使用 <em><strong>tryLock( )</strong></em> 方法获取锁，该方法接受2个参数，一个表示等待时长，另一个表示计时单位。如果成功获得锁就会返回true，反之返回false。  <em><strong>ReentrantLock.tryLock( )</strong></em> 方法也可以不带参数直接运行，在这种情况下，当前线程会尝试获得锁，如果锁未被其他线程占用则申请锁成功，立即返回true；反之如果被其他线程占用，则其他线程不会进行等待，而是立即返回false。这种模式不会引起线程等待，因此不会产生死锁。</p>
 <h2 id="公平锁"><a href="#公平锁" class="headerlink" title="公平锁"></a>公平锁</h2><p>一般情况下，锁的申请都是非公平的，重入锁允许我们对公平性进行设置，他的构造函数如下:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ReentrantLock</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span>  fair)</span></span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="function"><span class="keyword">public</span> <span class="title">ReentrantLock</span><span class="params">(<span class="keyword">boolean</span>  fair)</span></span></code></pre>
 
 <p>fair 为true表示当前的锁是公平的。默认情况下，锁是非公平的，实现公平锁必然要求系统维护一个有序队列，因此公平锁的实现成本比较高。如果没有特殊的需求则不需要使用公平锁。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ReentrantLock fairLock = <span class="hljs-keyword">new</span> ReentrantLock(<span class="hljs-keyword">true</span>);<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>)&#123;<br>        <span class="hljs-keyword">try</span>&#123;<br>            fairLock.lock();<br>            System.out.println(Thread.currentThread().getName()+<span class="hljs-string">&quot; get the lock&quot;</span>);<br>        &#125;<span class="hljs-keyword">finally</span> &#123;<br>            fairLock.unlock();<br>        &#125;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>&#123;<br>    FairLock fairLock = <span class="hljs-keyword">new</span> FairLock();<br>    Thread t1 = <span class="hljs-keyword">new</span> Thread(fairLock,<span class="hljs-string">&quot;t1&quot;</span>);<br>    Thread t2 = <span class="hljs-keyword">new</span> Thread(fairLock,<span class="hljs-string">&quot;t2&quot;</span>);<br><br>    t1.start();<br>    t2.start();<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ReentrantLock fairLock = <span class="keyword">new</span> ReentrantLock(<span class="keyword">true</span>);
+
+<span class="meta">@Override</span>
+<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;
+    <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;
+        <span class="keyword">try</span>&#123;
+            fairLock.lock();
+            System.out.println(Thread.currentThread().getName()+<span class="string">&quot; get the lock&quot;</span>);
+        &#125;<span class="keyword">finally</span> &#123;
+            fairLock.unlock();
+        &#125;
+    &#125;
+&#125;
+
+
+<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;
+    FairLock fairLock = <span class="keyword">new</span> FairLock();
+    Thread t1 = <span class="keyword">new</span> Thread(fairLock,<span class="string">&quot;t1&quot;</span>);
+    Thread t2 = <span class="keyword">new</span> Thread(fairLock,<span class="string">&quot;t2&quot;</span>);
+
+    t1.start();
+    t2.start();
+&#125;</code></pre>
 
 
 

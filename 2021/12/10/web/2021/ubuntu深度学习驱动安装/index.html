@@ -14,32 +14,37 @@
 </ul>
 <!-- tocstop -->
 
-<h2 id="首先查看本机所安装的显卡型号"><a href="#首先查看本机所安装的显卡型号" class="headerlink" title="首先查看本机所安装的显卡型号"></a>首先查看本机所安装的显卡型号</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">lspci|grep VGA<br></code></pre></td></tr></table></figure>
+<h2 id="首先查看本机所安装的显卡型号"><a href="#首先查看本机所安装的显卡型号" class="headerlink" title="首先查看本机所安装的显卡型号"></a>首先查看本机所安装的显卡型号</h2><pre><code class="highlight shell">lspci|grep VGA</code></pre>
 <p><img src="/2021/12/10/web/2021/ubuntu%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/C5902CF2-5023-414E-9BBA-D7FE625ECA55.png"></p>
 <p>根据如上所述的显卡型号，去官网下载对应的系统和对应显卡的驱动。</p>
 <h2 id="官网下载驱动"><a href="#官网下载驱动" class="headerlink" title="官网下载驱动"></a>官网下载驱动</h2><p><a target="_blank" rel="noopener" href="https://www.nvidia.cn/Download/index.aspx">nvidia驱动下载地址</a></p>
 <p>选择对应的产品类型，产品系列以及产品型号再根据操作系统系统下载对应的驱动程序。</p>
-<h2 id="删除原有的开源驱动程序-可选"><a href="#删除原有的开源驱动程序-可选" class="headerlink" title="删除原有的开源驱动程序(可选)"></a>删除原有的开源驱动程序(可选)</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo apt-get remove --pure nvidia*<br></code></pre></td></tr></table></figure>
+<h2 id="删除原有的开源驱动程序-可选"><a href="#删除原有的开源驱动程序-可选" class="headerlink" title="删除原有的开源驱动程序(可选)"></a>删除原有的开源驱动程序(可选)</h2><pre><code class="highlight shell">sudo apt-get remove --pure nvidia*</code></pre>
 
 <h2 id="禁用nouveau驱动"><a href="#禁用nouveau驱动" class="headerlink" title="禁用nouveau驱动"></a>禁用nouveau驱动</h2><p>编辑 <strong>/etc/modprobe.d/blacklist.conf</strong> ,添加以下内容:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">blacklist nouveau<br>blacklist lbm-nouveau<br>options nouveau modeset=0<br>alias nouveau off<br>alias lbm-nouveau off<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">blacklist nouveau
+blacklist lbm-nouveau
+options nouveau modeset=0
+alias nouveau off
+alias lbm-nouveau off</code></pre>
 
 <p>关闭nouveau</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf</code></pre>
 
-<h2 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">update-initramfs -u <br>reboot<br></code></pre></td></tr></table></figure>
+<h2 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h2><pre><code class="highlight shell">update-initramfs -u 
+reboot</code></pre>
 
-<h2 id="验证nouveau是否已经禁用"><a href="#验证nouveau是否已经禁用" class="headerlink" title="验证nouveau是否已经禁用"></a>验证nouveau是否已经禁用</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">lsmod|grep nouveau<br></code></pre></td></tr></table></figure>
+<h2 id="验证nouveau是否已经禁用"><a href="#验证nouveau是否已经禁用" class="headerlink" title="验证nouveau是否已经禁用"></a>验证nouveau是否已经禁用</h2><pre><code class="highlight shell">lsmod|grep nouveau</code></pre>
 <p>没有信息显示，说明nouveau已被禁用，接下来可以安装nvdia的显卡驱动。</p>
 <h2 id="安装nvidia驱动"><a href="#安装nvidia驱动" class="headerlink" title="安装nvidia驱动"></a>安装nvidia驱动</h2><ul>
 <li>给文件可执行权限</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo chmod +x NVIDIA-Linux-x86_64-470.86.run<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">sudo chmod +x NVIDIA-Linux-x86_64-470.86.run</code></pre>
 
 <ul>
 <li>安装</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo ./NVIDIA-Linux-x86_64-470.86.run -no-x-check -no-nouveau-check -no-opengl-files<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">sudo ./NVIDIA-Linux-x86_64-470.86.run -no-x-check -no-nouveau-check -no-opengl-files</code></pre>
 
 <table>
 <thead>
@@ -61,11 +66,12 @@
 <td>只安装驱动文件，不安装OpenGL文件</td>
 </tr>
 </tbody></table>
-<h2 id="查看驱动是否安装成功"><a href="#查看驱动是否安装成功" class="headerlink" title="查看驱动是否安装成功"></a>查看驱动是否安装成功</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">nvidia-smi<br></code></pre></td></tr></table></figure>
+<h2 id="查看驱动是否安装成功"><a href="#查看驱动是否安装成功" class="headerlink" title="查看驱动是否安装成功"></a>查看驱动是否安装成功</h2><pre><code class="highlight shell">nvidia-smi</code></pre>
 
 <h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><p>如果出现以下类似的问题</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">NVIDIA-SMI has failed because it couldn‘t communicate with NVIDIA driver. Make sure that the latest driver is installed and running.<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">NVIDIA-SMI has failed because it couldn‘t communicate with NVIDIA driver. Make sure that the latest driver is installed and running.</code></pre>
 <p>解决方案:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo apt-get install dkms<br>sudo dkms install -m nvidia -v 470.86<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">sudo apt-get install dkms
+sudo dkms install -m nvidia -v 470.86</code></pre>
 
 </div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/12/10/docker/docker%E7%A3%81%E7%9B%98%E5%8D%A0%E7%94%A8%E4%B8%8E%E6%B8%85%E7%90%86%E9%97%AE%E9%A2%98/">上一篇</a><a class="next" href="/2021/12/10/web/2021/typescript%E7%AC%94%E8%AE%B01/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

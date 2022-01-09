@@ -4,26 +4,167 @@
 </blockquote>
 <ul>
 <li><p>第一种方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@WebFilter(filterName = &quot;myFilter&quot;,urlPatterns = &quot;/*&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFilter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Filter</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">(FilterConfig filterConfig)</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> </span>&#123;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">destroy</span><span class="hljs-params">()</span> </span>&#123;<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-meta">@EnableAutoConfiguration</span><br><span class="hljs-meta">@EnableWebMvc</span><br><span class="hljs-meta">@ServletComponentScan(basePackages = &quot;com.fanyin.eghm&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EghmApplication</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        SpringApplication.run(EghmApplication.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@WebFilter(filterName = &quot;myFilter&quot;,urlPatterns = &quot;/*&quot;)</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> </span>&#123;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;
+    &#125;
+&#125;
+
+<span class="meta">@SpringBootApplication</span>
+<span class="meta">@EnableAutoConfiguration</span>
+<span class="meta">@EnableWebMvc</span>
+<span class="meta">@ServletComponentScan(basePackages = &quot;com.fanyin.eghm&quot;)</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EghmApplication</span> </span>&#123;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;
+        SpringApplication.run(EghmApplication.class, args);
+    &#125;
+&#125;</code></pre>
 <p>@ServletComponentScan 所扫描的包路径必须包含该Filter</p>
 </li>
 <li><p>第二种</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FilterConfig</span> </span>&#123;<br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> FilterRegistrationBean <span class="hljs-title">filterRegistrationBean</span><span class="hljs-params">()</span></span>&#123;<br>        FilterRegistrationBean bean = <span class="hljs-keyword">new</span> FilterRegistrationBean();<br>        bean.setFilter(<span class="hljs-keyword">new</span> MyFilter2());<br>        bean.addUrlPatterns(<span class="hljs-string">&quot;/*&quot;</span>);<br>        <span class="hljs-keyword">return</span> bean;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<pre><code class="highlight java"><span class="meta">@Configuration</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FilterConfig</span> </span>&#123;
+    <span class="meta">@Bean</span>
+    <span class="function"><span class="keyword">public</span> FilterRegistrationBean <span class="title">filterRegistrationBean</span><span class="params">()</span></span>&#123;
+        FilterRegistrationBean bean = <span class="keyword">new</span> FilterRegistrationBean();
+        bean.setFilter(<span class="keyword">new</span> MyFilter2());
+        bean.addUrlPatterns(<span class="string">&quot;/*&quot;</span>);
+        <span class="keyword">return</span> bean;
+    &#125;
+&#125;</code></pre></li>
 <li><p>第三种</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Bean(&quot;proxyFilter&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Filter <span class="hljs-title">filter</span> <span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Filter() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">(javax.servlet.FilterConfig filterConfig)</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;<br>            &#125;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> </span>&#123;<br>            &#125;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">destroy</span><span class="hljs-params">()</span> </span>&#123;<br>            &#125;<br>        &#125;;<br>    &#125;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> DelegatingFilterProxyRegistrationBean <span class="hljs-title">delegatingFilterProxyRegistrationBean</span><span class="hljs-params">()</span></span>&#123;<br>        DelegatingFilterProxyRegistrationBean bean = <span class="hljs-keyword">new</span> DelegatingFilterProxyRegistrationBean(<span class="hljs-string">&quot;proxyFilter&quot;</span>);<br>        bean.addUrlPatterns(<span class="hljs-string">&quot;/*&quot;</span>);<br>        <span class="hljs-keyword">return</span> bean;<br>    &#125;<br></code></pre></td></tr></table></figure></li>
+<pre><code class="highlight java"><span class="meta">@Bean(&quot;proxyFilter&quot;)</span>
+    <span class="function"><span class="keyword">public</span> Filter <span class="title">filter</span> <span class="params">()</span></span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> Filter() &#123;
+            <span class="meta">@Override</span>
+            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(javax.servlet.FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;
+            &#125;
+
+            <span class="meta">@Override</span>
+            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> </span>&#123;
+            &#125;
+
+            <span class="meta">@Override</span>
+            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;
+            &#125;
+        &#125;;
+    &#125;
+
+    <span class="meta">@Bean</span>
+    <span class="function"><span class="keyword">public</span> DelegatingFilterProxyRegistrationBean <span class="title">delegatingFilterProxyRegistrationBean</span><span class="params">()</span></span>&#123;
+        DelegatingFilterProxyRegistrationBean bean = <span class="keyword">new</span> DelegatingFilterProxyRegistrationBean(<span class="string">&quot;proxyFilter&quot;</span>);
+        bean.addUrlPatterns(<span class="string">&quot;/*&quot;</span>);
+        <span class="keyword">return</span> bean;
+    &#125;</code></pre></li>
 <li><p>第四种</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Bean(&quot;myFilter&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Filter <span class="hljs-title">filter</span> <span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Filter() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">(javax.servlet.FilterConfig filterConfig)</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;<br>            &#125;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> </span>&#123;<br>            &#125;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">destroy</span><span class="hljs-params">()</span> </span>&#123;<br>            &#125;<br>        &#125;;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Bean(&quot;myFilter&quot;)</span>
+    <span class="function"><span class="keyword">public</span> Filter <span class="title">filter</span> <span class="params">()</span></span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> Filter() &#123;
+            <span class="meta">@Override</span>
+            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(javax.servlet.FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;
+            &#125;
+
+            <span class="meta">@Override</span>
+            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> </span>&#123;
+            &#125;
+
+            <span class="meta">@Override</span>
+            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;
+            &#125;
+        &#125;;
+    &#125;</code></pre>
 <p>说明<br>第二种和第三种类似,均实现了AbstractFilterRegistrationBean接口,而该接口间接实现了ServletContextInitializer，springboot在启动容器后会查找实现该接口的bean，并调用onStartup()方法添加自定义的Filter。<br>两者的区别 DelegatingFilterProxyRegistrationBean 通过传入的proxyFilter名字,在WebApplicationContext查找该Fillter Bean，并通过DelegatingFilterProxy生成基于该Bean的代理Filter对象，而 FilterRegistrationBean 则是直接设置一个Filter，因此该Filter可以有spring容器管理,也可不用spring管理。<br>注意：如果Filter声明为一个Bean，则不需要定义为FilterRegistrationBean，也会被spring发现并添加。<br>方法四 该方式无法定义拦截规则等，默认全局。</p>
 </li>
 </ul>
 <p>EmbeddedWebApplicationContext 容器启动后执行 springboot 2.0 变更为ServletWebServerApplicationContext 。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">selfInitialize</span><span class="hljs-params">(ServletContext servletContext)</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;<br>        prepareEmbeddedWebApplicationContext(servletContext);<br>        ConfigurableListableBeanFactory beanFactory = getBeanFactory();<br>        ExistingWebApplicationScopes existingScopes = <span class="hljs-keyword">new</span> ExistingWebApplicationScopes(<br>                beanFactory);<br>        WebApplicationContextUtils.registerWebApplicationScopes(beanFactory,<br>                getServletContext());<br>        existingScopes.restore();<br>        WebApplicationContextUtils.registerEnvironmentBeans(beanFactory,<br>                getServletContext());<br>        <span class="hljs-keyword">for</span> (ServletContextInitializer beans : getServletContextInitializerBeans()) &#123;<br>            beans.onStartup(servletContext);<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">selfInitialize</span><span class="params">(ServletContext servletContext)</span> <span class="keyword">throws</span> ServletException </span>&#123;
+        prepareEmbeddedWebApplicationContext(servletContext);
+        ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+        ExistingWebApplicationScopes existingScopes = <span class="keyword">new</span> ExistingWebApplicationScopes(
+                beanFactory);
+        WebApplicationContextUtils.registerWebApplicationScopes(beanFactory,
+                getServletContext());
+        existingScopes.restore();
+        WebApplicationContextUtils.registerEnvironmentBeans(beanFactory,
+                getServletContext());
+        <span class="keyword">for</span> (ServletContextInitializer beans : getServletContextInitializerBeans()) &#123;
+            beans.onStartup(servletContext);
+        &#125;
+    &#125;</code></pre>
 <p>getServletContextInitializerBeans() 会返回实现了ServletContextInitializer接口的集合,同时初始化一些数据,如下:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ServletContextInitializerBeans</span><span class="hljs-params">(ListableBeanFactory beanFactory)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.initializers = <span class="hljs-keyword">new</span> LinkedMultiValueMap&lt;Class&lt;?&gt;, ServletContextInitializer&gt;();<br>        addServletContextInitializerBeans(beanFactory);<br>        addAdaptableBeans(beanFactory);<br>        List&lt;ServletContextInitializer&gt; sortedInitializers = <span class="hljs-keyword">new</span> ArrayList&lt;ServletContextInitializer&gt;();<br>        <span class="hljs-keyword">for</span> (Map.Entry&lt;?, List&lt;ServletContextInitializer&gt;&gt; entry : <span class="hljs-keyword">this</span>.initializers<br>                .entrySet()) &#123;<br>            AnnotationAwareOrderComparator.sort(entry.getValue());<br>            sortedInitializers.addAll(entry.getValue());<br>        &#125;<br>        <span class="hljs-keyword">this</span>.sortedList = Collections.unmodifiableList(sortedInitializers);<br>    &#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="function"><span class="keyword">public</span> <span class="title">ServletContextInitializerBeans</span><span class="params">(ListableBeanFactory beanFactory)</span> </span>&#123;
+        <span class="keyword">this</span>.initializers = <span class="keyword">new</span> LinkedMultiValueMap&lt;Class&lt;?&gt;, ServletContextInitializer&gt;();
+        addServletContextInitializerBeans(beanFactory);
+        addAdaptableBeans(beanFactory);
+        List&lt;ServletContextInitializer&gt; sortedInitializers = <span class="keyword">new</span> ArrayList&lt;ServletContextInitializer&gt;();
+        <span class="keyword">for</span> (Map.Entry&lt;?, List&lt;ServletContextInitializer&gt;&gt; entry : <span class="keyword">this</span>.initializers
+                .entrySet()) &#123;
+            AnnotationAwareOrderComparator.sort(entry.getValue());
+            sortedInitializers.addAll(entry.getValue());
+        &#125;
+        <span class="keyword">this</span>.sortedList = Collections.unmodifiableList(sortedInitializers);
+    &#125;</code></pre>
 <p>addAdaptableBeans addServletContextInitializerBeans 在调用onStartup()方法之前会添加Filter与Servlet,注意Filter与Servlet必须已经声明为Bean<br>第一种则最终也是采用第二种方式,区别就是在springboot启动时将扫描到的包路径作为入参传递给ServletComponentRegisteringPostProcessor 而该类实现了BeanFactoryPostProcessor接口,因此在BeanFactory初始化后,会调用postProcessBeanFactory()方法,在该方法中通过之前传入的包来扫描相应的类,并将@WebFilter的类由相应的处理器转换为FilterRegistrationBean。<br>ServletComponentRegisteringPostProcessor</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java">ServletComponentRegisteringPostProcessor(Set&lt;String&gt; packagesToScan) &#123;<br>    <span class="hljs-keyword">this</span>.packagesToScan = packagesToScan;<br>&#125;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">postProcessBeanFactory</span><span class="hljs-params">(ConfigurableListableBeanFactory beanFactory)</span></span><br><span class="hljs-function">        <span class="hljs-keyword">throws</span> BeansException </span>&#123;<br>    <span class="hljs-keyword">if</span> (isRunningInEmbeddedContainer()) &#123;<br>        ClassPathScanningCandidateComponentProvider componentProvider = createComponentProvider();<br>        <span class="hljs-keyword">for</span> (String packageToScan : <span class="hljs-keyword">this</span>.packagesToScan) &#123;<br>            scanPackage(componentProvider, packageToScan);<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">scanPackage</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">        ClassPathScanningCandidateComponentProvider componentProvider,</span></span><br><span class="hljs-params"><span class="hljs-function">        String packageToScan)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span> (BeanDefinition candidate : componentProvider<br>            .findCandidateComponents(packageToScan)) &#123;<br>        <span class="hljs-keyword">if</span> (candidate <span class="hljs-keyword">instanceof</span> ScannedGenericBeanDefinition) &#123;<br>            <span class="hljs-keyword">for</span> (ServletComponentHandler handler : handlers) &#123;<br>                handler.handle(((ScannedGenericBeanDefinition) candidate),<br>                        (BeanDefinitionRegistry) <span class="hljs-keyword">this</span>.applicationContext);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java">ServletComponentRegisteringPostProcessor(Set&lt;String&gt; packagesToScan) &#123;
+    <span class="keyword">this</span>.packagesToScan = packagesToScan;
+&#125;
+
+<span class="meta">@Override</span>
+<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postProcessBeanFactory</span><span class="params">(ConfigurableListableBeanFactory beanFactory)</span></span>
+<span class="function">        <span class="keyword">throws</span> BeansException </span>&#123;
+    <span class="keyword">if</span> (isRunningInEmbeddedContainer()) &#123;
+        ClassPathScanningCandidateComponentProvider componentProvider = createComponentProvider();
+        <span class="keyword">for</span> (String packageToScan : <span class="keyword">this</span>.packagesToScan) &#123;
+            scanPackage(componentProvider, packageToScan);
+        &#125;
+    &#125;
+&#125;
+
+<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">scanPackage</span><span class="params">(</span></span>
+<span class="params"><span class="function">        ClassPathScanningCandidateComponentProvider componentProvider,</span></span>
+<span class="params"><span class="function">        String packageToScan)</span> </span>&#123;
+    <span class="keyword">for</span> (BeanDefinition candidate : componentProvider
+            .findCandidateComponents(packageToScan)) &#123;
+        <span class="keyword">if</span> (candidate <span class="keyword">instanceof</span> ScannedGenericBeanDefinition) &#123;
+            <span class="keyword">for</span> (ServletComponentHandler handler : handlers) &#123;
+                handler.handle(((ScannedGenericBeanDefinition) candidate),
+                        (BeanDefinitionRegistry) <span class="keyword">this</span>.applicationContext);
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
 <p>WebFilterHandler</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java">WebFilterHandler() &#123;<br>    <span class="hljs-keyword">super</span>(WebFilter.class);<br>&#125;<br><br><span class="hljs-meta">@Override</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doHandle</span><span class="hljs-params">(Map&lt;String, Object&gt; attributes,</span></span><br><span class="hljs-params"><span class="hljs-function">        ScannedGenericBeanDefinition beanDefinition,</span></span><br><span class="hljs-params"><span class="hljs-function">        BeanDefinitionRegistry registry)</span> </span>&#123;<br>    BeanDefinitionBuilder builder = BeanDefinitionBuilder<br>            .rootBeanDefinition(FilterRegistrationBean.class);<br>    builder.addPropertyValue(<span class="hljs-string">&quot;asyncSupported&quot;</span>, attributes.get(<span class="hljs-string">&quot;asyncSupported&quot;</span>));<br>    builder.addPropertyValue(<span class="hljs-string">&quot;dispatcherTypes&quot;</span>, extractDispatcherTypes(attributes));<br>    builder.addPropertyValue(<span class="hljs-string">&quot;filter&quot;</span>, beanDefinition);<br>    builder.addPropertyValue(<span class="hljs-string">&quot;initParameters&quot;</span>, extractInitParameters(attributes));<br>    String name = determineName(attributes, beanDefinition);<br>    builder.addPropertyValue(<span class="hljs-string">&quot;name&quot;</span>, name);<br>    builder.addPropertyValue(<span class="hljs-string">&quot;servletNames&quot;</span>, attributes.get(<span class="hljs-string">&quot;servletNames&quot;</span>));<br>    builder.addPropertyValue(<span class="hljs-string">&quot;urlPatterns&quot;</span>,<br>            extractUrlPatterns(<span class="hljs-string">&quot;urlPatterns&quot;</span>, attributes));<br>    registry.registerBeanDefinition(name, builder.getBeanDefinition());<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java">WebFilterHandler() &#123;
+    <span class="keyword">super</span>(WebFilter.class);
+&#125;
+
+<span class="meta">@Override</span>
+<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doHandle</span><span class="params">(Map&lt;String, Object&gt; attributes,</span></span>
+<span class="params"><span class="function">        ScannedGenericBeanDefinition beanDefinition,</span></span>
+<span class="params"><span class="function">        BeanDefinitionRegistry registry)</span> </span>&#123;
+    BeanDefinitionBuilder builder = BeanDefinitionBuilder
+            .rootBeanDefinition(FilterRegistrationBean.class);
+    builder.addPropertyValue(<span class="string">&quot;asyncSupported&quot;</span>, attributes.get(<span class="string">&quot;asyncSupported&quot;</span>));
+    builder.addPropertyValue(<span class="string">&quot;dispatcherTypes&quot;</span>, extractDispatcherTypes(attributes));
+    builder.addPropertyValue(<span class="string">&quot;filter&quot;</span>, beanDefinition);
+    builder.addPropertyValue(<span class="string">&quot;initParameters&quot;</span>, extractInitParameters(attributes));
+    String name = determineName(attributes, beanDefinition);
+    builder.addPropertyValue(<span class="string">&quot;name&quot;</span>, name);
+    builder.addPropertyValue(<span class="string">&quot;servletNames&quot;</span>, attributes.get(<span class="string">&quot;servletNames&quot;</span>));
+    builder.addPropertyValue(<span class="string">&quot;urlPatterns&quot;</span>,
+            extractUrlPatterns(<span class="string">&quot;urlPatterns&quot;</span>, attributes));
+    registry.registerBeanDefinition(name, builder.getBeanDefinition());
+&#125;</code></pre>
 <p>添加自定义Servlet 也可采用方法一@WebServlet 或者ServletRegistrationBean<br>添加自定义Listener也可以采用方法一 @WebListener或者ServletListenerRegistrationBean ,注意监听事件是泛型</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2020/01/19/java/2020/springboot 中添加filter/';

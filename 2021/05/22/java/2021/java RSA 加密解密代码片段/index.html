@@ -13,15 +13,81 @@
 </ul>
 <!-- tocstop -->
 
-<h2 id="秘钥生成"><a href="#秘钥生成" class="headerlink" title="秘钥生成"></a>秘钥生成</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initKey</span><span class="hljs-params">()</span> </span>&#123;<br>      KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(<span class="hljs-string">&quot;RSA&quot;</span>);<br>      keyPairGenerator.initialize(<span class="hljs-number">2048</span>);<span class="hljs-comment">//长度必须为64的倍数 512~65536 之间</span><br>      KeyPair keyPair = keyPairGenerator.generateKeyPair();<br>      RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic(); <span class="hljs-comment">//公钥</span><br>      RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();    <span class="hljs-comment">//私钥</span><br>  &#125;<br></code></pre></td></tr></table></figure>
+<h2 id="秘钥生成"><a href="#秘钥生成" class="headerlink" title="秘钥生成"></a>秘钥生成</h2><pre><code class="highlight java"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initKey</span><span class="params">()</span> </span>&#123;
+      KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(<span class="string">&quot;RSA&quot;</span>);
+      keyPairGenerator.initialize(<span class="number">2048</span>);<span class="comment">//长度必须为64的倍数 512~65536 之间</span>
+      KeyPair keyPair = keyPairGenerator.generateKeyPair();
+      RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic(); <span class="comment">//公钥</span>
+      RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();    <span class="comment">//私钥</span>
+  &#125;</code></pre>
 
-<h2 id="公钥加密"><a href="#公钥加密" class="headerlink" title="公钥加密"></a>公钥加密</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">byte</span>[] encryptByPublicKey(<span class="hljs-keyword">byte</span>[] data, <span class="hljs-keyword">byte</span>[] key) <span class="hljs-keyword">throws</span> Exception &#123;<br>      KeyFactory keyFactory = KeyFactory.getInstance(<span class="hljs-string">&quot;RSA&quot;</span>);<br>      X509EncodedKeySpec x509KeySpec = <span class="hljs-keyword">new</span> X509EncodedKeySpec(key);<br>      PublicKey pubKey = keyFactory.generatePublic(x509KeySpec);<br>      Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());<br>      cipher.init(Cipher.ENCRYPT_MODE, pubKey);<br>      <span class="hljs-keyword">return</span> cipher.doFinal(data);<br>  &#125;<br></code></pre></td></tr></table></figure>
+<h2 id="公钥加密"><a href="#公钥加密" class="headerlink" title="公钥加密"></a>公钥加密</h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">byte</span>[] encryptByPublicKey(<span class="keyword">byte</span>[] data, <span class="keyword">byte</span>[] key) <span class="keyword">throws</span> Exception &#123;
+      KeyFactory keyFactory = KeyFactory.getInstance(<span class="string">&quot;RSA&quot;</span>);
+      X509EncodedKeySpec x509KeySpec = <span class="keyword">new</span> X509EncodedKeySpec(key);
+      PublicKey pubKey = keyFactory.generatePublic(x509KeySpec);
+      Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+      cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+      <span class="keyword">return</span> cipher.doFinal(data);
+  &#125;</code></pre>
 
-<h2 id="公钥解密"><a href="#公钥解密" class="headerlink" title="公钥解密"></a>公钥解密</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">byte</span>[] decryptByPublicKey(<span class="hljs-keyword">byte</span>[] data) <span class="hljs-keyword">throws</span> Exception &#123;<br>       ByteArrayOutputStream out = <span class="hljs-keyword">new</span> ByteArrayOutputStream();<br>       KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);<br>       X509EncodedKeySpec x509KeySpec = <span class="hljs-keyword">new</span> X509EncodedKeySpec(Base64.getDecoder().decode(publicKey.trim()));<br>       PublicKey pubKey = keyFactory.generatePublic(x509KeySpec);<br>       Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());<br>       cipher.init(Cipher.DECRYPT_MODE, pubKey);<br>       <span class="hljs-keyword">int</span> inputLen = data.length;<br>       <span class="hljs-keyword">int</span> offSet = <span class="hljs-number">0</span>;<br>       <span class="hljs-keyword">byte</span>[] cache;<br>       <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;<br>       <span class="hljs-keyword">while</span> (inputLen - offSet &gt; <span class="hljs-number">0</span>) &#123;<br>           <span class="hljs-keyword">if</span> (inputLen - offSet &gt; MAX_DECRYPT_BLOCK) &#123;<br>               cache = cipher.doFinal(data, offSet, MAX_DECRYPT_BLOCK);<br>           &#125; <span class="hljs-keyword">else</span> &#123;<br>               cache = cipher.doFinal(data, offSet, inputLen - offSet);<br>           &#125;<br>           out.write(cache, <span class="hljs-number">0</span>, cache.length);<br>           i++;<br>           offSet = i * MAX_DECRYPT_BLOCK;<br>       &#125;<br>       out.close();<br>       <span class="hljs-keyword">return</span> out.toByteArray();<br>   &#125;<br></code></pre></td></tr></table></figure>
+<h2 id="公钥解密"><a href="#公钥解密" class="headerlink" title="公钥解密"></a>公钥解密</h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">byte</span>[] decryptByPublicKey(<span class="keyword">byte</span>[] data) <span class="keyword">throws</span> Exception &#123;
+       ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();
+       KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+       X509EncodedKeySpec x509KeySpec = <span class="keyword">new</span> X509EncodedKeySpec(Base64.getDecoder().decode(publicKey.trim()));
+       PublicKey pubKey = keyFactory.generatePublic(x509KeySpec);
+       Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+       cipher.init(Cipher.DECRYPT_MODE, pubKey);
+       <span class="keyword">int</span> inputLen = data.length;
+       <span class="keyword">int</span> offSet = <span class="number">0</span>;
+       <span class="keyword">byte</span>[] cache;
+       <span class="keyword">int</span> i = <span class="number">0</span>;
+       <span class="keyword">while</span> (inputLen - offSet &gt; <span class="number">0</span>) &#123;
+           <span class="keyword">if</span> (inputLen - offSet &gt; MAX_DECRYPT_BLOCK) &#123;
+               cache = cipher.doFinal(data, offSet, MAX_DECRYPT_BLOCK);
+           &#125; <span class="keyword">else</span> &#123;
+               cache = cipher.doFinal(data, offSet, inputLen - offSet);
+           &#125;
+           out.write(cache, <span class="number">0</span>, cache.length);
+           i++;
+           offSet = i * MAX_DECRYPT_BLOCK;
+       &#125;
+       out.close();
+       <span class="keyword">return</span> out.toByteArray();
+   &#125;</code></pre>
 
-<h2 id="私钥加密"><a href="#私钥加密" class="headerlink" title="私钥加密"></a>私钥加密</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">byte</span>[] encryptByPrivateKey(<span class="hljs-keyword">byte</span>[] data, <span class="hljs-keyword">byte</span>[] key) <span class="hljs-keyword">throws</span> Exception &#123;<br>        ByteArrayOutputStream out = <span class="hljs-keyword">new</span> ByteArrayOutputStream();<br>        PKCS8EncodedKeySpec pkcs8KeySpec = <span class="hljs-keyword">new</span> PKCS8EncodedKeySpec(key);<br>        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);<br>        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);<br>        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());<br>        cipher.init(Cipher.ENCRYPT_MODE, privateKey);<br>        <span class="hljs-keyword">int</span> inputLen = data.length;<br>        <span class="hljs-keyword">int</span> offSet = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">byte</span>[] cache;<br>        <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">while</span> (inputLen - offSet &gt; <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">if</span> (inputLen - offSet &gt; MAX_ENCRYPT_BLOCK) &#123;<br>                cache = cipher.doFinal(data, offSet, MAX_ENCRYPT_BLOCK);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                cache = cipher.doFinal(data, offSet, inputLen - offSet);<br>            &#125;<br>            out.write(cache, <span class="hljs-number">0</span>, cache.length);<br>            i++;<br>            offSet = i * MAX_ENCRYPT_BLOCK;<br>        &#125;<br>        out.close();<br>        <span class="hljs-keyword">return</span> out.toByteArray();<br>    &#125;<br></code></pre></td></tr></table></figure>
+<h2 id="私钥加密"><a href="#私钥加密" class="headerlink" title="私钥加密"></a>私钥加密</h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">byte</span>[] encryptByPrivateKey(<span class="keyword">byte</span>[] data, <span class="keyword">byte</span>[] key) <span class="keyword">throws</span> Exception &#123;
+        ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();
+        PKCS8EncodedKeySpec pkcs8KeySpec = <span class="keyword">new</span> PKCS8EncodedKeySpec(key);
+        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
+        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        <span class="keyword">int</span> inputLen = data.length;
+        <span class="keyword">int</span> offSet = <span class="number">0</span>;
+        <span class="keyword">byte</span>[] cache;
+        <span class="keyword">int</span> i = <span class="number">0</span>;
+        <span class="keyword">while</span> (inputLen - offSet &gt; <span class="number">0</span>) &#123;
+            <span class="keyword">if</span> (inputLen - offSet &gt; MAX_ENCRYPT_BLOCK) &#123;
+                cache = cipher.doFinal(data, offSet, MAX_ENCRYPT_BLOCK);
+            &#125; <span class="keyword">else</span> &#123;
+                cache = cipher.doFinal(data, offSet, inputLen - offSet);
+            &#125;
+            out.write(cache, <span class="number">0</span>, cache.length);
+            i++;
+            offSet = i * MAX_ENCRYPT_BLOCK;
+        &#125;
+        out.close();
+        <span class="keyword">return</span> out.toByteArray();
+    &#125;</code></pre>
 
-<h2 id="私钥解密"><a href="#私钥解密" class="headerlink" title="私钥解密"></a>私钥解密</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">byte</span>[] decryptByPrivateKey(<span class="hljs-keyword">byte</span>[] data, <span class="hljs-keyword">byte</span>[] key) <span class="hljs-keyword">throws</span> Exception &#123;<br>        PKCS8EncodedKeySpec pkcs8KeySpec = <span class="hljs-keyword">new</span> PKCS8EncodedKeySpec(key);<br>        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);<br>        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);<br>        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());<br>        cipher.init(Cipher.DECRYPT_MODE, privateKey);<br>        <span class="hljs-keyword">return</span> cipher.doFinal(data);<br>    &#125;<br></code></pre></td></tr></table></figure></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+<h2 id="私钥解密"><a href="#私钥解密" class="headerlink" title="私钥解密"></a>私钥解密</h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">byte</span>[] decryptByPrivateKey(<span class="keyword">byte</span>[] data, <span class="keyword">byte</span>[] key) <span class="keyword">throws</span> Exception &#123;
+        PKCS8EncodedKeySpec pkcs8KeySpec = <span class="keyword">new</span> PKCS8EncodedKeySpec(key);
+        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
+        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        <span class="keyword">return</span> cipher.doFinal(data);
+    &#125;</code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/05/22/java/2021/java RSA 加密解密代码片段/';
 var disqus_title = 'RSA 算法加解密代码实现片段';
 var disqus_url = 'https://mirsery.github.io/2021/05/22/java/2021/java RSA 加密解密代码片段/';

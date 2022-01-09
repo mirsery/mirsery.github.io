@@ -4,13 +4,34 @@
 </blockquote>
 <p>LINUX是个多用户系统，一旦连接到网络中，它可以同时为多个登录用户提供服务。系统管理员可以随时了解系统中有那些用户，用户都在进行什么操作。</p>
 <h1 id="查看用户的操作"><a href="#查看用户的操作" class="headerlink" title="查看用户的操作"></a>查看用户的操作</h1><p>系统管理员若想知道某一时刻用户的行为，只需要输入命令w即可，在SHELL终端中输入如下命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">tux@tux-desktop:~$ w<br><br>21:13:14 up 7:08, 2 users, load average: 0.22, 0.32, 0.20<br>USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT<br>tux      tty7     :0               14:05     ?    37:55   0.33s x-session-manag<br>tux      pts/1    :0.0             21:13    0.00s 0.13s 0.00s w<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">tux@tux-desktop:~$ w
+
+21:13:14 up 7:08, 2 users, load average: 0.22, 0.32, 0.20
+USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT
+tux      tty7     :0               14:05     ?    37:55   0.33s x-session-manag
+tux      pts/1    :0.0             21:13    0.00s 0.13s 0.00s w</code></pre>
 
 <p>可以看到执行W命令及显示结果。<br>命令信息含义<br>上述显示的信息分别表示如下：<br>第一行显示系统的汇总信息，字段分别表示系统当前时间、系统运行时间、登陆哟内用户总数及系统平均负载信息。对于上述势力中的几个显示数据意义为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">21:13:14 表示执行W的时间是在晚上9点13分。<br>7:08 表示系统运行7小时8分。<br>2 users 表示当前系统登陆用户总数为2。<br>load average与后面的数字一起表示系统在过去1，5，10分钟内的负载程度，数值越小，系统负载越轻。<br>从第二行开始构成一个表格，共有8个栏目，分别显示各个用户正在做的事情及该用户所占用的系统资料。<br>USER：显示登陆用户帐号名。用户重复登陆，该帐号也会重复出现。<br>TTY：用户登陆所用的终端。<br>FROM：显示用户在何处登陆系统。<br>LOGIN@：是LOGIN AT的意思，表示登陆进入系统的时间。<br>IDLE：用户空闲时间，从用户上一次任务结束后，开会记时。<br>JCPU：一终端代号来区分，表示在摸段时间内，所有与该终端相关的进程任务所耗费的CPU时间。<br>PCPU：指WHAT域的任务执行后耗费的CPU时间。<br>WHAT：表示当前执行的任务。<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">21:13:14 表示执行W的时间是在晚上9点13分。
+7:08 表示系统运行7小时8分。
+2 users 表示当前系统登陆用户总数为2。
+load average与后面的数字一起表示系统在过去1，5，10分钟内的负载程度，数值越小，系统负载越轻。
+从第二行开始构成一个表格，共有8个栏目，分别显示各个用户正在做的事情及该用户所占用的系统资料。
+USER：显示登陆用户帐号名。用户重复登陆，该帐号也会重复出现。
+TTY：用户登陆所用的终端。
+FROM：显示用户在何处登陆系统。
+LOGIN@：是LOGIN AT的意思，表示登陆进入系统的时间。
+IDLE：用户空闲时间，从用户上一次任务结束后，开会记时。
+JCPU：一终端代号来区分，表示在摸段时间内，所有与该终端相关的进程任务所耗费的CPU时间。
+PCPU：指WHAT域的任务执行后耗费的CPU时间。
+WHAT：表示当前执行的任务。</code></pre>
 
 <h1 id="查看某用户"><a href="#查看某用户" class="headerlink" title="查看某用户"></a>查看某用户</h1><p>当登陆系统用户很多的时候，可以在W后面加上某个用户名，则会查看该用户执行任务的情况。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">tux@tux-desktop:~$ w tux<br>21:19:01 up 7:14, 2 users, load average: 0.25, 0.21, 0.18<br>USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT<br>tux      tty7     :0               14:05     ?    38:05   0.33s x-session-manag<br>tux      pts/1    :0.0             21:13    0.00s 0.13s 0.00s w tux<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">tux@tux-desktop:~$ w tux
+21:19:01 up 7:14, 2 users, load average: 0.25, 0.21, 0.18
+USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT
+tux      tty7     :0               14:05     ?    38:05   0.33s x-session-manag
+tux      pts/1    :0.0             21:13    0.00s 0.13s 0.00s w tux</code></pre>
 <p>默认情况下，系统会显示上述所有的信息，如果只关心某一方面，可以只使用相关的选项。</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2016/08/23/linux/(转)linux下查看在线用户/';

@@ -8,10 +8,64 @@
 <blockquote>
 <p>该文档摘抄自<a target="_blank" rel="noopener" href="https://blog.mybatis.org./">https://blog.mybatis.org。</a><br>Mybatis xml映射器insert、update 和 delete 标签</p>
 </blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">insert</span></span><br><span class="hljs-tag">  <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insertAuthor&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;domain.blog.Author&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">flushCache</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">statementType</span>=<span class="hljs-string">&quot;PREPARED&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">keyProperty</span>=<span class="hljs-string">&quot;&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">keyColumn</span>=<span class="hljs-string">&quot;&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">useGeneratedKeys</span>=<span class="hljs-string">&quot;&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">timeout</span>=<span class="hljs-string">&quot;20&quot;</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">update</span></span><br><span class="hljs-tag">  <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updateAuthor&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;domain.blog.Author&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">flushCache</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">statementType</span>=<span class="hljs-string">&quot;PREPARED&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">timeout</span>=<span class="hljs-string">&quot;20&quot;</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">delete</span></span><br><span class="hljs-tag">  <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;deleteAuthor&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;domain.blog.Author&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">flushCache</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">statementType</span>=<span class="hljs-string">&quot;PREPARED&quot;</span></span><br><span class="hljs-tag">  <span class="hljs-attr">timeout</span>=<span class="hljs-string">&quot;20&quot;</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight xml"><span class="tag">&lt;<span class="name">insert</span></span>
+<span class="tag">  <span class="attr">id</span>=<span class="string">&quot;insertAuthor&quot;</span></span>
+<span class="tag">  <span class="attr">parameterType</span>=<span class="string">&quot;domain.blog.Author&quot;</span></span>
+<span class="tag">  <span class="attr">flushCache</span>=<span class="string">&quot;true&quot;</span></span>
+<span class="tag">  <span class="attr">statementType</span>=<span class="string">&quot;PREPARED&quot;</span></span>
+<span class="tag">  <span class="attr">keyProperty</span>=<span class="string">&quot;&quot;</span></span>
+<span class="tag">  <span class="attr">keyColumn</span>=<span class="string">&quot;&quot;</span></span>
+<span class="tag">  <span class="attr">useGeneratedKeys</span>=<span class="string">&quot;&quot;</span></span>
+<span class="tag">  <span class="attr">timeout</span>=<span class="string">&quot;20&quot;</span>&gt;</span>
+
+<span class="tag">&lt;<span class="name">update</span></span>
+<span class="tag">  <span class="attr">id</span>=<span class="string">&quot;updateAuthor&quot;</span></span>
+<span class="tag">  <span class="attr">parameterType</span>=<span class="string">&quot;domain.blog.Author&quot;</span></span>
+<span class="tag">  <span class="attr">flushCache</span>=<span class="string">&quot;true&quot;</span></span>
+<span class="tag">  <span class="attr">statementType</span>=<span class="string">&quot;PREPARED&quot;</span></span>
+<span class="tag">  <span class="attr">timeout</span>=<span class="string">&quot;20&quot;</span>&gt;</span>
+
+<span class="tag">&lt;<span class="name">delete</span></span>
+<span class="tag">  <span class="attr">id</span>=<span class="string">&quot;deleteAuthor&quot;</span></span>
+<span class="tag">  <span class="attr">parameterType</span>=<span class="string">&quot;domain.blog.Author&quot;</span></span>
+<span class="tag">  <span class="attr">flushCache</span>=<span class="string">&quot;true&quot;</span></span>
+<span class="tag">  <span class="attr">statementType</span>=<span class="string">&quot;PREPARED&quot;</span></span>
+<span class="tag">  <span class="attr">timeout</span>=<span class="string">&quot;20&quot;</span>&gt;</span></code></pre>
 
 <p>example:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insertAuthor&quot;</span>&gt;</span><br>  insert into Author (id,username,password,email,bio)<br>  values (#&#123;id&#125;,#&#123;username&#125;,#&#123;password&#125;,#&#123;email&#125;,#&#123;bio&#125;)<br><span class="hljs-tag">&lt;/<span class="hljs-name">insert</span>&gt;</span><br><br><span class="hljs-comment">&lt;!-- 返回生成的主键id的值 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insertAuthor&quot;</span> <span class="hljs-attr">useGeneratedKeys</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">keyProperty</span>=<span class="hljs-string">&quot;id&quot;</span>&gt;</span><br>  insert into Author (username,password,email,bio)<br>  values (#&#123;username&#125;,#&#123;password&#125;,#&#123;email&#125;,#&#123;bio&#125;)<br><span class="hljs-tag">&lt;/<span class="hljs-name">insert</span>&gt;</span><br><br><span class="hljs-comment">&lt;!-- 批量插入示例 !--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;insertAuthor&quot;</span> <span class="hljs-attr">useGeneratedKeys</span>=<span class="hljs-string">&quot;true&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">keyProperty</span>=<span class="hljs-string">&quot;id&quot;</span>&gt;</span><br>  insert into Author (username, password, email, bio) values<br>  <span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">item</span>=<span class="hljs-string">&quot;item&quot;</span> <span class="hljs-attr">collection</span>=<span class="hljs-string">&quot;list&quot;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&quot;,&quot;</span>&gt;</span><br>    (#&#123;item.username&#125;, #&#123;item.password&#125;, #&#123;item.email&#125;, #&#123;item.bio&#125;)<br>  <span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">insert</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updateAuthor&quot;</span>&gt;</span><br>  update Author set<br>    username = #&#123;username&#125;,<br>    password = #&#123;password&#125;,<br>    email = #&#123;email&#125;,<br>    bio = #&#123;bio&#125;<br>  where id = #&#123;id&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">delete</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;deleteAuthor&quot;</span>&gt;</span><br>  delete from Author where id = #&#123;id&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">delete</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight xml"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insertAuthor&quot;</span>&gt;</span>
+  insert into Author (id,username,password,email,bio)
+  values (#&#123;id&#125;,#&#123;username&#125;,#&#123;password&#125;,#&#123;email&#125;,#&#123;bio&#125;)
+<span class="tag">&lt;/<span class="name">insert</span>&gt;</span>
+
+<span class="comment">&lt;!-- 返回生成的主键id的值 --&gt;</span>
+<span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insertAuthor&quot;</span> <span class="attr">useGeneratedKeys</span>=<span class="string">&quot;true&quot;</span></span>
+<span class="tag">    <span class="attr">keyProperty</span>=<span class="string">&quot;id&quot;</span>&gt;</span>
+  insert into Author (username,password,email,bio)
+  values (#&#123;username&#125;,#&#123;password&#125;,#&#123;email&#125;,#&#123;bio&#125;)
+<span class="tag">&lt;/<span class="name">insert</span>&gt;</span>
+
+<span class="comment">&lt;!-- 批量插入示例 !--&gt;</span>
+<span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insertAuthor&quot;</span> <span class="attr">useGeneratedKeys</span>=<span class="string">&quot;true&quot;</span></span>
+<span class="tag">    <span class="attr">keyProperty</span>=<span class="string">&quot;id&quot;</span>&gt;</span>
+  insert into Author (username, password, email, bio) values
+  <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">item</span>=<span class="string">&quot;item&quot;</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span>&gt;</span>
+    (#&#123;item.username&#125;, #&#123;item.password&#125;, #&#123;item.email&#125;, #&#123;item.bio&#125;)
+  <span class="tag">&lt;/<span class="name">foreach</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">insert</span>&gt;</span>
+
+<span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">&quot;updateAuthor&quot;</span>&gt;</span>
+  update Author set
+    username = #&#123;username&#125;,
+    password = #&#123;password&#125;,
+    email = #&#123;email&#125;,
+    bio = #&#123;bio&#125;
+  where id = #&#123;id&#125;
+<span class="tag">&lt;/<span class="name">update</span>&gt;</span>
+
+<span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;deleteAuthor&quot;</span>&gt;</span>
+  delete from Author where id = #&#123;id&#125;
+<span class="tag">&lt;/<span class="name">delete</span>&gt;</span></code></pre>
 
 <p>Insert, Update, Delete 元素的属性</p>
 <table>

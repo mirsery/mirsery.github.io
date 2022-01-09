@@ -29,9 +29,105 @@
 <li>Interrupt the rest of the threads of the group using the interrupt() method.</li>
 <li>Implement the waitFinish() method. It will use the activeCount() method to control the end of one of the threads.</li>
 </ul>
-<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><h3 id="the-code-about-the-thread-class"><a href="#the-code-about-the-thread-class" class="headerlink" title="the code about the thread class"></a>the code about the thread class</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.Date;<br><span class="hljs-keyword">import</span> java.util.Random;<br><span class="hljs-keyword">import</span> java.util.concurrent.TimeUnit;<br><br><span class="hljs-keyword">import</span> javax.xml.transform.Result;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SearchTask</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Runnable</span></span>&#123;<br>	<br>	<span class="hljs-keyword">private</span> Result result;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SearchTask</span><span class="hljs-params">(Result result)</span> </span>&#123;<br>		<span class="hljs-keyword">this</span>.result = result;<br>	&#125;<br><br>	<span class="hljs-meta">@Override</span><br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;<br>		String name = Thread.currentThread().getName();<br>		System.out.printf(<span class="hljs-string">&quot;Thread %s: Start\n&quot;</span>,name);<br>		<span class="hljs-keyword">try</span>&#123;<br>			doTask();<br>			result.setSystemId(name);<br>		&#125;<span class="hljs-keyword">catch</span>(InterruptedException e)&#123;<br>			System.out.printf(<span class="hljs-string">&quot;Thread %s: Interrupted\n&quot;</span>,name);<br>			<span class="hljs-keyword">return</span>;<br>		&#125;<br>		System.out.printf(<span class="hljs-string">&quot;Thread %s: End\n&quot;</span>,name);<br>	&#125;<br>	<br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doTask</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> InterruptedException</span>&#123;<br>		Random random = <span class="hljs-keyword">new</span> Random((<span class="hljs-keyword">new</span> Date()).getTime());<br>		<span class="hljs-keyword">int</span> value = (<span class="hljs-keyword">int</span>)(random.nextDouble()*<span class="hljs-number">100</span>);<br>		System.out.printf(<span class="hljs-string">&quot;Thread %s: %d\n&quot;</span>,<br>		  Thread.currentThread().getName(),value);<br>		TimeUnit.SECONDS.sleep(value);<br>	&#125;<br>	<br>&#125;<br>    <br></code></pre></td></tr></table></figure>
+<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><h3 id="the-code-about-the-thread-class"><a href="#the-code-about-the-thread-class" class="headerlink" title="the code about the thread class"></a>the code about the thread class</h3><pre><code class="highlight java"><span class="keyword">import</span> java.util.Date;
+<span class="keyword">import</span> java.util.Random;
+<span class="keyword">import</span> java.util.concurrent.TimeUnit;
 
-<h3 id="the-code-about-Main-methods"><a href="#the-code-about-Main-methods" class="headerlink" title="the code about Main() methods"></a>the code about Main() methods</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">import</span> java.util.concurrent.TimeUnit;<br><br><span class="hljs-keyword">import</span> javax.xml.transform.Result;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Main</span> </span>&#123;<br>	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>		ThreadGroup threadGroup = <span class="hljs-keyword">new</span> ThreadGroup(<span class="hljs-string">&quot;Searcher&quot;</span>);<br>		Result result = <span class="hljs-keyword">new</span> Result() &#123;<br>			<span class="hljs-keyword">private</span> String systemId;<br><br>			<span class="hljs-meta">@Override</span><br>			<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setSystemId</span><span class="hljs-params">(String systemId)</span> </span>&#123;<br>				<span class="hljs-keyword">this</span>.systemId = systemId;<br>			&#125;<br><br>			<span class="hljs-meta">@Override</span><br>			<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getSystemId</span><span class="hljs-params">()</span> </span>&#123;<br>				<span class="hljs-keyword">return</span> systemId;<br>			&#125;<br>		&#125;;<br><br>		SearchTask searchTask = <span class="hljs-keyword">new</span> SearchTask(result);<br><br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>			Thread thread = <span class="hljs-keyword">new</span> Thread(threadGroup, searchTask);<br>			thread.start();<br>			<span class="hljs-keyword">try</span> &#123;<br>				TimeUnit.SECONDS.sleep(<span class="hljs-number">1</span>);<br>			&#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>				e.printStackTrace();<br>			&#125;<br>		&#125;<br>		System.out.printf(<span class="hljs-string">&quot;Number of Threads:%d\n&quot;</span>, threadGroup.activeCount());<br>		System.out.printf(<span class="hljs-string">&quot;Information about the Thread Group\n&quot;</span>);<br>		threadGroup.list();<br><br>		Thread[] threads = <span class="hljs-keyword">new</span> Thread[threadGroup.activeCount()];<br>		threadGroup.enumerate(threads);<br>		<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; threadGroup.activeCount(); i++) &#123;<br>			System.out.printf(<span class="hljs-string">&quot;thread %s: %s\n&quot;</span>, threads[i].getName(), <br>			threads[i].getState());<br>		&#125;<br>		waitFinish(threadGroup);<br>		threadGroup.interrupt();<br>	&#125;<br><br>	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">waitFinish</span><span class="hljs-params">(ThreadGroup threadGroup)</span> </span>&#123;<br>		<span class="hljs-keyword">while</span> (threadGroup.activeCount() &gt; <span class="hljs-number">9</span>) &#123;<br>			<span class="hljs-keyword">try</span> &#123;<br>				TimeUnit.SECONDS.sleep(<span class="hljs-number">1</span>);<br>			&#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>				e.printStackTrace();<br>			&#125;<br>		&#125;<br>		System.out.printf(<span class="hljs-string">&quot;The threadGroup has %d threads.\n&quot;</span>, <br>		threadGroup.activeCount());<br>	&#125;<br><br>&#125;<br><br></code></pre></td></tr></table></figure>
+<span class="keyword">import</span> javax.xml.transform.Result;
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SearchTask</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;
+	
+	<span class="keyword">private</span> Result result;
+	
+	<span class="function"><span class="keyword">public</span> <span class="title">SearchTask</span><span class="params">(Result result)</span> </span>&#123;
+		<span class="keyword">this</span>.result = result;
+	&#125;
+
+	<span class="meta">@Override</span>
+	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;
+		String name = Thread.currentThread().getName();
+		System.out.printf(<span class="string">&quot;Thread %s: Start\n&quot;</span>,name);
+		<span class="keyword">try</span>&#123;
+			doTask();
+			result.setSystemId(name);
+		&#125;<span class="keyword">catch</span>(InterruptedException e)&#123;
+			System.out.printf(<span class="string">&quot;Thread %s: Interrupted\n&quot;</span>,name);
+			<span class="keyword">return</span>;
+		&#125;
+		System.out.printf(<span class="string">&quot;Thread %s: End\n&quot;</span>,name);
+	&#125;
+	
+	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doTask</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>&#123;
+		Random random = <span class="keyword">new</span> Random((<span class="keyword">new</span> Date()).getTime());
+		<span class="keyword">int</span> value = (<span class="keyword">int</span>)(random.nextDouble()*<span class="number">100</span>);
+		System.out.printf(<span class="string">&quot;Thread %s: %d\n&quot;</span>,
+		  Thread.currentThread().getName(),value);
+		TimeUnit.SECONDS.sleep(value);
+	&#125;
+	
+&#125;</code></pre>
+
+<h3 id="the-code-about-Main-methods"><a href="#the-code-about-Main-methods" class="headerlink" title="the code about Main() methods"></a>the code about Main() methods</h3><pre><code class="highlight java">
+<span class="keyword">import</span> java.util.concurrent.TimeUnit;
+
+<span class="keyword">import</span> javax.xml.transform.Result;
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;
+	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;
+		ThreadGroup threadGroup = <span class="keyword">new</span> ThreadGroup(<span class="string">&quot;Searcher&quot;</span>);
+		Result result = <span class="keyword">new</span> Result() &#123;
+			<span class="keyword">private</span> String systemId;
+
+			<span class="meta">@Override</span>
+			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSystemId</span><span class="params">(String systemId)</span> </span>&#123;
+				<span class="keyword">this</span>.systemId = systemId;
+			&#125;
+
+			<span class="meta">@Override</span>
+			<span class="function"><span class="keyword">public</span> String <span class="title">getSystemId</span><span class="params">()</span> </span>&#123;
+				<span class="keyword">return</span> systemId;
+			&#125;
+		&#125;;
+
+		SearchTask searchTask = <span class="keyword">new</span> SearchTask(result);
+
+		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;
+			Thread thread = <span class="keyword">new</span> Thread(threadGroup, searchTask);
+			thread.start();
+			<span class="keyword">try</span> &#123;
+				TimeUnit.SECONDS.sleep(<span class="number">1</span>);
+			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+				e.printStackTrace();
+			&#125;
+		&#125;
+		System.out.printf(<span class="string">&quot;Number of Threads:%d\n&quot;</span>, threadGroup.activeCount());
+		System.out.printf(<span class="string">&quot;Information about the Thread Group\n&quot;</span>);
+		threadGroup.list();
+
+		Thread[] threads = <span class="keyword">new</span> Thread[threadGroup.activeCount()];
+		threadGroup.enumerate(threads);
+		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadGroup.activeCount(); i++) &#123;
+			System.out.printf(<span class="string">&quot;thread %s: %s\n&quot;</span>, threads[i].getName(), 
+			threads[i].getState());
+		&#125;
+		waitFinish(threadGroup);
+		threadGroup.interrupt();
+	&#125;
+
+	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">waitFinish</span><span class="params">(ThreadGroup threadGroup)</span> </span>&#123;
+		<span class="keyword">while</span> (threadGroup.activeCount() &gt; <span class="number">9</span>) &#123;
+			<span class="keyword">try</span> &#123;
+				TimeUnit.SECONDS.sleep(<span class="number">1</span>);
+			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+				e.printStackTrace();
+			&#125;
+		&#125;
+		System.out.printf(<span class="string">&quot;The threadGroup has %d threads.\n&quot;</span>, 
+		threadGroup.activeCount());
+	&#125;
+
+&#125;
+</code></pre>
 <h2 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works"></a>How it works</h2><p>In the following screenshot, you can see the output of the list() method and the output generated when we write the status of each Thread object, as shown in the following screenshot:</p>
 <p>The ThreadGroup class stores the Thread objects and the other ThreadGroup objects associated with it, so it can access all of their information (status, for example) and perform operations over all its members (interrupt, for example).</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';

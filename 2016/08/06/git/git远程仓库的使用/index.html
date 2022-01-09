@@ -12,10 +12,15 @@ git remote -v   (v是verbose的缩写)
 <h1 id="查看远程仓库信息"><a href="#查看远程仓库信息" class="headerlink" title="查看远程仓库信息"></a>查看远程仓库信息</h1><pre><code>git remote show
 </code></pre>
 <h1 id="远程仓库的删除和重命名"><a href="#远程仓库的删除和重命名" class="headerlink" title="远程仓库的删除和重命名"></a>远程仓库的删除和重命名</h1><p>在新版 Git 中可以用 git remote rename 命令修改某个远程仓库的简短名称，比如想把 pb 改成 paul，可以这么运行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">git remote rename pb paul<br>git remote<br><span class="hljs-comment">#origin</span><br><span class="hljs-comment">#paul</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight bash">git remote rename pb paul
+git remote
+<span class="comment">#origin</span>
+<span class="comment">#paul</span></code></pre>
 <p>注意，对远程仓库的重命名，也会使对应的分支名称发生变化，原来的 pb/master 分支现在成了 paul/master。</p>
 <p>碰到远端仓库服务器迁移，或者原来的克隆镜像不再使用，又或者某个参与者不再贡献代码，那么需要移除对应的远端仓库，可以运行 git remote rm 命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">git remote rm paul<br>git remote<br><span class="hljs-comment">#origin</span><br></code></pre></td></tr></table></figure></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+<pre><code class="highlight bash">git remote rm paul
+git remote
+<span class="comment">#origin</span></code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2016/08/06/git/git远程仓库的使用/';
 var disqus_title = 'git远程仓库的使用';
 var disqus_url = 'https://mirsery.github.io/2016/08/06/git/git远程仓库的使用/';

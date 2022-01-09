@@ -3,12 +3,38 @@
 <p> Springboot框架自行封装了一套发布订阅模式可以供我们日常开发的使用</p>
 </blockquote>
 <p>##自定义事件类<br>在springboot中继承 <strong>ApplicationEvent</strong>类可以实现自定义事件<br>下面是示例代码:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestEvent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ApplicationEvent</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> String message;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">TestEvent</span><span class="hljs-params">(Object source, String message)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>(source);<br>        <span class="hljs-keyword">this</span>.message = message;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getMessage</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> message;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setMessage</span><span class="hljs-params">(String message)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.message = message;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestEvent</span> <span class="keyword">extends</span> <span class="title">ApplicationEvent</span> </span>&#123;
+    <span class="keyword">private</span> String message;
+    <span class="function"><span class="keyword">public</span> <span class="title">TestEvent</span><span class="params">(Object source, String message)</span> </span>&#123;
+        <span class="keyword">super</span>(source);
+        <span class="keyword">this</span>.message = message;
+    &#125;
+    <span class="function"><span class="keyword">public</span> String <span class="title">getMessage</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> message;
+    &#125;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMessage</span><span class="params">(String message)</span> </span>&#123;
+        <span class="keyword">this</span>.message = message;
+    &#125;
+&#125;</code></pre>
 
 <p>##定义事件监听组件<br>只要实现<strong>ApplicationListner<T>接口</strong>，组件就可以订阅相关的事件</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestEventListerner</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ApplicationListener</span>&lt;<span class="hljs-title">TestEvent</span>&gt; </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Handle an application event.</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> event the event to respond to</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onApplicationEvent</span><span class="hljs-params">(TestEvent event)</span> </span>&#123;<br>        System.out.println(<span class="hljs-keyword">this</span>.getClass() + <span class="hljs-string">&quot; message is &quot;</span> + event.getMessage() + <span class="hljs-string">&quot;, source is :&quot;</span> + event.getSource());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Component</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestEventListerner</span> <span class="keyword">implements</span> <span class="title">ApplicationListener</span>&lt;<span class="title">TestEvent</span>&gt; </span>&#123;
 
-<h2 id="事件发布"><a href="#事件发布" class="headerlink" title="事件发布"></a>事件发布</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">ApplicationContext applicationContext = SpringApplication.run(WebTestApplication.class, args);<br>TestEvent test = <span class="hljs-keyword">new</span> TestEvent(<span class="hljs-string">&quot;test-code&quot;</span>, <span class="hljs-string">&quot;测试事件发生&quot;</span>);<br>applicationContext.publishEvent(test);<br></code></pre></td></tr></table></figure>
+    <span class="comment">/**</span>
+<span class="comment">     * Handle an application event.</span>
+<span class="comment">     *</span>
+<span class="comment">     * <span class="doctag">@param</span> event the event to respond to</span>
+<span class="comment">     */</span>
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onApplicationEvent</span><span class="params">(TestEvent event)</span> </span>&#123;
+        System.out.println(<span class="keyword">this</span>.getClass() + <span class="string">&quot; message is &quot;</span> + event.getMessage() + <span class="string">&quot;, source is :&quot;</span> + event.getSource());
+    &#125;
+&#125;</code></pre>
+
+<h2 id="事件发布"><a href="#事件发布" class="headerlink" title="事件发布"></a>事件发布</h2><pre><code class="highlight java">ApplicationContext applicationContext = SpringApplication.run(WebTestApplication.class, args);
+TestEvent test = <span class="keyword">new</span> TestEvent(<span class="string">&quot;test-code&quot;</span>, <span class="string">&quot;测试事件发生&quot;</span>);
+applicationContext.publishEvent(test);</code></pre>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/02/28/java/2021/Springboot自带的事件驱动使用/';
 var disqus_title = 'springboot自带的事件驱动模型使用';

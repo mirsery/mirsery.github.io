@@ -5,11 +5,11 @@
 <ul>
 <li>方法一 终端执行如下命令,配置允许任何来源的app安装</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo spctl --master-disable<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">sudo spctl --master-disable</code></pre>
 <ul>
 <li>方法二 终端执行如下命令</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo xattr -r -d com.apple.quarantine /Applications/[target].app<br></code></pre></td></tr></table></figure></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+<pre><code class="highlight shell">sudo xattr -r -d com.apple.quarantine /Applications/[target].app</code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/04/15/mac/2021/mac app已破损问题解决/';
 var disqus_title = 'mac下安装app提示已破损';
 var disqus_url = 'https://mirsery.github.io/2021/04/15/mac/2021/mac app已破损问题解决/';

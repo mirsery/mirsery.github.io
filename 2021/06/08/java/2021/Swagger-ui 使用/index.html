@@ -10,16 +10,119 @@
 </ul>
 <!-- tocstop -->
 
-<h2 id="引入相关依赖jar包"><a href="#引入相关依赖jar包" class="headerlink" title="引入相关依赖jar包"></a>引入相关依赖jar包</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.springfox<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>springfox-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h2 id="引入相关依赖jar包"><a href="#引入相关依赖jar包" class="headerlink" title="引入相关依赖jar包"></a>引入相关依赖jar包</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></code></pre>
 
 <h2 id="启用-swagger"><a href="#启用-swagger" class="headerlink" title="启用 swagger"></a>启用 swagger</h2><p>下面是swagger-ui 配置样例:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Value;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> springfox.documentation.builders.ApiInfoBuilder;<br><span class="hljs-keyword">import</span> springfox.documentation.builders.PathSelectors;<br><span class="hljs-keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;<br><span class="hljs-keyword">import</span> springfox.documentation.service.ApiInfo;<br><span class="hljs-keyword">import</span> springfox.documentation.service.ApiKey;<br><span class="hljs-keyword">import</span> springfox.documentation.service.AuthorizationScope;<br><span class="hljs-keyword">import</span> springfox.documentation.service.SecurityReference;<br><span class="hljs-keyword">import</span> springfox.documentation.service.SecurityScheme;<br><span class="hljs-keyword">import</span> springfox.documentation.spi.DocumentationType;<br><span class="hljs-keyword">import</span> springfox.documentation.spi.service.contexts.SecurityContext;<br><span class="hljs-keyword">import</span> springfox.documentation.spring.web.plugins.Docket;<br><span class="hljs-keyword">import</span> springfox.documentation.swagger2.annotations.EnableSwagger2;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@description</span>:</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@author</span>: misery</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@create</span>: 2021-06-04 16:26</span><br><span class="hljs-comment"> **/</span><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@EnableSwagger2</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SwaggerConfig</span> </span>&#123;<br><br>    <span class="hljs-meta">@Value(&quot;$&#123;swagger.enable:false&#125;&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> swagger2Enable;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Docket <span class="hljs-title">createRestApi</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Docket(DocumentationType.OAS_30).apiInfo(apiInfo())<br>                .enable(swagger2Enable)<br>                .groupName(<span class="hljs-string">&quot;所有&quot;</span>)<br>                .select()<br>                .apis(RequestHandlerSelectors.any())<br>                .paths(PathSelectors.any())<br>                .paths(PathSelectors.regex(<span class="hljs-string">&quot;(?!/error.*).*&quot;</span>))     <span class="hljs-comment">// 去除默认basicController</span><br>                .paths(PathSelectors.regex(<span class="hljs-string">&quot;(?!/actuator.*).*&quot;</span>))    <span class="hljs-comment">//去除actuator</span><br>                .build()<br>                .securityContexts(securityContext())<br>                .securitySchemes(security());<br>    &#125;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Docket <span class="hljs-title">appApi</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Docket(DocumentationType.OAS_30).apiInfo(apiInfo())<br>                .enable(swagger2Enable)<br>                .groupName(<span class="hljs-string">&quot;groupName&quot;</span>)<br>                .select()<br>                .apis(RequestHandlerSelectors.basePackage(<span class="hljs-string">&quot;com.xxxx.xxx&quot;</span>))<br>                .paths(PathSelectors.any())<br>                .build()<br>                .securityContexts(securityContext())<br>                .securitySchemes(security());<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> ApiInfo <span class="hljs-title">apiInfo</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ApiInfoBuilder()<br>                .title(<span class="hljs-string">&quot;title&quot;</span>)<br>                .description(<span class="hljs-string">&quot;description&quot;</span>)<br>                .version(<span class="hljs-string">&quot;0.0.1&quot;</span>)<br>                .build();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> List&lt;SecurityScheme&gt; <span class="hljs-title">security</span><span class="hljs-params">()</span> </span>&#123;<br>        SecurityScheme token = <span class="hljs-keyword">new</span> ApiKey(<span class="hljs-string">&quot;token&quot;</span>, <span class="hljs-string">&quot;token&quot;</span>, <span class="hljs-string">&quot;header&quot;</span>);<br>        List&lt;SecurityScheme&gt; securitySchemeList = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        securitySchemeList.add(token);<br>        <span class="hljs-keyword">return</span> securitySchemeList;<br>    &#125;<br><br>    <span class="hljs-function">List&lt;SecurityReference&gt; <span class="hljs-title">defaultAuth</span><span class="hljs-params">()</span> </span>&#123;<br>        AuthorizationScope authorizationScope<br>                = <span class="hljs-keyword">new</span> AuthorizationScope(<span class="hljs-string">&quot;global&quot;</span>, <span class="hljs-string">&quot;accessEverything&quot;</span>);<br>        AuthorizationScope[] authorizationScopes = <span class="hljs-keyword">new</span> AuthorizationScope[<span class="hljs-number">1</span>];<br>        authorizationScopes[<span class="hljs-number">0</span>] = authorizationScope;<br>        List&lt;SecurityReference&gt; lists = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        lists.add(<span class="hljs-keyword">new</span> SecurityReference(<span class="hljs-string">&quot;token&quot;</span>, authorizationScopes));<br>        <span class="hljs-keyword">return</span> lists;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> List&lt;SecurityContext&gt; <span class="hljs-title">securityContext</span><span class="hljs-params">()</span> </span>&#123;<br>        SecurityContext securityContext = SecurityContext.builder()<br>                .securityReferences(defaultAuth())<br>                .build();<br>        List&lt;SecurityContext&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br>        list.add(securityContext);<br>        <span class="hljs-keyword">return</span> list;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;
+<span class="keyword">import</span> org.springframework.context.annotation.Bean;
+<span class="keyword">import</span> org.springframework.context.annotation.Configuration;
+<span class="keyword">import</span> springfox.documentation.builders.ApiInfoBuilder;
+<span class="keyword">import</span> springfox.documentation.builders.PathSelectors;
+<span class="keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;
+<span class="keyword">import</span> springfox.documentation.service.ApiInfo;
+<span class="keyword">import</span> springfox.documentation.service.ApiKey;
+<span class="keyword">import</span> springfox.documentation.service.AuthorizationScope;
+<span class="keyword">import</span> springfox.documentation.service.SecurityReference;
+<span class="keyword">import</span> springfox.documentation.service.SecurityScheme;
+<span class="keyword">import</span> springfox.documentation.spi.DocumentationType;
+<span class="keyword">import</span> springfox.documentation.spi.service.contexts.SecurityContext;
+<span class="keyword">import</span> springfox.documentation.spring.web.plugins.Docket;
+<span class="keyword">import</span> springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+<span class="comment">/**</span>
+<span class="comment"> * <span class="doctag">@description</span>:</span>
+<span class="comment"> * <span class="doctag">@author</span>: misery</span>
+<span class="comment"> * <span class="doctag">@create</span>: 2021-06-04 16:26</span>
+<span class="comment"> **/</span>
+<span class="meta">@Configuration</span>
+<span class="meta">@EnableSwagger2</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;
+
+    <span class="meta">@Value(&quot;$&#123;swagger.enable:false&#125;&quot;)</span>
+    <span class="keyword">private</span> <span class="keyword">boolean</span> swagger2Enable;
+
+    <span class="meta">@Bean</span>
+    <span class="function"><span class="keyword">public</span> Docket <span class="title">createRestApi</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.OAS_30).apiInfo(apiInfo())
+                .enable(swagger2Enable)
+                .groupName(<span class="string">&quot;所有&quot;</span>)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .paths(PathSelectors.regex(<span class="string">&quot;(?!/error.*).*&quot;</span>))     <span class="comment">// 去除默认basicController</span>
+                .paths(PathSelectors.regex(<span class="string">&quot;(?!/actuator.*).*&quot;</span>))    <span class="comment">//去除actuator</span>
+                .build()
+                .securityContexts(securityContext())
+                .securitySchemes(security());
+    &#125;
+
+    <span class="meta">@Bean</span>
+    <span class="function"><span class="keyword">public</span> Docket <span class="title">appApi</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.OAS_30).apiInfo(apiInfo())
+                .enable(swagger2Enable)
+                .groupName(<span class="string">&quot;groupName&quot;</span>)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.xxxx.xxx&quot;</span>))
+                .paths(PathSelectors.any())
+                .build()
+                .securityContexts(securityContext())
+                .securitySchemes(security());
+    &#125;
+
+    <span class="function"><span class="keyword">private</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfoBuilder()
+                .title(<span class="string">&quot;title&quot;</span>)
+                .description(<span class="string">&quot;description&quot;</span>)
+                .version(<span class="string">&quot;0.0.1&quot;</span>)
+                .build();
+    &#125;
+
+    <span class="function"><span class="keyword">private</span> List&lt;SecurityScheme&gt; <span class="title">security</span><span class="params">()</span> </span>&#123;
+        SecurityScheme token = <span class="keyword">new</span> ApiKey(<span class="string">&quot;token&quot;</span>, <span class="string">&quot;token&quot;</span>, <span class="string">&quot;header&quot;</span>);
+        List&lt;SecurityScheme&gt; securitySchemeList = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        securitySchemeList.add(token);
+        <span class="keyword">return</span> securitySchemeList;
+    &#125;
+
+    <span class="function">List&lt;SecurityReference&gt; <span class="title">defaultAuth</span><span class="params">()</span> </span>&#123;
+        AuthorizationScope authorizationScope
+                = <span class="keyword">new</span> AuthorizationScope(<span class="string">&quot;global&quot;</span>, <span class="string">&quot;accessEverything&quot;</span>);
+        AuthorizationScope[] authorizationScopes = <span class="keyword">new</span> AuthorizationScope[<span class="number">1</span>];
+        authorizationScopes[<span class="number">0</span>] = authorizationScope;
+        List&lt;SecurityReference&gt; lists = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        lists.add(<span class="keyword">new</span> SecurityReference(<span class="string">&quot;token&quot;</span>, authorizationScopes));
+        <span class="keyword">return</span> lists;
+    &#125;
+
+    <span class="function"><span class="keyword">private</span> List&lt;SecurityContext&gt; <span class="title">securityContext</span><span class="params">()</span> </span>&#123;
+        SecurityContext securityContext = SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .build();
+        List&lt;SecurityContext&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        list.add(securityContext);
+        <span class="keyword">return</span> list;
+    &#125;
+
+&#125;</code></pre>
 
 <h2 id="Controller-添加描述信息"><a href="#Controller-添加描述信息" class="headerlink" title="Controller 添加描述信息"></a>Controller 添加描述信息</h2><p>@Api 可以对Controller进行描述</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Api(tags = &quot;xxx相关接口&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestController</span></span>&#123;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Api(tags = &quot;xxx相关接口&quot;)</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span></span>&#123;
+    ...
+&#125;</code></pre>
 
 <h2 id="接口添加描述信息"><a href="#接口添加描述信息" class="headerlink" title="接口添加描述信息"></a>接口添加描述信息</h2><p>@ApiOperation 可以对接口进行描述</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@GETMapping(&quot;/hi&quot;)</span><br><span class="hljs-meta">@ApiOperation(&quot;xxxxx接口&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">hello</span><span class="hljs-params">()</span></span>&#123;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@GETMapping(&quot;/hi&quot;)</span>
+<span class="meta">@ApiOperation(&quot;xxxxx接口&quot;)</span>
+<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span></span>&#123;
+    ...
+&#125;</code></pre>
 
 <ul>
 <li><p><em><strong>@ApiOperation 注解属性</strong></em></p>
@@ -125,7 +228,12 @@
 
 </table>
 
-<h2 id="给实体类添加描述信息"><a href="#给实体类添加描述信息" class="headerlink" title="给实体类添加描述信息"></a>给实体类添加描述信息</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@ApiModel(&quot;用户实体&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Entity</span> </span>&#123;<br>    <span class="hljs-meta">@ApiModelProperty(&quot;用户 id&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> id;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h2 id="给实体类添加描述信息"><a href="#给实体类添加描述信息" class="headerlink" title="给实体类添加描述信息"></a>给实体类添加描述信息</h2><pre><code class="highlight java"><span class="meta">@ApiModel(&quot;用户实体&quot;)</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Entity</span> </span>&#123;
+    <span class="meta">@ApiModelProperty(&quot;用户 id&quot;)</span>
+    <span class="keyword">private</span> <span class="keyword">int</span> id;
+&#125;
+</code></pre>
 
 <ul>
 <li>@ApiModelProperty 主要属性</li>

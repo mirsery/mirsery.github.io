@@ -1,14 +1,62 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> ES6学习笔记4-属性 · mirsery</title><meta name="description" content="ES6学习笔记4-属性 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ES6学习笔记4-属性</h1><div class="post-info">作者: mirsery         创建日期: 2016年12月6日</div><div class="post-content"><h2 id="ES6允许直接写入变量和函数。"><a href="#ES6允许直接写入变量和函数。" class="headerlink" title="ES6允许直接写入变量和函数。"></a>ES6允许直接写入变量和函数。</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> o =&#123;<br>    <span class="hljs-function"><span class="hljs-title">method</span>(<span class="hljs-params"></span>)</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;hello&quot;</span>;    <br>    &#125;,<br>    <span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;hshsh&#x27;</span><br>&#125;<br><span class="hljs-comment">//等同于下面</span><br><span class="hljs-keyword">var</span> o =&#123;<br>    <span class="hljs-attr">method</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;hello&quot;</span>;    <br>    &#125;,<br>    <span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;hshsh&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ES6学习笔记4-属性</h1><div class="post-info">作者: mirsery         创建日期: 2016年12月6日</div><div class="post-content"><h2 id="ES6允许直接写入变量和函数。"><a href="#ES6允许直接写入变量和函数。" class="headerlink" title="ES6允许直接写入变量和函数。"></a>ES6允许直接写入变量和函数。</h2><pre><code class="highlight js"><span class="keyword">var</span> o =&#123;
+    <span class="function"><span class="title">method</span>(<span class="params"></span>)</span>&#123;
+        <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;    
+    &#125;,
+    <span class="attr">name</span>:<span class="string">&#x27;hshsh&#x27;</span>
+&#125;
+<span class="comment">//等同于下面</span>
+<span class="keyword">var</span> o =&#123;
+    <span class="attr">method</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;
+        <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;    
+    &#125;,
+    <span class="attr">name</span>:<span class="string">&#x27;hshsh&#x27;</span>
+&#125;</code></pre>
 <h2 id="属性名表达式"><a href="#属性名表达式" class="headerlink" title="属性名表达式"></a>属性名表达式</h2><p>javaSript语言定义对象的属性有两种方法。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1</span><br>obj.foo = <span class="hljs-literal">true</span>;<br><span class="hljs-comment">// 2</span><br>obj[<span class="hljs-string">&#x27;a&#x27;</span>+<span class="hljs-string">&#x27;bc&#x27;</span>] = <span class="hljs-number">123</span>;<br><br><span class="hljs-keyword">let</span> obj = &#123;<br>    [<span class="hljs-string">&#x27;propKey&#x27;</span>]:<span class="hljs-literal">true</span>,<br>    [<span class="hljs-string">&#x27;a&#x27;</span>+<span class="hljs-string">&#x27;bc&#x27;</span>]:<span class="hljs-number">123</span><br> &#125;;<span class="hljs-comment">//</span><br> <br> <span class="hljs-keyword">let</span> obj = &#123;<br>    [<span class="hljs-string">&#x27;h&#x27;</span>+<span class="hljs-string">&quot;ello&quot;</span>] ()&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;hi&#x27;</span>;    <br>    &#125;<br> &#125;<br> <span class="hljs-built_in">console</span>.log(obj.hello());<span class="hljs-comment">//hi</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight js"><span class="comment">// 1</span>
+obj.foo = <span class="literal">true</span>;
+<span class="comment">// 2</span>
+obj[<span class="string">&#x27;a&#x27;</span>+<span class="string">&#x27;bc&#x27;</span>] = <span class="number">123</span>;
+
+<span class="keyword">let</span> obj = &#123;
+    [<span class="string">&#x27;propKey&#x27;</span>]:<span class="literal">true</span>,
+    [<span class="string">&#x27;a&#x27;</span>+<span class="string">&#x27;bc&#x27;</span>]:<span class="number">123</span>
+ &#125;;<span class="comment">//</span>
+ 
+ <span class="keyword">let</span> obj = &#123;
+    [<span class="string">&#x27;h&#x27;</span>+<span class="string">&quot;ello&quot;</span>] ()&#123;
+        <span class="keyword">return</span> <span class="string">&#x27;hi&#x27;</span>;    
+    &#125;
+ &#125;
+ <span class="built_in">console</span>.log(obj.hello());<span class="comment">//hi</span></code></pre>
 <h2 id="方法的name属性"><a href="#方法的name属性" class="headerlink" title="方法的name属性"></a>方法的name属性</h2><p>函数的name属性，返回函数名。ES6为对象方法也添加了name属性。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> person = &#123;<br>  <span class="hljs-attr">sayName</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>.name);<br>  &#125;,<br>  <span class="hljs-keyword">get</span> <span class="hljs-title">firstName</span>() &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Nicholas&quot;</span> <br>  &#125;<br>&#125;<br>persion.sayName.name   <span class="hljs-comment">//sayName</span><br>persion.firstName.name <span class="hljs-comment">// get firstName</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight js"><span class="keyword">var</span> person = &#123;
+  <span class="attr">sayName</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;
+    <span class="built_in">console</span>.log(<span class="built_in">this</span>.name);
+  &#125;,
+  <span class="keyword">get</span> <span class="title">firstName</span>() &#123;
+    <span class="keyword">return</span> <span class="string">&quot;Nicholas&quot;</span> 
+  &#125;
+&#125;
+persion.sayName.name   <span class="comment">//sayName</span>
+persion.firstName.name <span class="comment">// get firstName</span></code></pre>
 <h2 id="Object-is"><a href="#Object-is" class="headerlink" title="Object.is()"></a>Object.is()</h2><p>用来比较两个值是否严格相等。他与严格相等(===)的行为基本一致，不同之处只有两个:</p>
 <ul>
 <li>+0不能等于-0</li>
-<li>NaN等于自身<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js">+<span class="hljs-number">0</span> === -<span class="hljs-number">0</span>   <span class="hljs-comment">//true</span><br><span class="hljs-literal">NaN</span> === <span class="hljs-literal">NaN</span> <span class="hljs-comment">//false</span><br><br><span class="hljs-built_in">Object</span>.is(+<span class="hljs-number">0</span>,-<span class="hljs-number">0</span>)<span class="hljs-comment">//false</span><br><span class="hljs-built_in">Object</span>.is(<span class="hljs-literal">NaN</span>,<span class="hljs-literal">NaN</span>)<span class="hljs-comment">//true</span><br></code></pre></td></tr></table></figure>
-<h2 id="扩展运算符"><a href="#扩展运算符" class="headerlink" title="扩展运算符"></a>扩展运算符</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">push</span>(<span class="hljs-params">array, ...items</span>) </span>&#123;<br>  array.push(...items);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(<span class="hljs-params">x, y</span>) </span>&#123;<br>  <span class="hljs-keyword">return</span> x + y;<br>&#125;<br><br>add(...[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]); <span class="hljs-comment">//3</span><br></code></pre></td></tr></table></figure></li>
+<li>NaN等于自身<pre><code class="highlight js">+<span class="number">0</span> === -<span class="number">0</span>   <span class="comment">//true</span>
+<span class="literal">NaN</span> === <span class="literal">NaN</span> <span class="comment">//false</span>
+
+<span class="built_in">Object</span>.is(+<span class="number">0</span>,-<span class="number">0</span>)<span class="comment">//false</span>
+<span class="built_in">Object</span>.is(<span class="literal">NaN</span>,<span class="literal">NaN</span>)<span class="comment">//true</span></code></pre>
+<h2 id="扩展运算符"><a href="#扩展运算符" class="headerlink" title="扩展运算符"></a>扩展运算符</h2><pre><code class="highlight js"><span class="function"><span class="keyword">function</span> <span class="title">push</span>(<span class="params">array, ...items</span>) </span>&#123;
+  array.push(...items);
+&#125;
+
+<span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">x, y</span>) </span>&#123;
+  <span class="keyword">return</span> x + y;
+&#125;
+
+add(...[<span class="number">1</span>,<span class="number">2</span>]); <span class="comment">//3</span></code></pre></li>
 </ul>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2016/12/06/前端/ES6学习笔记4-属性/';

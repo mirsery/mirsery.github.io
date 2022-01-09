@@ -13,14 +13,44 @@
 <ol>
 <li>添加缓存</li>
 <li>application中开启**@EnableCaching**标注</li>
-<li>创建service层<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java:n">@Service<br>public class CacheDemoService &#123;<br><br>    @CachePut(value = &quot;test&quot;, key = &quot;#key&quot;)//将返回的数据写入缓存 <br>    public String getMessage(String msg, String key) &#123;<br>        System.out.println(&quot;CachePut the message, key : &quot; + key);<br>        return msg;<br>    &#125;<br><br>    @Cacheable(value = &quot;test&quot;, key = &quot;#key&quot;)    //第一次执行方法缓存，第二次若参数相同时则不会触发方法，而是从缓存中直接返回数据<br>    public String getDemo(String key) &#123;<br>        String msg = &quot;hello world cache&quot;;<br>        System.out.println(&quot;Cacheable the message, key : &quot; + key);<br>        return msg;<br>    &#125;<br><br>    @CacheEvict(value = &quot;test&quot;, key = &quot;#key&quot;)<br>    public void deleteCache(String key) &#123;<br>        System.out.println(&quot;delete the cache key : &quot; + key);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>创建service层<pre><code class="highlight java:n">@Service
+public class CacheDemoService &#123;
+
+    @CachePut(value = &quot;test&quot;, key = &quot;#key&quot;)//将返回的数据写入缓存 
+    public String getMessage(String msg, String key) &#123;
+        System.out.println(&quot;CachePut the message, key : &quot; + key);
+        return msg;
+    &#125;
+
+    @Cacheable(value = &quot;test&quot;, key = &quot;#key&quot;)    //第一次执行方法缓存，第二次若参数相同时则不会触发方法，而是从缓存中直接返回数据
+    public String getDemo(String key) &#123;
+        String msg = &quot;hello world cache&quot;;
+        System.out.println(&quot;Cacheable the message, key : &quot; + key);
+        return msg;
+    &#125;
+
+    @CacheEvict(value = &quot;test&quot;, key = &quot;#key&quot;)
+    public void deleteCache(String key) &#123;
+        System.out.println(&quot;delete the cache key : &quot; + key);
+    &#125;
+&#125;</code></pre></li>
 </ol>
 <p>##SpringBoot中使用其他缓存技术<br>###EhCache</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span> <br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>net.sf.ehcache<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span> <br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>ehcache<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span> <br></code></pre></td></tr></table></figure>
+<pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span> 
+    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sf.ehcache<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> 
+    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>ehcache<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> 
+<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></code></pre>
 <p>Springboot 会自动配置EhCacheManager的Bean<br>###Guava</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span> <br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.google.guava<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span> <br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>guava<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span> <br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>18.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span> 
+    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.guava<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> 
+    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>guava<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> 
+    <span class="tag">&lt;<span class="name">version</span>&gt;</span>18.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span> 
+<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></code></pre>
 <p>###Redis</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span> <br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span> <br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span> <br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span> 
+    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> 
+    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> 
+<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></code></pre>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/05/07/java/2021/springboot 应用缓存(二)/';
 var disqus_title = 'springboot 中应用缓存（二）';

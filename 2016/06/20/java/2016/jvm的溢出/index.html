@@ -3,8 +3,32 @@
 <blockquote>
 <p>在windows平台的虚拟机中，Java的线程是映射到操作系统的内核线程上。</p>
 </blockquote>
-<p>#方法区和运行时常量池溢出<br>    String.intern(）是一个Native方法，他的作用是：如果字符串常量池中已经包含了一个等于此String对象的字符串，则返回代表池中这个字符串的String对象；否则，将此String对象包含的字符串添加到常量池中，并且返回到此String的对象引用。<br>    下面是一个String.intern(）返回引用的测试<br> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">public class RuntimeConstantPoolOOM()&#123;<br>    public static main(String[] args)&#123;<br>        String str1 = new StringBuffer(&quot;计算机&quot;).append(&quot;软件&quot;).toString();<br>           System.out.println(str1.intern() == str1);<br>	       String str2 = new StringBuffer(&quot;ja&quot;).append(&quot;va&quot;).toString(); <br>	       System.out.println(str2.intern() == str2);<br>	       System.out.println(str2.intern());                    <br>        &#125;    <br>&#125;<br></code></pre></td></tr></table></figure><br>在jdk 1.6中会返回两个false，在jdk 1.7中则会返回一个true 和一个false。<br>产生差异的原因是：<br>    在JDK 1.6中，intern（）方法会把首次遇到的字符串实例复制到永久代中，返回的也是永久代中这个字符串实例的引用，而由StringBuilder创建的字符串实例在Java堆上，所以必然不是同一个引用，将返回false。<br>    而JDK 1.7（以及部分其他虚拟机，例如JRockit）的intern（）实现不会再复制实例，只是在常量池中记录首次出现的实例引用，因此intern（）返回的引用和由StringBuilder创建的那个字符串实例是同一个。对str2比较返回false是因为“java”这个字符串在执行StringBuilder.toString（）之前已经出现过，字符串常量池中已经有它的引用了，不符合“首次出现”的原则，而“计算机软件”这个字符串则是首次出现的，因此返回true。<br>##方法区<br>    方法区用于存放Class的相关信息，如类名、访问修饰符、常来你吃、字段描述、方法描述等。在此借助CGLib直接操作字节码运行时产生了大量的动态类。<br>    方法区溢出也是一种常见的内存溢出异常，一个类要被垃圾收集器回收掉，判定条件是比较苛刻的。在经常动态生成大量Class的应用中，需要特别注意类的回收状况。这类场景除了上面提到的程序使用了CGLib字节码增强和动态语言之外，常见的还有：大量JSP或动态产生JSP文件的应用（JSP第一次运行时需要编译为Java类）、基于OSGi的应用（即使是同一个类文件，被不同的加载器加载也会视为不同的类）等。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">public class JavaMethodAreaOOM&#123;<br>    public static void main（String[]args）&#123;<br>        while（true）&#123;<br>            Enhancer enhancer=new Enhancer（）；<br>            enhancer.setSuperclass（OOMObject.class）；<br>            enhancer.setUseCache（false）；<br>            enhancer.setCallback（new MethodInterceptor（）&#123;<br>    public Object intercept（Object obj,Method method,Object[]args,MethodProxy proxy）throws Throwable&#123;<br>                     return proxy.invokeSuper（obj,args）；<br>            &#125;<br>        &#125;）；<br>        enhancer.create（）；<br>    &#125;<br>&#125;<br>static class OOMObject&#123;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>#方法区和运行时常量池溢出<br>    String.intern(）是一个Native方法，他的作用是：如果字符串常量池中已经包含了一个等于此String对象的字符串，则返回代表池中这个字符串的String对象；否则，将此String对象包含的字符串添加到常量池中，并且返回到此String的对象引用。<br>    下面是一个String.intern(）返回引用的测试<br> <pre><code class="highlight plaintext">public class RuntimeConstantPoolOOM()&#123;
+    public static main(String[] args)&#123;
+        String str1 = new StringBuffer(&quot;计算机&quot;).append(&quot;软件&quot;).toString();
+           System.out.println(str1.intern() == str1);
+	       String str2 = new StringBuffer(&quot;ja&quot;).append(&quot;va&quot;).toString(); 
+	       System.out.println(str2.intern() == str2);
+	       System.out.println(str2.intern());                    
+        &#125;    
+&#125;</code></pre><br>在jdk 1.6中会返回两个false，在jdk 1.7中则会返回一个true 和一个false。<br>产生差异的原因是：<br>    在JDK 1.6中，intern（）方法会把首次遇到的字符串实例复制到永久代中，返回的也是永久代中这个字符串实例的引用，而由StringBuilder创建的字符串实例在Java堆上，所以必然不是同一个引用，将返回false。<br>    而JDK 1.7（以及部分其他虚拟机，例如JRockit）的intern（）实现不会再复制实例，只是在常量池中记录首次出现的实例引用，因此intern（）返回的引用和由StringBuilder创建的那个字符串实例是同一个。对str2比较返回false是因为“java”这个字符串在执行StringBuilder.toString（）之前已经出现过，字符串常量池中已经有它的引用了，不符合“首次出现”的原则，而“计算机软件”这个字符串则是首次出现的，因此返回true。<br>##方法区<br>    方法区用于存放Class的相关信息，如类名、访问修饰符、常来你吃、字段描述、方法描述等。在此借助CGLib直接操作字节码运行时产生了大量的动态类。<br>    方法区溢出也是一种常见的内存溢出异常，一个类要被垃圾收集器回收掉，判定条件是比较苛刻的。在经常动态生成大量Class的应用中，需要特别注意类的回收状况。这类场景除了上面提到的程序使用了CGLib字节码增强和动态语言之外，常见的还有：大量JSP或动态产生JSP文件的应用（JSP第一次运行时需要编译为Java类）、基于OSGi的应用（即使是同一个类文件，被不同的加载器加载也会视为不同的类）等。</p>
+<pre><code class="highlight plaintext">public class JavaMethodAreaOOM&#123;
+    public static void main（String[]args）&#123;
+        while（true）&#123;
+            Enhancer enhancer=new Enhancer（）；
+            enhancer.setSuperclass（OOMObject.class）；
+            enhancer.setUseCache（false）；
+            enhancer.setCallback（new MethodInterceptor（）&#123;
+    public Object intercept（Object obj,Method method,Object[]args,MethodProxy proxy）throws Throwable&#123;
+                     return proxy.invokeSuper（obj,args）；
+            &#125;
+        &#125;）；
+        enhancer.create（）；
+    &#125;
+&#125;
+static class OOMObject&#123;
+&#125;
+&#125;</code></pre>
 <p>##本机直接内存溢出(不能理解)<br>    DirectMemory容量可通过-XX：MAXDirectMemorySize指定，如果不指定则默认于Java堆最大值（-Xmx指定）一样。<br><a target="_blank" rel="noopener" href="http://ju.outofmemory.cn/entry/75840">参考文档链接</a><br>    由DirectMemory导致的内存溢出，一个明显的特征是在HeapDump文件中不会看见明显的异常。NIO在1.4之后可以直接分配堆外内存(Native堆上)。NIO可能会导致本机直接内存溢出。</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2016/06/20/java/2016/jvm的溢出/';

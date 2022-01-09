@@ -3,11 +3,32 @@
 <p> 来自：掘金（作者：cipher）<br>原文链接 <a target="_blank" rel="noopener" href="https://juejin.im/post/5c551122e51d457fcc5a9790">https://juejin.im/post/5c551122e51d457fcc5a9790</a></p>
 </blockquote>
 <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>这里虚拟一个业务需求，让大家容易理解。假设有一个订单系统，里面的一个功能是根据订单的不同类型作出不同的处理。<br>订单实体:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OrderDTO</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> String code;<br>    <span class="hljs-keyword">private</span> BigDecimal price;<br>    <span class="hljs-keyword">private</span> String type;  <br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderDTO</span> </span>&#123;
+    <span class="keyword">private</span> String code;
+    <span class="keyword">private</span> BigDecimal price;
+    <span class="keyword">private</span> String type;  
+&#125;</code></pre>
 <p>service接口:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">IOrderService</span> </span>&#123;<br>            <span class="hljs-comment">/**</span><br><span class="hljs-comment">            * 根据订单的不同类型做出不同的处理</span><br><span class="hljs-comment">            * <span class="hljs-doctag">@param</span> dto 订单实体</span><br><span class="hljs-comment">            * <span class="hljs-doctag">@return</span> </span><br><span class="hljs-comment">            */</span><br>            <span class="hljs-function">String <span class="hljs-title">handle</span><span class="hljs-params">(OrderDTO dto)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IOrderService</span> </span>&#123;
+            <span class="comment">/**</span>
+<span class="comment">            * 根据订单的不同类型做出不同的处理</span>
+<span class="comment">            * <span class="doctag">@param</span> dto 订单实体</span>
+<span class="comment">            * <span class="doctag">@return</span> </span>
+<span class="comment">            */</span>
+            <span class="function">String <span class="title">handle</span><span class="params">(OrderDTO dto)</span></span>;
+&#125;</code></pre>
 <p>##传统实现<br>根据订单类写一堆的if-else:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OrderServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">IOrderService</span> </span>&#123;<br>    String type = dto.getType();<br>        <span class="hljs-keyword">if</span>(<span class="hljs-string">&quot;1&quot;</span>.equals(type))&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;处理普通订单&quot;</span>;<br>        &#125;<span class="hljs-function">elese <span class="hljs-title">if</span><span class="hljs-params">(<span class="hljs-string">&quot;2&quot;</span>.equals(type)</span>)</span>&#123;<br>           <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;处理团购订单&quot;</span>;<br>       &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;3&quot;</span>.equals(type))&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;处理促销订单&quot;</span>;<br>      &#125;                <br>     <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderServiceImpl</span> <span class="keyword">implements</span> <span class="title">IOrderService</span> </span>&#123;
+    String type = dto.getType();
+        <span class="keyword">if</span>(<span class="string">&quot;1&quot;</span>.equals(type))&#123;
+            <span class="keyword">return</span> <span class="string">&quot;处理普通订单&quot;</span>;
+        &#125;<span class="function">elese <span class="title">if</span><span class="params">(<span class="string">&quot;2&quot;</span>.equals(type)</span>)</span>&#123;
+           <span class="keyword">return</span> <span class="string">&quot;处理团购订单&quot;</span>;
+       &#125;<span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;3&quot;</span>.equals(type))&#123;
+            <span class="keyword">return</span> <span class="string">&quot;处理促销订单&quot;</span>;
+      &#125;                
+     <span class="keyword">return</span> <span class="keyword">null</span>;
+&#125;</code></pre>
 <h2 id="策略模式实现"><a href="#策略模式实现" class="headerlink" title="策略模式实现"></a>策略模式实现</h2><p>利用策略模式只需要实现两行可实现业务逻辑:<br>@Service<br>public class OrderServiceV2Impl implements IOrderService {<br>    @Autowrited<br>    private HandlerContext handlerContext;</p>
 <pre><code>@Override
 public String handle(OrderDTO dto)&#123;
@@ -20,9 +41,12 @@ public String handle(OrderDTO dto)&#123;
 <pre><code>其实在springboot中实现策略模式，我们可以利用springboot本身提供的@service 注解以及其 同一接口的实现的Map注入就可以解决。下面简单的举个例子。
 </code></pre>
 <p>首先我们先定一个接口</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">DataListener</span></span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onData</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DataListener</span></span>&#123;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onData</span><span class="params">()</span></span>;
+&#125;</code></pre>
 <p>接着定义几个实现该接口的类 DataListener1, DataListener2.<br>我们在实现的类DataListener1…上增加@service注解，同时给他命名（其默认名可以为字符串类型的策略），接着我们定义一个场景类<strong>DataHandleContext</strong>,<br>场景类中引入如下变量：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowrite</span><br><span class="hljs-keyword">public</span> Map&lt;String,DataListener&gt; dataListenerMap;<span class="hljs-comment">//该类是所定义的策略的map集合</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Autowrite</span>
+<span class="keyword">public</span> Map&lt;String,DataListener&gt; dataListenerMap;<span class="comment">//该类是所定义的策略的map集合</span></code></pre>
 <p>至此，我们就很简单的实现了策略模式。策略的命名可以采用枚举类进行控制，这样新增策略时只需要在枚举类中新增相应的枚举类型以及新建相关的service层类。</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/01/05/java/2021/springBoot中替换if-else/';

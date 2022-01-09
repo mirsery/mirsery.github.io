@@ -12,7 +12,35 @@
 </ul>
 <h1 id="2-配置文件-etc-sudoers"><a href="#2-配置文件-etc-sudoers" class="headerlink" title="2.配置文件/etc/sudoers"></a>2.配置文件/etc/sudoers</h1><p>它的主要配置文件是sudoers,linux下通常在/etc目录下，如果是solaris，缺省不装sudo的，编译安装后通常在安装目录的 etc目录下，不过不管sudoers文件在哪儿，sudo都提供了一个编辑该文件的命令：visudo来对该文件进行修改。强烈推荐使用该命令修改 sudoers，因为它会帮你校验文件配置是否正确，如果不正确，在保存退出时就会提示你哪段配置出错的。 </p>
 <p>言归正传，下面介绍如何配置sudoers:<br>首先写sudoers的缺省配置： </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">############################################################# <br># sudoers file. <br># <br># This file MUST be edited with the &#x27;visudo&#x27; command as root. <br># <br># See the sudoers man page for the details on how to write a sudoers file. <br># <br><br># Host alias specification <br><br># User alias specification <br><br># Cmnd alias specification <br><br># Defaults specification <br><br># User privilege specification <br>    root    ALL=(ALL) ALL <br><br># Uncomment to allow people in group wheel to run all commands <br># %wheel        ALL=(ALL)       ALL <br><br># Same thing without a password <br># %wheel        ALL=(ALL)       NOPASSWD: ALL <br><br># Samples <br># %users  ALL=/sbin/mount /cdrom,/sbin/umount /cdrom <br># %users  localhost=/sbin/shutdown -h now <br>################################################################## <br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">############################################################# 
+# sudoers file. 
+# 
+# This file MUST be edited with the &#x27;visudo&#x27; command as root. 
+# 
+# See the sudoers man page for the details on how to write a sudoers file. 
+# 
+
+# Host alias specification 
+
+# User alias specification 
+
+# Cmnd alias specification 
+
+# Defaults specification 
+
+# User privilege specification 
+    root    ALL=(ALL) ALL 
+
+# Uncomment to allow people in group wheel to run all commands 
+# %wheel        ALL=(ALL)       ALL 
+
+# Same thing without a password 
+# %wheel        ALL=(ALL)       NOPASSWD: ALL 
+
+# Samples 
+# %users  ALL=/sbin/mount /cdrom,/sbin/umount /cdrom 
+# %users  localhost=/sbin/shutdown -h now 
+##################################################################</code></pre>
 <p>##1. 最简单的配置，让普通用户support具有root的所有权限<br>执行visudo之后，可以看见缺省只有一条配置：<br>   <code>root    ALL=(ALL) ALL</code><br>那么你就在下边再加一条配置：<br>    <code>support ALL=(ALL) ALL </code><br>这样，普通用户support就能够执行root权限的所有命令<br>以support用户登录之后，执行：<br>    <code>sudo su - </code><br>然后输入support用户自己的密码，就可以切换成root用户了<br>##2. 让普通用户support只能在某几台服务器上，执行root能执行的某些命令<br>首先需要配置一些Alias，这样在下面配置权限时，会方便一些，不用写大段大段的配置。Alias主要分成4种 </p>
 <ul>
 <li>配置Host_Alias：就是主机的列表<br>  <code>Host_Alias      HOST_FLAG = hostname1, hostname2, hostname3 </code></li>
@@ -24,7 +52,38 @@
   如果不需要密码验证的话，则按照这样的格式来配置 <pre><code> ``` USER_FLAG HOST_FLAG=(RUNAS_FLAG) NOPASSWD: COMMAND_FLAG ```
 </code></pre>
 </li>
-<li>配置示例：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">############################################################################ <br># sudoers file. <br># <br># This file MUST be edited with the &#x27;visudo&#x27; command as root. <br># <br># See the sudoers man page for the details on how to write a sudoers file. <br># <br><br># Host alias specification <br>Host_Alias      EPG = 192.168.1.1, 192.168.1.2 <br><br># User alias specification <br><br># Cmnd alias specification <br>Cmnd_Alias      SQUID = /opt/vtbin/squid_refresh, /sbin/service, /bin/rm <br><br># Defaults specification <br><br># User privilege specification <br>root    ALL=(ALL) ALL <br>support EPG=(ALL) NOPASSWD: SQUID <br><br># Uncomment to allow people in group wheel to run all commands <br># %wheel        ALL=(ALL)       ALL <br><br># Same thing without a password <br># %wheel        ALL=(ALL)       NOPASSWD: ALL <br><br># Samples <br># %users  ALL=/sbin/mount /cdrom,/sbin/umount /cdrom <br># %users  localhost=/sbin/shutdown -h now <br>###############################################################<br></code></pre></td></tr></table></figure></li>
+<li>配置示例：<pre><code class="highlight plaintext">############################################################################ 
+# sudoers file. 
+# 
+# This file MUST be edited with the &#x27;visudo&#x27; command as root. 
+# 
+# See the sudoers man page for the details on how to write a sudoers file. 
+# 
+
+# Host alias specification 
+Host_Alias      EPG = 192.168.1.1, 192.168.1.2 
+
+# User alias specification 
+
+# Cmnd alias specification 
+Cmnd_Alias      SQUID = /opt/vtbin/squid_refresh, /sbin/service, /bin/rm 
+
+# Defaults specification 
+
+# User privilege specification 
+root    ALL=(ALL) ALL 
+support EPG=(ALL) NOPASSWD: SQUID 
+
+# Uncomment to allow people in group wheel to run all commands 
+# %wheel        ALL=(ALL)       ALL 
+
+# Same thing without a password 
+# %wheel        ALL=(ALL)       NOPASSWD: ALL 
+
+# Samples 
+# %users  ALL=/sbin/mount /cdrom,/sbin/umount /cdrom 
+# %users  localhost=/sbin/shutdown -h now 
+###############################################################</code></pre></li>
 </ul>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2016/08/10/linux/（转）linux下的sudoers配置/';

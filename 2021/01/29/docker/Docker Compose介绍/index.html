@@ -10,7 +10,11 @@
 <li>手动下载二进制包使用</li>
 </ul>
 <p>Linux 上我们可以从 Github 上下载它的二进制包来使用，最新发行的版本地址：<a target="_blank" rel="noopener" href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a>。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo curl -l https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m) \ <br>-o /usr/<span class="hljs-built_in">local</span>/bin/docker-compose<br>sudo chmod +x /usr/<span class="hljs-built_in">local</span>/bin/docker-compose<br>sudo ln -s /usr/<span class="hljs-built_in">local</span>/bin/docker-compose /usr/bin/docker-compose<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight bash">sudo curl -l https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m) \ 
+-o /usr/<span class="built_in">local</span>/bin/docker-compose
+sudo chmod +x /usr/<span class="built_in">local</span>/bin/docker-compose
+sudo ln -s /usr/<span class="built_in">local</span>/bin/docker-compose /usr/bin/docker-compose
+</code></pre>
 <blockquote>
 <p>  <strong>$(uname -m) 显示计算机类型，$(uname -s) 显示操作系统名称</strong></p>
 </blockquote>

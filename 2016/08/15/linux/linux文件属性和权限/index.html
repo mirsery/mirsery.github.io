@@ -13,7 +13,8 @@
 </ul>
 <!-- tocstop -->
 
-<h2 id="文件属性的展现结构"><a href="#文件属性的展现结构" class="headerlink" title="文件属性的展现结构"></a>文件属性的展现结构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">drwxrwxr-x 12(连接数) mirsery(拥有者) mirsery(用户组)     4096(文件大小) Sep 17 16:49(最后修改日期) reps<br>-rw-r-----  1(连接数) redis   redis      58835 Mar  5  2019 redis.conf<br></code></pre></td></tr></table></figure>
+<h2 id="文件属性的展现结构"><a href="#文件属性的展现结构" class="headerlink" title="文件属性的展现结构"></a>文件属性的展现结构</h2><pre><code class="highlight plaintext">drwxrwxr-x 12(连接数) mirsery(拥有者) mirsery(用户组)     4096(文件大小) Sep 17 16:49(最后修改日期) reps
+-rw-r-----  1(连接数) redis   redis      58835 Mar  5  2019 redis.conf</code></pre>
 <p>第一个字符用于描述文件类型，可取的值有: -、d、l、b、c、s和p。</p>
 <ul>
 <li><strong>`</strong> 代表这是一个普通文件</li>
@@ -25,10 +26,10 @@
 <li><strong>p</strong> 命名管道文件<br>剩下的代表拥有者、所属组、其他 的权限。</li>
 <li>r 可读 4</li>
 <li>w 可写 2</li>
-<li>x 可执行 1<h2 id="文件连接数"><a href="#文件连接数" class="headerlink" title="文件连接数"></a>文件连接数</h2>Linux系统使用的文件系统是一种基于inode的文件系统。每一个新创建的文件都会被分配一个inode，且每一个文件都有一个唯一的inode编号。系统是通过inode定位每一个文件，通常情况下为了提高文件系统的执行效率，访问过的文件的inode会被缓存在内存中。那么这个连接数属性其实就是inode的引用计数。<br>In 命令可以创建2中文件链接-硬链接和软链接。其中软链接也叫做符号链接，只是一个普通的文件需要额外增加一个**-s**命令选项来创建。<br>###软连接<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell:n">ln -s /bin/bash sh<br></code></pre></td></tr></table></figure>
-上面的命令会创建一个新的软链接 sh指向 /bin/bash，此时执行<strong>ls -l</strong>可以看到:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell:n">lrwxrwxrwx  1 mirsery mirsery        9 Sep 19 10:46 sh -&gt; /bin/bash<br></code></pre></td></tr></table></figure>
-软连接的文件属性和目标属性完全不同，按照系统设计，软链接也要占据一个新的inode，也就是说软连接是一个新的文件，不影响inode的引用计数。<br>###硬连接<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ln /bin/bash bash<br></code></pre></td></tr></table></figure>
-上面的命令会创建一个名为bash的硬连接到**/bin/bash<strong>。使用</strong>ls -l**命令可以看到:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell:n">-rwxr-xr-x  2 root    root     1113504 Apr  5  2018 bash<br></code></pre></td></tr></table></figure>
+<li>x 可执行 1<h2 id="文件连接数"><a href="#文件连接数" class="headerlink" title="文件连接数"></a>文件连接数</h2>Linux系统使用的文件系统是一种基于inode的文件系统。每一个新创建的文件都会被分配一个inode，且每一个文件都有一个唯一的inode编号。系统是通过inode定位每一个文件，通常情况下为了提高文件系统的执行效率，访问过的文件的inode会被缓存在内存中。那么这个连接数属性其实就是inode的引用计数。<br>In 命令可以创建2中文件链接-硬链接和软链接。其中软链接也叫做符号链接，只是一个普通的文件需要额外增加一个**-s**命令选项来创建。<br>###软连接<pre><code class="highlight shell:n">ln -s /bin/bash sh</code></pre>
+上面的命令会创建一个新的软链接 sh指向 /bin/bash，此时执行<strong>ls -l</strong>可以看到:<pre><code class="highlight shell:n">lrwxrwxrwx  1 mirsery mirsery        9 Sep 19 10:46 sh -&gt; /bin/bash</code></pre>
+软连接的文件属性和目标属性完全不同，按照系统设计，软链接也要占据一个新的inode，也就是说软连接是一个新的文件，不影响inode的引用计数。<br>###硬连接<pre><code class="highlight shell">ln /bin/bash bash</code></pre>
+上面的命令会创建一个名为bash的硬连接到**/bin/bash<strong>。使用</strong>ls -l**命令可以看到:<pre><code class="highlight shell:n">-rwxr-xr-x  2 root    root     1113504 Apr  5  2018 bash</code></pre>
 硬连接的属性和目标文件的属性完全相同，因为引用的是相同的inode，仅仅将inode的引用计数进行了**+1**操作。<h4 id="软连接和硬连接的区别"><a href="#软连接和硬连接的区别" class="headerlink" title="软连接和硬连接的区别"></a>软连接和硬连接的区别</h4></li>
 <li>输入删除文件连接的目标文件，则软连接会失效，而硬连接则仅是“连接数”-1。</li>
 <li>软连接可以创建在任何位置，包括网络，而硬连接则不行，目标文件与连接文件必须在同一磁盘分区内。</li>

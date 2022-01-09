@@ -20,20 +20,21 @@
 </blockquote>
 <p>下载对应的deb文件（headers、image、modules）即可。</p>
 <p>下载完成后，进入到下载目录，执行以下 命令安装内核文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo dpkg -i *.deb<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight bash">sudo dpkg -i *.deb</code></pre>
 <p>留意安装过程中是否会有报错信息，安装完成后重启计算机，运行以下命令:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看当前计算机运行的内核版本号是否为你刚刚下载的版本号</span><br>uanme -a <br></code></pre></td></tr></table></figure>
+<pre><code class="highlight bash"><span class="comment"># 查看当前计算机运行的内核版本号是否为你刚刚下载的版本号</span>
+uanme -a</code></pre>
 
 <h2 id="切换内核版本"><a href="#切换内核版本" class="headerlink" title="切换内核版本"></a>切换内核版本</h2><blockquote>
 <p>首先需要下载和安装你想要切换的内核版本，操作方法和上述步骤一致。</p>
 </blockquote>
 <p>下载并安装对应的内核文件之后，你可以运行以下命令:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">grep menuentry /boot/grub/grub.cfg<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight bash">grep menuentry /boot/grub/grub.cfg</code></pre>
 <p>查看对应的系统中安装的内核版本的列表是否存在你刚刚安装的内核版本，如果没有则返回上一步核对安装过程中是否有纰漏。如果没有问题则复制你想要运行的内核版本的名称的全称。<br>修改<code>/etc/default/grub</code>文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">GRUB_DEFALT=<span class="hljs-string">&quot;你刚刚复制的内核版本全名称&quot;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight bash">GRUB_DEFALT=<span class="string">&quot;你刚刚复制的内核版本全名称&quot;</span></code></pre>
 <p>执行更新命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo update grub<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight bash">sudo update grub</code></pre>
 <p>看是否有报错信息，如果有保存信息，根据报错信息的提示进行修改。修改完成之后重复上一步的更新操作直至成功为止。然后重启电脑。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo reboot<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight bash">sudo reboot</code></pre>
 <p>重启电脑之后查看内核版本是否更换为对应的你所切换的版本，然后再次打开<code>/etc/default/grub</code>文件，将 GRUB_DEFALT值修改为原先的0.</p>
 </div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/07/27/java/2021/%E8%AF%BB%E5%86%99%E9%94%81/">上一篇</a><a class="next" href="/2021/07/27/mac/2021/mac%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

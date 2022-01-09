@@ -10,7 +10,9 @@
 <!-- tocstop -->
 
 <h2 id="加载jQuery"><a href="#加载jQuery" class="headerlink" title="加载jQuery"></a>加载jQuery</h2><p>1.坚持使用CDN来加载jQuery，这种别人服务器免费帮你托管文件的便宜干嘛不占呢。点击查看使用CDN的好处，点此查看一些主流的jQuery CDN地址。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&lt;script type=<span class="hljs-string">&quot;text/javascript&quot;</span> src=<span class="hljs-string">&quot;//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js&quot;</span>&gt;&lt;/script&gt;<br><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="handlebars"><span class="xml">window.jQuery || document.write(&#x27;<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;js/jquery-1.11.0.min.js&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span>&lt;\/script&gt;&#x27;)</span></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight javascript">&lt;script type=<span class="string">&quot;text/javascript&quot;</span> src=<span class="string">&quot;//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js&quot;</span>&gt;&lt;/script&gt;
+
+<span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="handlebars"><span class="xml">window.jQuery || document.write(&#x27;<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;js/jquery-1.11.0.min.js&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span>&lt;\/script&gt;&#x27;)</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></code></pre>
 <p>2.安全起见，最好还是提供一个本地备份以便在无法从远程CDN服务器获取jQuery时网站也能工作，如上面代码所示<a target="_blank" rel="noopener" href="https://css-tricks.com/snippets/jquery/fallback-for-cdn-hosted-jquery/">详细见此</a><br>3.使用<a target="_blank" rel="noopener" href="http://www.paulirish.com/2010/the-protocol-relative-url/">裸协议</a>的URL（也就是说去掉http:或者https:），如上面代码展示的那样。<br>4.如果可能，尽量将你的JavaScript和jQuery代码放到页面底部。<br>5.该使用哪个版本？</p>
 <ul>
 <li>如果你想兼容IE678请表用2.x的版本</li>
@@ -24,60 +26,143 @@
 <p>3.使用驼峰命名</p>
 <h2 id="关于选择器"><a href="#关于选择器" class="headerlink" title="关于选择器"></a>关于选择器</h2><p>1.尽量ID选择器。其背后机理其实是调用原生的document.getElementById()，所以速度较其他选择器快。</p>
 <p>2.使用类选择器时表指定元素的类型。不信你看这个性能比较</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html">var $products = $(&quot;div.products&quot;); // 慢<br>var $products = $(&quot;.products&quot;); // 快<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight html">var $products = $(&quot;div.products&quot;); // 慢
+var $products = $(&quot;.products&quot;); // 快</code></pre>
 <p>3.ID父亲容器下面再查找子元素请用.find()方法。这样做快的原因是通过id选择元素不会使用Sizzle引擎。详情看这里</p>
 <p>4.多级查找中，右边尽量指定得详细点而左边则尽量简单点。了解更多</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html">// 丑陋<br>$(&quot;div.data .gonzalez&quot;);<br> <br>// 优化后<br>$(&quot;.data td.gonzalez&quot;);<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight html">// 丑陋
+$(&quot;div.data .gonzalez&quot;);
+ 
+// 优化后
+$(&quot;.data td.gonzalez&quot;);</code></pre>
 <p>5.避免冗余。详情或者查看性能比较</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html">$(&quot;.data table.attendees td.gonzalez&quot;); <br>// 好的方式：去掉了中间的冗余<br>$(&quot;.data td.gonzalez&quot;);<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight html">$(&quot;.data table.attendees td.gonzalez&quot;); 
+// 好的方式：去掉了中间的冗余
+$(&quot;.data td.gonzalez&quot;);</code></pre>
 <p>6.指定选择的上下文。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html">// 劣质的代码：因为需要遍历整个DOM来找到.class<br>$(&#x27;.class&#x27;);<br> <br>// 高品代码：因为只需在指定容器范围内进行查找<br>$(&#x27;.class&#x27;, &#x27;#class-container&#x27;);<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight html">// 劣质的代码：因为需要遍历整个DOM来找到.class
+$(&#x27;.class&#x27;);
+ 
+// 高品代码：因为只需在指定容器范围内进行查找
+$(&#x27;.class&#x27;, &#x27;#class-container&#x27;);</code></pre>
 <p>7.表使用万能选择器。查看具体阐释</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html">$(&#x27;div.container &gt; *&#x27;); // 差<br>$(&#x27;div.container&#x27;).children(); // 棒<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight html">$(&#x27;div.container &gt; *&#x27;); // 差
+$(&#x27;div.container&#x27;).children(); // 棒</code></pre>
 <p>8.警惕隐式的万能选择器。省略的情况下其实使用的就是*号通配符。更多信息</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html">$(&#x27;div.someclass :radio&#x27;); // 差<br>$(&#x27;div.someclass input:radio&#x27;); // 棒<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight html">$(&#x27;div.someclass :radio&#x27;); // 差
+$(&#x27;div.someclass input:radio&#x27;); // 棒</code></pre>
 <p>9.ID已经表示唯一了，背后使用的是document.getElementById()，所以表跟其他选择器混搭了。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs html">$(&#x27;#outer #inner&#x27;); // 脏<br>$(&#x27;div#inner&#x27;); // 乱<br>$(&#x27;.outer-container #inner&#x27;); // 差<br>$(&#x27;#inner&#x27;); // 干净利落，后台只需调用document.getElementById()<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight html">$(&#x27;#outer #inner&#x27;); // 脏
+$(&#x27;div#inner&#x27;); // 乱
+$(&#x27;.outer-container #inner&#x27;); // 差
+$(&#x27;#inner&#x27;); // 干净利落，后台只需调用document.getElementById()</code></pre>
 <h2 id="DOM操作相关"><a href="#DOM操作相关" class="headerlink" title="DOM操作相关"></a>DOM操作相关</h2><p>1.操作任何元素前先将其从文档卸载，完了再贴回去。这事儿还能说细点</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">var $myList = $(&quot;#list-container &gt; ul&quot;).detach();<br>//...一大堆对$myList的处理<br>$myList.appendTo(&quot;#list-container&quot;);<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">var $myList = $(&quot;#list-container &gt; ul&quot;).detach();
+//...一大堆对$myList的处理
+$myList.appendTo(&quot;#list-container&quot;);</code></pre>
 <p>2.代码里将HTML组织好后再一次性贴到DOM中去。具体来说，性能比较</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">// 这样不好<br>var $myList = $(&quot;#list&quot;);<br>for(var i = 0; i &lt; 10000; i++)&#123;<br>    $myList.append(&quot;&lt;li&gt;&quot;+i+&quot;&lt;/li&gt;&quot;);<br>&#125;<br> <br>// 这样好<br>var $myList = $(&quot;#list&quot;);<br>var list = &quot;&quot;;<br>for(var i = 0; i &lt; 10000; i++)&#123;<br>    list += &quot;&lt;li&gt;&quot;+i+&quot;&lt;/li&gt;&quot;;<br>&#125;<br>$myList.html(list);<br> <br>// 但这样更好<br>var array = []; <br>for(var i = 0; i &lt; 10000; i++)&#123;<br>    array[i] = &quot;&lt;li&gt;&quot;+i+&quot;&lt;/li&gt;&quot;; <br>&#125;<br>$myList.html(array.join(&#x27;&#x27;));<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">// 这样不好
+var $myList = $(&quot;#list&quot;);
+for(var i = 0; i &lt; 10000; i++)&#123;
+    $myList.append(&quot;&lt;li&gt;&quot;+i+&quot;&lt;/li&gt;&quot;);
+&#125;
+ 
+// 这样好
+var $myList = $(&quot;#list&quot;);
+var list = &quot;&quot;;
+for(var i = 0; i &lt; 10000; i++)&#123;
+    list += &quot;&lt;li&gt;&quot;+i+&quot;&lt;/li&gt;&quot;;
+&#125;
+$myList.html(list);
+ 
+// 但这样更好
+var array = []; 
+for(var i = 0; i &lt; 10000; i++)&#123;
+    array[i] = &quot;&lt;li&gt;&quot;+i+&quot;&lt;/li&gt;&quot;; 
+&#125;
+$myList.html(array.join(&#x27;&#x27;));</code></pre>
 <p>3.不要处理不存在的元素。详情</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">// 无良的做法：jQuery后台要跑完三个函数后才会知道这个元素其实根本不存在<br>$(&quot;#nosuchthing&quot;).slideUp();<br>// 应该这样<br>var $mySelection = $(&quot;#nosuchthing&quot;);<br>if ($mySelection.length) &#123;<br>    $mySelection.slideUp();<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">// 无良的做法：jQuery后台要跑完三个函数后才会知道这个元素其实根本不存在
+$(&quot;#nosuchthing&quot;).slideUp();
+// 应该这样
+var $mySelection = $(&quot;#nosuchthing&quot;);
+if ($mySelection.length) &#123;
+    $mySelection.slideUp();
+&#125;</code></pre>
 <p>##事件相关<br>1.一个页面只写一个文档ready事件的处理程序。这样代码既清晰好调试，又容易跟踪代码的进程。<br>2.表用匿名函数来做事件的回调。匿名函数不易调试维护测试和复用。或许你想较真，看看这里吧</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">$(&quot;#myLink&quot;).on(&quot;click&quot;, function()&#123;...&#125;); // 表这样<br> <br>// 这样<br>function myLinkClickHandler()&#123;...&#125;<br>$(&quot;#myLink&quot;).on(&quot;click&quot;, myLinkClickHandler);<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">$(&quot;#myLink&quot;).on(&quot;click&quot;, function()&#123;...&#125;); // 表这样
+ 
+// 这样
+function myLinkClickHandler()&#123;...&#125;
+$(&quot;#myLink&quot;).on(&quot;click&quot;, myLinkClickHandler);</code></pre>
 <p>3.处理文档ready事件的回调也表用匿名函数，匿名函数不易调试维护测试和复用:(</p>
 <p>````<br>$(function(){ … }); // 糟糕的做法：无法利用此函数也无法为其写测试用例</p>
 <p>// 好的做法<br>$(initPage); // 抑或 $(document).ready(initPage);<br>function initPage(){<br>    // 这里你可以进行程序的初始化了<br>}</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">4.进一步，最好也将ready事件的处理程序放到外部文件中引入到页面，而页面中内嵌的代码只需调用即可。<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">4.进一步，最好也将ready事件的处理程序放到外部文件中引入到页面，而页面中内嵌的代码只需调用即可。</code></pre>
 <script src="my-document-ready.js"></script>
 <script>
     // 初始化一些必要的全局变量
     $(document).ready(initPage); // 抑或 $(initPage);
 </script>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">5.千万表写内联到HTML的JS代码，这是调试的梦魇！应该总是用jQuery来绑定事件自带程序，这样也方便随时动态地取消绑定。<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">5.千万表写内联到HTML的JS代码，这是调试的梦魇！应该总是用jQuery来绑定事件自带程序，这样也方便随时动态地取消绑定。</code></pre>
 <p><a id="myLink" href="#" onclick="myEventHandler();">my link</a> <!--不好 --><br>$(“#myLink”).on(“click”, myEventHandler); // GOOD</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">6.如果可能尽量在绑定事件处理程序时使用一个命名空间，这样可以方便地取消绑定而不会影响其他绑定。<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">6.如果可能尽量在绑定事件处理程序时使用一个命名空间，这样可以方便地取消绑定而不会影响其他绑定。</code></pre>
 <p>$(“#myLink”).on(“click.mySpecialClick”, myEventHandler); // 不错<br>// 之后，让我们优雅地解除绑定<br>$(“#myLink”).unbind(“click.mySpecialClick”);</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">异步操作<br>1.直接用$.ajax()而表去用.getJson() 或 .get(),因为jQuery内部还是将其转为前者<br><br>2.表对HTTPS站点使用HTTP去发起请求，最好干脆就表指定（将HTTP或者HTTPS从你的URL中移除）<br><br>3.表在链接里面嵌参数，请使用专门的参数设置来传递<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">异步操作
+1.直接用$.ajax()而表去用.getJson() 或 .get(),因为jQuery内部还是将其转为前者
+
+2.表对HTTPS站点使用HTTP去发起请求，最好干脆就表指定（将HTTP或者HTTPS从你的URL中移除）
+
+3.表在链接里面嵌参数，请使用专门的参数设置来传递</code></pre>
 <p>// 不易阅读的代码…<br>$.ajax({<br>    url: “something.php?param1=test1&amp;param2=test2”,<br>    ….<br>});</p>
 <p>// 更易阅读…<br>$.ajax({<br>    url: “something.php”,<br>    data: { param1: test1, param2: test2 }<br>});</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">4.尽量指明数据类型以便你自己清楚要处理什么样的数据（见下方会提到的Ajax模板）<br><br>5.对于异步动态加载的内容，最好使用代理来绑定事件处理程序。这样的好处是对于之后动态加载的元素事件同样有效。你或许想了解更多<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">4.尽量指明数据类型以便你自己清楚要处理什么样的数据（见下方会提到的Ajax模板）
+
+5.对于异步动态加载的内容，最好使用代理来绑定事件处理程序。这样的好处是对于之后动态加载的元素事件同样有效。你或许想了解更多</code></pre>
 <p>$(“#parent-container”).on(“click”, “a”, delegatedClickHandlerForAjax);</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">6.使用Promise模式。更多例子<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">6.使用Promise模式。更多例子</code></pre>
 <p>$.ajax({ … }).then(successHandler, failureHandler);</p>
 <p>// 抑或<br>var jqxhr = $.ajax({ … });<br>jqxhr.done(successHandler);<br>jqxhr.fail(failureHandler);</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">7.标准的Ajax模板一分。追寻根源<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">7.标准的Ajax模板一分。追寻根源</code></pre>
 <p>var jqxhr = $.ajax({<br>    url: url,<br>    type: “GET”, // 默认为GET,你可以根据需要更改<br>    cache: true, // 默认为true,但对于script,jsonp类型为false,可以自行设置<br>    data: {}, // 将请求参数放这里.<br>    dataType: “json”, // 指定想要的数据类型<br>    jsonp: “callback”, // 指定回调处理JSONP类型的请求<br>    statusCode: { // 如果你想处理各状态的错误的话<br>        404: handler404,<br>        500: handler500<br>    }<br>});<br>jqxhr.done(successHandler);<br>jqxhr.fail(failureHandler);</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">##动画与特效<br>1.保持一个始终如一风格统一的动画实现<br><br>2.紧遵用户体验，表滥用动画特效<br><br>使用简洁的显示隐藏，状态切换，滑入滑出等效果来展示元素<br>使用预设值来设置动画的速度’fast’，’slow’，或者400（中等速度）<br>插件相关<br>1.始终选择一个有良好支持，完善文档，全面测试过并且社区活跃的插件<br><br>2.注意所用插件与当前使用的jQuery版本是否兼容<br><br>3.一些常用功能应该写成jQuery插件。一分jQuery插件的编写模板<br><br>##链式句法<br>1.除了用变量将jQuery选择器返回的结果保存，还可以利用好链式调用。<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">##动画与特效
+1.保持一个始终如一风格统一的动画实现
+
+2.紧遵用户体验，表滥用动画特效
+
+使用简洁的显示隐藏，状态切换，滑入滑出等效果来展示元素
+使用预设值来设置动画的速度’fast’，’slow’，或者400（中等速度）
+插件相关
+1.始终选择一个有良好支持，完善文档，全面测试过并且社区活跃的插件
+
+2.注意所用插件与当前使用的jQuery版本是否兼容
+
+3.一些常用功能应该写成jQuery插件。一分jQuery插件的编写模板
+
+##链式句法
+1.除了用变量将jQuery选择器返回的结果保存，还可以利用好链式调用。
+</code></pre>
 <p>$(“#myDiv”).addClass(“error”).show();</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plaintext"><br>2.当链式调用多达3次以上或代码因绑定回调略显复杂时，使用换行和适当的缩进来提高代码的可读性。<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">
+2.当链式调用多达3次以上或代码因绑定回调略显复杂时，使用换行和适当的缩进来提高代码的可读性。
+</code></pre>
 <p>$(“#myLink”)<br>    .addClass(“bold”)<br>    .on(“click”, myClickHandler)<br>    .on(“mouseover”, myMouseOverHandler)<br>    .show();</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">3.对于特别长的调用最好还是用变量保存下中间结果来简化代码。<br><br>## 其他<br><br>1.使用对象字面量来传递参数<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">3.对于特别长的调用最好还是用变量保存下中间结果来简化代码。
+
+## 其他
+
+1.使用对象字面量来传递参数
+</code></pre>
 <p>$myLink.attr(“href”, “#”).attr(“title”, “my link”).attr(“rel”, “external”); // 糟糕：调用了三次attr<br>// 不错，只调用了一次attr<br>$myLink.attr({<br>    href: “#”,<br>    title: “my link”,<br>    rel: “external”<br>});</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plaintext"><br>2.表将CSS与jQuery杂揉<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">
+2.表将CSS与jQuery杂揉
+</code></pre>
 <p>$(“#mydiv”).css({‘color’:red, ‘font-weight’:’bold’}); // 不好<br>.error {/* 不错 */<br>    color: red;<br>    font-weight: bold;<br>}<br>$(“#mydiv”).addClass(“error”);</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext"><br>3.时刻关注官方Changelog，表使用摒弃了的方法。点此查看所有废弃的方法<br><br>4.适时地使用原生JavaScript。一些与此有关的性能比较<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">
+3.时刻关注官方Changelog，表使用摒弃了的方法。点此查看所有废弃的方法
+
+4.适时地使用原生JavaScript。一些与此有关的性能比较
+</code></pre>
 <p>$(“#myId”); // 多少还是会逊色于…<br>document.getElementById(“myId”);<br>```</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2016/08/12/编码规范/jQuery的编码标准/';

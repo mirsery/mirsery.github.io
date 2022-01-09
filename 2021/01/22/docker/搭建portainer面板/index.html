@@ -17,11 +17,17 @@
 </blockquote>
 <h2 id="官方手册地址"><a href="#官方手册地址" class="headerlink" title="官方手册地址"></a>官方手册地址</h2><p><a target="_blank" rel="noopener" href="https://documentation.portainer.io/v2.0/deploy/linux/#deploy-portainer-in-docker">https://documentation.portainer.io/v2.0/deploy/linux/#deploy-portainer-in-docker</a></p>
 <h2 id="汉化包下载"><a href="#汉化包下载" class="headerlink" title="汉化包下载"></a>汉化包下载</h2><p><a href="/_attachments/2021-01-22/public.zip">下载汉化包public.zip</a></p>
-<h2 id="独立容器形式运行Portainer"><a href="#独立容器形式运行Portainer" class="headerlink" title="独立容器形式运行Portainer"></a>独立容器形式运行Portainer</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo docker run -d -p 9000:9000 \<br>--restart=always  \<br>-v /var/run/docker.sock:/var/run/docker.sock \<br>-v /mnt/prtainer/data:/data \<br>-v /mnt/prtainer/public:/public \<br>--name prtainer  \<br>portainer/portainer <br></code></pre></td></tr></table></figure>
+<h2 id="独立容器形式运行Portainer"><a href="#独立容器形式运行Portainer" class="headerlink" title="独立容器形式运行Portainer"></a>独立容器形式运行Portainer</h2><pre><code class="highlight bash">sudo docker run -d -p 9000:9000 \
+--restart=always  \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /mnt/prtainer/data:/data \
+-v /mnt/prtainer/public:/public \
+--name prtainer  \
+portainer/portainer</code></pre>
 <p>其中*/mnt/prtainer/public* 为Portainer汉化包的路径<br>Portainer 的数据存放在内部/data 目录，这样容器重启的时候数据会丢失，所以要确保数据持久化。</p>
 <h2 id="stack-方式启动"><a href="#stack-方式启动" class="headerlink" title="stack 方式启动"></a>stack 方式启动</h2><ul>
-<li>下载stack文件<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -L https://downloads.portainer.io/portainer-agent-stack.yml -o portainer-agent-stack.yml<br></code></pre></td></tr></table></figure></li>
-<li>以stack方式启动 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker stack deploy -c portainer-agent-stack.yml portainer<br></code></pre></td></tr></table></figure></li>
+<li>下载stack文件<pre><code class="highlight bash">curl -L https://downloads.portainer.io/portainer-agent-stack.yml -o portainer-agent-stack.yml</code></pre></li>
+<li>以stack方式启动 <pre><code class="highlight bash">docker stack deploy -c portainer-agent-stack.yml portainer</code></pre></li>
 </ul>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/01/22/docker/搭建portainer面板/';

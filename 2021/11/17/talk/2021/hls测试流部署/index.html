@@ -16,10 +16,18 @@
 <h1 id="hls测试流简易部署全过程"><a href="#hls测试流简易部署全过程" class="headerlink" title="hls测试流简易部署全过程"></a>hls测试流简易部署全过程</h1><p>web开发的过程中有时候会遇到缺少hls在线测试流的情况，这个时候就需要我们自己搭建可用的测试流服务。</p>
 <h2 id="第一步将下载的视频切片成m3u8"><a href="#第一步将下载的视频切片成m3u8" class="headerlink" title="第一步将下载的视频切片成m3u8"></a>第一步将下载的视频切片成m3u8</h2><p>在此操作之前我们需要用到ffmpeg（<a target="_blank" rel="noopener" href="https://ffmpeg.org/download.html">点击下载</a>). FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源计算机程序。采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。它包含了非常先进的音频/视频编解码库libavcodec。</p>
 <p>下载安装完之后我们可以调用如下命令:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ffmpeg -i yoursource.mp4 -f segment -segment_time 60 -segment_format mpegts -segment_list yourtarget.m3u8 -c copy -bsf:v h264_mp4toannexb -map 0 yourtarget-%04d.ts<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">ffmpeg -i yoursource.mp4 -f segment -segment_time 60 -segment_format mpegts -segment_list yourtarget.m3u8 -c copy -bsf:v h264_mp4toannexb -map 0 yourtarget-%04d.ts</code></pre>
 <p>上述命令会按照60s的间隔对mp4文件进行切片。</p>
 <h2 id="第二步将切片的文件部署到web服务器中发布"><a href="#第二步将切片的文件部署到web服务器中发布" class="headerlink" title="第二步将切片的文件部署到web服务器中发布"></a>第二步将切片的文件部署到web服务器中发布</h2><p>以下是nginx服务器的简单部署配置示例</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">server &#123;<br>        listen 80;<br>        index index.html;<br>        server_name xxxxxx; // 服务名<br>        location /&#123;<br>            add_header Access-Control-Allow-Origin *; //允许跨域<br>            root /xxxx/videoPath; //视频切片存放路径<br>        &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">server &#123;
+        listen 80;
+        index index.html;
+        server_name xxxxxx; // 服务名
+        location /&#123;
+            add_header Access-Control-Allow-Origin *; //允许跨域
+            root /xxxx/videoPath; //视频切片存放路径
+        &#125;
+ &#125;</code></pre>
 
 <p>完成以上配置之后直接访问m3u8文件的web地址即可播放视频流</p>
 </div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/11/18/web/2021/npm%E4%B8%8B%E8%BD%BD%E5%8C%85%E8%B7%AF%E5%BE%84%E8%AE%BE%E7%BD%AE/">上一篇</a><a class="next" href="/2021/08/27/web/2021/PostMan-%E6%8E%A5%E5%8F%A3%E8%B0%83%E8%AF%95%E6%8C%87%E5%8D%97/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

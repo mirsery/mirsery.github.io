@@ -13,20 +13,31 @@
 <li>在调用eval( ) 方法的作用域内进行代码求值。<br>eval 创建的函数会继承该作用域的闭包 - - -局部作用域内执行eval()时的衍生结果。</li>
 </ul>
 <p>##使用函数构造器进行求值<br>JavaScript中的所有函数都是Function的实例<br>直接通过Function构造器实例化函数</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javaScript"><span class="hljs-keyword">var</span> add=<span class="hljs-keyword">new</span> <span class="hljs-built_in">Function</span>(<span class="hljs-string">&quot;a&quot;</span>,<span class="hljs-string">&quot;b&quot;</span>,<span class="hljs-string">&quot;return a+b;&quot;</span>);<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight javaScript"><span class="keyword">var</span> add=<span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;return a+b;&quot;</span>);</code></pre>
 <blockquote>
 <p>使用Function构造器方式创建函数的时候不会创建闭包</p>
 </blockquote>
 <p>##用定时器进行求值<br>定时器可以对代码字符串进行求值，而且还是异步的。<br>我们使用定时器的时候一般传递给定时器一个内联函数或者函数引用，这是setTimeout()、setInterval()方法推荐使用的方式，但是这些方式也可以接受字符串的传入，从而在定时器触发的时候进行求值。<br>示例如下:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javaScript"><span class="hljs-keyword">var</span> tick = <span class="hljs-built_in">window</span>.setTimeout(<span class="hljs-string">&#x27;alert(&quot;hi&quot;)&#x27;</span>,<span class="hljs-number">100</span>);<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight javaScript"><span class="keyword">var</span> tick = <span class="built_in">window</span>.setTimeout(<span class="string">&#x27;alert(&quot;hi&quot;)&#x27;</span>,<span class="number">100</span>);</code></pre>
 <p>大致相当于new Function()的使用方式。</p>
 <p>##全局作用域内的求值操作</p>
 <p>我们可以把将要执行的代码放在动态的&lt;script&gt;标签内，并将标签注入到文档中。<br>##函数序列化(“反编译”)</p>
 <p>toString ( ) ————–JavaScript可以把已经求值的代码转换成字符串。</p>
 <p>##面向切面的脚本标签<br>AOP或面向切面编程。———-维基百科对AOP的定义:“一种旨在通过分离横切关注点而增加模块化的编程范式”。<br>简单的说AOP技术可以在运行时将代码进行注入并执行一些横切代码，如日志记录、缓存、安全检查等。AOP引擎将在运行时添加日志代码而不是在原有代码中添加大量的日志语句以便让开发人员在开发期间不用关注这些事情。<br>比方说我们可以创建一个类型为onload的新脚本。<br>我们可以指定如下的代码块实现。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>&quot;<span class="hljs-attr">x</span>/<span class="hljs-attr">onload</span>&quot;&gt;</span><br>... ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight html"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>&quot;<span class="attr">x</span>/<span class="attr">onload</span>&quot;&gt;</span>
+... ...
+<span class="tag">&lt;/<span class="name">script</span>&gt;</span></code></pre>
 <p>创建一个在页面加载后才执行的脚本标签类型。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javaScript">&lt;script type<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;<br><span class="hljs-built_in">window</span>.onload =  <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-keyword">var</span> scripts = <span class="hljs-built_in">document</span>.getElementByTagName(<span class="hljs-string">&quot;script&quot;</span>);<br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>;i&lt;scripts.length;i++)&#123;<br>        <span class="hljs-keyword">if</span>(scripts[i].type==<span class="hljs-string">&quot;x/onload&quot;</span>)&#123;<br>            globalEval(Scripts[i].innerHTML);<br>        &#125;<br>    &#125;<br>&#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight javaScript">&lt;script type<span class="string">&quot;text/javascript&quot;</span>&gt;
+<span class="built_in">window</span>.onload =  <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;
+    <span class="keyword">var</span> scripts = <span class="built_in">document</span>.getElementByTagName(<span class="string">&quot;script&quot;</span>);
+    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;scripts.length;i++)&#123;
+        <span class="keyword">if</span>(scripts[i].type==<span class="string">&quot;x/onload&quot;</span>)&#123;
+            globalEval(Scripts[i].innerHTML);
+        &#125;
+    &#125;
+&#125;
+&lt;/script&gt;</code></pre>
 <p>这是一个简单的例子，但是这种技术更复杂且有更有意义的用途。例如:将自定义脚本快和JQuery.tmpl()方法一起使用，用于提供运行时模板，利用它可以在用户界面上执行脚本或者在准备操作DOM的时候甚至是相邻元素上执行脚本。</p>
 <p>##元语言和领域特定语言(待补)</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';

@@ -11,9 +11,9 @@
 </ul>
 <!-- tocstop -->
 
-<h2 id="查看docker占用分布"><a href="#查看docker占用分布" class="headerlink" title="查看docker占用分布"></a>查看docker占用分布</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker system df<br></code></pre></td></tr></table></figure>
+<h2 id="查看docker占用分布"><a href="#查看docker占用分布" class="headerlink" title="查看docker占用分布"></a>查看docker占用分布</h2><pre><code class="highlight shell">docker system df</code></pre>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker system df -v #可以进一步查看空间占用的细节以确定是哪个镜像，容器活着本地卷占用过高的空间<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">docker system df -v #可以进一步查看空间占用的细节以确定是哪个镜像，容器活着本地卷占用过高的空间</code></pre>
 
 
 <h2 id="清理方法"><a href="#清理方法" class="headerlink" title="清理方法"></a>清理方法</h2><h3 id="自动清理命令"><a href="#自动清理命令" class="headerlink" title="自动清理命令"></a>自动清理命令</h3><blockquote>
@@ -25,14 +25,22 @@
 <li>未被任何容器所关联的网络</li>
 <li>所有悬空的镜像</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker system prune # 对空间进行自动清理<br>docker system prune -a #清除所有未被使用的镜像和悬空镜像<br>docker system prune -f #用以强制删除不提示信息<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">docker system prune # 对空间进行自动清理
+docker system prune -a #清除所有未被使用的镜像和悬空镜像
+docker system prune -f #用以强制删除不提示信息</code></pre>
 
 <p>针对容器和镜像的删除命令:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker image prune #删除悬空的镜像<br>docker container prune #删除无用的容器<br><span class="hljs-meta">#</span><span class="bash"></span><br><span class="bash"><span class="hljs-comment"># 默认情况下docker container prune命令会清理掉所有处于stopped状态的容器</span></span><br><span class="hljs-meta">#</span><span class="bash"></span><br><span class="bash">docker volume prune <span class="hljs-comment"># 删除无用的卷</span></span><br>docker network prune # 删除无用的网络<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">docker image prune #删除悬空的镜像
+docker container prune #删除无用的容器
+<span class="meta">#</span><span class="bash"></span>
+<span class="bash"><span class="comment"># 默认情况下docker container prune命令会清理掉所有处于stopped状态的容器</span></span>
+<span class="meta">#</span><span class="bash"></span>
+<span class="bash">docker volume prune <span class="comment"># 删除无用的卷</span></span>
+docker network prune # 删除无用的网络</code></pre>
 
 <h3 id="手动清除"><a href="#手动清除" class="headerlink" title="手动清除"></a>手动清除</h3><ul>
-<li>清理卷<br>如果卷占用过高，可以清除一些不使用的卷，包括一些未被任何容器调用的卷（-v 详细信息中若显示LINKS=0，则未被调用)<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker volume rm $(docker volume ls -qf dangling=true)<br></code></pre></td></tr></table></figure></li>
-<li>容器清理<br>如果发现是容器占用过高的空间，可以手动删除一些:<br>删除所有已退出的容器:<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker rm -v $(docker ps -aq -f status=exited)<br></code></pre></td></tr></table></figure>
-删除所有状态为dead的容器<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker rm -v $(docker ps -aq -f status=dead)<br></code></pre></td></tr></table></figure></li>
+<li>清理卷<br>如果卷占用过高，可以清除一些不使用的卷，包括一些未被任何容器调用的卷（-v 详细信息中若显示LINKS=0，则未被调用)<pre><code class="highlight shell">docker volume rm $(docker volume ls -qf dangling=true)</code></pre></li>
+<li>容器清理<br>如果发现是容器占用过高的空间，可以手动删除一些:<br>删除所有已退出的容器:<pre><code class="highlight shell">docker rm -v $(docker ps -aq -f status=exited)</code></pre>
+删除所有状态为dead的容器<pre><code class="highlight shell">docker rm -v $(docker ps -aq -f status=dead)</code></pre></li>
 </ul>
 </div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/12/17/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E6%90%AD%E5%BB%BA/">上一篇</a><a class="next" href="/2021/12/10/web/2021/ubuntu%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

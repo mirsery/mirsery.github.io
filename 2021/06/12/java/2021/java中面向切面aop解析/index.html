@@ -13,18 +13,49 @@
 <h2 id="实现简易的Aop"><a href="#实现简易的Aop" class="headerlink" title="实现简易的Aop"></a>实现简易的Aop</h2><ol>
 <li>定义一个 需要被代理的接口，并实现接口</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Job</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">doWork</span><span class="hljs-params">(String msg)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Work</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Job</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">doWork</span><span class="hljs-params">(String msg)</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;[do-work] &quot;</span> + msg);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Job</span> </span>&#123;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">doWork</span><span class="params">(String msg)</span></span>;
+&#125;</code></pre>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Work</span> <span class="keyword">implements</span> <span class="title">Job</span> </span>&#123;
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">doWork</span><span class="params">(String msg)</span> </span>&#123;
+        System.out.println(<span class="string">&quot;[do-work] &quot;</span> + msg);
+        <span class="keyword">return</span> <span class="number">1</span>;
+    &#125;
+&#125;</code></pre>
 
 <ol start="2">
 <li>实现InvocationHandler接口并创建代理方法</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WorkHandler</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">InvocationHandler</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> Object o;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">WorkHandler</span><span class="hljs-params">(Object o)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.o = o;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">invoke</span><span class="hljs-params">(Object proxy, Method method, Object[] args)</span> <span class="hljs-keyword">throws</span> Throwable </span>&#123;<br>        method.invoke(o, args);<br>        System.out.println(<span class="hljs-string">&quot;[proxy-invoke]&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WorkHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;
+
+    <span class="keyword">private</span> Object o;
+
+    <span class="function"><span class="keyword">public</span> <span class="title">WorkHandler</span><span class="params">(Object o)</span> </span>&#123;
+        <span class="keyword">this</span>.o = o;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;
+        method.invoke(o, args);
+        System.out.println(<span class="string">&quot;[proxy-invoke]&quot;</span>);
+        <span class="keyword">return</span> <span class="number">2</span>;
+    &#125;
+
+&#125;</code></pre>
 
 <ol start="3">
 <li>场景测试类</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WorkMain</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Job work = <span class="hljs-keyword">new</span> Work();<br>        WorkHandler workHandler = <span class="hljs-keyword">new</span> WorkHandler(work);<br>        Job job = (Job) Proxy.newProxyInstance(work.getClass().getClassLoader(),<br>                work.getClass().getInterfaces(),workHandler);<br>        System.out.println(job.doWork(<span class="hljs-string">&quot;hahahah&quot;</span>));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WorkMain</span> </span>&#123;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;
+        Job work = <span class="keyword">new</span> Work();
+        WorkHandler workHandler = <span class="keyword">new</span> WorkHandler(work);
+        Job job = (Job) Proxy.newProxyInstance(work.getClass().getClassLoader(),
+                work.getClass().getInterfaces(),workHandler);
+        System.out.println(job.doWork(<span class="string">&quot;hahahah&quot;</span>));
+    &#125;
+&#125;</code></pre>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/06/12/java/2021/java中面向切面aop解析/';
 var disqus_title = 'java 中面向切面的Aop 解析';

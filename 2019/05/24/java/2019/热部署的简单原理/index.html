@@ -10,16 +10,68 @@
 <h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>在类加载器中，类只可以加载一次并且不可卸载。java类只能被加载一次，并且无法卸载。想要实现热部署可以分以下三个步骤：<br>1、销毁该自定义ClassLoader<br>2、更新class类文件<br>3、创建新的ClassLoader去加载更新后的class类文件。</p>
 <h2 id="源码部分"><a href="#源码部分" class="headerlink" title="源码部分"></a>源码部分</h2><ol>
 <li><p>自定义类加载器</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.io.InputStream;<br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyClassLoader</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ClassLoader</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Class&lt;?&gt; findClass(String name) <span class="hljs-keyword">throws</span> ClassNotFoundException &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            String fileName = name.substring(name.lastIndexOf(<span class="hljs-string">&quot;.&quot;</span> )+<span class="hljs-number">1</span>) + <span class="hljs-string">&quot;.class&quot;</span> ;<br>            InputStream inputStream = <span class="hljs-keyword">this</span>.getClass().getResourceAsStream(fileName);<br>            <span class="hljs-keyword">byte</span>[] b = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[inputStream.available()];<br>            inputStream.read(b);<br>            <span class="hljs-keyword">return</span> defineClass(name, b, <span class="hljs-number">0</span>, b.length);<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ClassNotFoundException(name);<br>        &#125;<br>    &#125;  <br>&#125;<br></code></pre></td></tr></table></figure></li>
+<pre><code class="highlight java"><span class="keyword">import</span> java.io.InputStream;
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;
+        <span class="keyword">try</span> &#123;
+            String fileName = name.substring(name.lastIndexOf(<span class="string">&quot;.&quot;</span> )+<span class="number">1</span>) + <span class="string">&quot;.class&quot;</span> ;
+            InputStream inputStream = <span class="keyword">this</span>.getClass().getResourceAsStream(fileName);
+            <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[inputStream.available()];
+            inputStream.read(b);
+            <span class="keyword">return</span> defineClass(name, b, <span class="number">0</span>, b.length);
+        &#125; <span class="keyword">catch</span> (Exception e) &#123;
+            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);
+        &#125;
+    &#125;  
+&#125;</code></pre></li>
 <li><p>替换的类</p>
 </li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//class 1</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Helloword</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">say</span><span class="hljs-params">()</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;Hello world! V1&quot;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">//class2</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Helloword</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">say</span><span class="hljs-params">()</span> </span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;Hello world! V2&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="comment">//class 1</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Helloword</span> </span>&#123;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">()</span> </span>&#123;
+        System.out.println(<span class="string">&quot;Hello world! V1&quot;</span>);
+    &#125;
+&#125;
+
+<span class="comment">//class2</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Helloword</span> </span>&#123;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">()</span> </span>&#123;
+        System.out.println(<span class="string">&quot;Hello world! V2&quot;</span>);
+    &#125;
+&#125;</code></pre>
 
 <ol start="3">
 <li>测试类</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> </span><br><span class="hljs-class"></span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">( String[] args )</span> <span class="hljs-keyword">throws</span> Exception</span><br><span class="hljs-function">    </span>&#123;<br>        loadHelloWorld();<br>        System.gc();<span class="hljs-comment">//等待gc回收</span><br>        Thread.sleep(<span class="hljs-number">3</span>* <span class="hljs-number">1000</span>);<br>        File fileV2 = <span class="hljs-keyword">new</span> File(<span class="hljs-string">&quot;Helloword2.class&quot;</span>);<br>        File fileV1 = <span class="hljs-keyword">new</span> File(<span class="hljs-string">&quot;target/classes/com/mirsery/test/Helloword.class&quot;</span>);<br>        fileV1.delete();<br>        fileV2.renameTo(fileV1);<br>        System.out.println(<span class="hljs-string">&quot;Update Success!&quot;</span>);<br>        loadHelloWorld();<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">loadHelloWorld</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;<br>        MyClassLoader myClassLoader = <span class="hljs-keyword">new</span> MyClassLoader();<br>        Class&lt;?&gt; class1 = myClassLoader.findClass(<span class="hljs-string">&quot;com.test.Helloword&quot;</span>);<br>        Object obj = class1.newInstance();<br>        Method method = class1.getMethod( <span class="hljs-string">&quot;say&quot;</span>);<br>        method.invoke(obj);<br>        System.out.println(obj);<br>        System.out.println(obj.getClass());<br>        System.out.println(obj.getClass().getClassLoader());<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>
+<span class="class"></span>&#123;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span> <span class="keyword">throws</span> Exception</span>
+<span class="function">    </span>&#123;
+        loadHelloWorld();
+        System.gc();<span class="comment">//等待gc回收</span>
+        Thread.sleep(<span class="number">3</span>* <span class="number">1000</span>);
+        File fileV2 = <span class="keyword">new</span> File(<span class="string">&quot;Helloword2.class&quot;</span>);
+        File fileV1 = <span class="keyword">new</span> File(<span class="string">&quot;target/classes/com/mirsery/test/Helloword.class&quot;</span>);
+        fileV1.delete();
+        fileV2.renameTo(fileV1);
+        System.out.println(<span class="string">&quot;Update Success!&quot;</span>);
+        loadHelloWorld();
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loadHelloWorld</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;
+        MyClassLoader myClassLoader = <span class="keyword">new</span> MyClassLoader();
+        Class&lt;?&gt; class1 = myClassLoader.findClass(<span class="string">&quot;com.test.Helloword&quot;</span>);
+        Object obj = class1.newInstance();
+        Method method = class1.getMethod( <span class="string">&quot;say&quot;</span>);
+        method.invoke(obj);
+        System.out.println(obj);
+        System.out.println(obj.getClass());
+        System.out.println(obj.getClass().getClassLoader());
+    &#125;
+
+&#125;</code></pre>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2019/05/24/java/2019/热部署的简单原理/';
 var disqus_title = 'java热部署的简单介绍';

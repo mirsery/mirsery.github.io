@@ -88,11 +88,21 @@
 <h2 id="目录划分"><a href="#目录划分" class="headerlink" title="目录划分"></a>目录划分</h2><p><a name="root"></a></p>
 <h3 id="root-目录结构划分"><a href="#root-目录结构划分" class="headerlink" title="${root}目录结构划分"></a>${root}目录结构划分</h3><p>在${root}下，目录结构 <em>必须(MUST)</em> 按照<code>职能</code>进行划分， <em>不允许(MUST NOT)</em> 将<code>资源类型</code>或<code>业务逻辑</code>划分的目录直接置于${root}下。</p>
 <p>常用的目录有<code>src</code>、<code>doc</code>、<code>dep</code>、<code>test</code>等。详细请参考<a href="#level1">一级目录详细说明</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">$&#123;root&#125;/<br>    src/<br>    test/<br>    doc/<br>    dep/<br>    ...<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">$&#123;root&#125;/
+    src/
+    test/
+    doc/
+    dep/
+    ...</code></pre>
 <h3 id="业务项目目录结构划分"><a href="#业务项目目录结构划分" class="headerlink" title="业务项目目录结构划分"></a>业务项目目录结构划分</h3><p><code>业务项目</code>的${root}目录结构划分遵循<a href="#root">${root}目录结构划分</a>。</p>
 <h4 id="项目代号"><a href="#项目代号" class="headerlink" title="项目代号"></a>项目代号</h4><p>业务项目 <em>可以(SHOULD)</em> 为项目起一个代号名称。代号名称 <em>必须(MUST)</em> 为一个单词，不宜过长。例：北斗的项目代号为<code>triones</code>，哥伦布的项目代号为<code>clb</code>，百度锦囊的项目代号为<code>jn</code>。项目代号有利于区分不同项目，为未来项目之间的重用留下扩展的后路。</p>
 <p>在项目开发时，通常会使用如下<a href="module.md#config">加载器配置</a>，将项目代号指向<code>src</code>。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript">&#123;<br>    <span class="hljs-attr">baseUrl</span>: <span class="hljs-string">&#x27;$&#123;docroot&#125;&#x27;</span>,<br>    <span class="hljs-attr">paths</span>: &#123;<br>        <span class="hljs-string">&#x27;triones&#x27;</span>: <span class="hljs-string">&#x27;src&#x27;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight javascript">&#123;
+    <span class="attr">baseUrl</span>: <span class="string">&#x27;$&#123;docroot&#125;&#x27;</span>,
+    <span class="attr">paths</span>: &#123;
+        <span class="string">&#x27;triones&#x27;</span>: <span class="string">&#x27;src&#x27;</span>
+    &#125;
+&#125;</code></pre>
 
 
 <h4 id="根据业务逻辑划分src目录结构"><a href="#根据业务逻辑划分src目录结构" class="headerlink" title="根据业务逻辑划分src目录结构"></a>根据业务逻辑划分src目录结构</h4><p><code>业务项目</code>的<code>src</code>目录内，绝大多数情况 <em>应当(SHOULD)</em> 根据<code>业务逻辑</code>划分目录结构。划分出的子目录（比如<a href="#bizdirexample">例子</a>中的<code>biz1</code>）我们称为<code>业务目录</code>。</p>

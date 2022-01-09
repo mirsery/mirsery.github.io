@@ -12,33 +12,88 @@
 <!-- tocstop -->
 
 <h2 id="typescript的安装"><a href="#typescript的安装" class="headerlink" title="typescript的安装"></a>typescript的安装</h2><p>使用npm包的形式安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">npm install -g typescript<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight shell">npm install -g typescript</code></pre>
 
-<h2 id="TypeScript的类型注解"><a href="#TypeScript的类型注解" class="headerlink" title="TypeScript的类型注解"></a>TypeScript的类型注解</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs typeScript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">greeter</span>(<span class="hljs-params">person: <span class="hljs-built_in">string</span></span>)</span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;hello, &quot;</span>+person;<br>&#125;<br><span class="hljs-keyword">let</span> user = <span class="hljs-string">&quot;Jane User&quot;</span>;<br><span class="hljs-built_in">document</span>.body.innerHtml = greeter(user)<br></code></pre></td></tr></table></figure>
+<h2 id="TypeScript的类型注解"><a href="#TypeScript的类型注解" class="headerlink" title="TypeScript的类型注解"></a>TypeScript的类型注解</h2><pre><code class="highlight typeScript"><span class="function"><span class="keyword">function</span> <span class="title">greeter</span>(<span class="params">person: <span class="built_in">string</span></span>)</span>&#123;
+    <span class="keyword">return</span> <span class="string">&quot;hello, &quot;</span>+person;
+&#125;
+<span class="keyword">let</span> user = <span class="string">&quot;Jane User&quot;</span>;
+<span class="built_in">document</span>.body.innerHtml = greeter(user)</code></pre>
 
 <p>TypeScript里的类型注解是一种轻量级的为函数或变量添加约束的方式。如果传入的参数不符合类型，则会编译器会给出相应的警告内容.</p>
 <h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>TypeScript里可以定义类似java中的接口，如下所示:</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs typeScript"><span class="hljs-keyword">interface</span> Person &#123;<br>    <span class="hljs-attr">firstName</span>: <span class="hljs-built_in">string</span>;<br>    lastName: <span class="hljs-built_in">string</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">greeter</span>(<span class="hljs-params">person: Person</span>) </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hello, &quot;</span> + person.firstName + <span class="hljs-string">&quot;&quot;</span> + person.lastName;<br>&#125;<br><br><span class="hljs-keyword">let</span> user = &#123;<span class="hljs-attr">firstName</span>:<span class="hljs-string">&quot;Jane&quot;</span>,<span class="hljs-attr">lastName</span>:<span class="hljs-string">&quot;User&quot;</span>&#125;;<br><span class="hljs-built_in">document</span>.body.innerHTML = greeter(user)<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight typeScript"><span class="keyword">interface</span> Person &#123;
+    <span class="attr">firstName</span>: <span class="built_in">string</span>;
+    lastName: <span class="built_in">string</span>
+&#125;
+
+<span class="function"><span class="keyword">function</span> <span class="title">greeter</span>(<span class="params">person: Person</span>) </span>&#123;
+    <span class="keyword">return</span> <span class="string">&quot;Hello, &quot;</span> + person.firstName + <span class="string">&quot;&quot;</span> + person.lastName;
+&#125;
+
+<span class="keyword">let</span> user = &#123;<span class="attr">firstName</span>:<span class="string">&quot;Jane&quot;</span>,<span class="attr">lastName</span>:<span class="string">&quot;User&quot;</span>&#125;;
+<span class="built_in">document</span>.body.innerHTML = greeter(user)</code></pre>
 
 <h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p>TypeScript支持JavaScript的新特性，比如支持基于类的面向对象编程。以下是官网的例子:</p>
 <blockquote>
 <p>在构造函数上使用public等同于创建了同名的成员变量</p>
 </blockquote>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs typeScript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span> </span>&#123;<br>    <span class="hljs-attr">fullName</span>: <span class="hljs-built_in">string</span>,<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> firstName,<span class="hljs-keyword">public</span> middleInitial,<span class="hljs-keyword">public</span> lastName</span>)</span>&#123;<br>        <span class="hljs-built_in">this</span>.fullName = firstName + <span class="hljs-string">&quot; &quot;</span> + middleInitial + <span class="hljs-string">&quot; &quot;</span> + lastName;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">interface</span> Person&#123;<br>    <span class="hljs-attr">firstName</span>: <span class="hljs-built_in">string</span>,<br>    <span class="hljs-attr">lastName</span>: <span class="hljs-built_in">string</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">greeter</span>(<span class="hljs-params">person: Person</span>)</span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hello, &quot;</span> + person.firstName + <span class="hljs-string">&quot; &quot;</span> + person.lastName;<br>&#125;<br><br><br><span class="hljs-keyword">let</span> user = <span class="hljs-keyword">new</span> Student(<span class="hljs-string">&quot;Jane&quot;</span>,<span class="hljs-string">&quot;M.&quot;</span>,<span class="hljs-string">&quot;User&quot;</span>);<br><span class="hljs-built_in">document</span>.body.innerHTML = greeter(user);<br><br><br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight typeScript"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;
+    <span class="attr">fullName</span>: <span class="built_in">string</span>,
+    <span class="function"><span class="title">constructor</span>(<span class="params"><span class="keyword">public</span> firstName,<span class="keyword">public</span> middleInitial,<span class="keyword">public</span> lastName</span>)</span>&#123;
+        <span class="built_in">this</span>.fullName = firstName + <span class="string">&quot; &quot;</span> + middleInitial + <span class="string">&quot; &quot;</span> + lastName;
+    &#125;
+&#125;
+
+<span class="keyword">interface</span> Person&#123;
+    <span class="attr">firstName</span>: <span class="built_in">string</span>,
+    <span class="attr">lastName</span>: <span class="built_in">string</span>;
+&#125;
+
+<span class="function"><span class="keyword">function</span> <span class="title">greeter</span>(<span class="params">person: Person</span>)</span>&#123;
+    <span class="keyword">return</span> <span class="string">&quot;Hello, &quot;</span> + person.firstName + <span class="string">&quot; &quot;</span> + person.lastName;
+&#125;
+
+
+<span class="keyword">let</span> user = <span class="keyword">new</span> Student(<span class="string">&quot;Jane&quot;</span>,<span class="string">&quot;M.&quot;</span>,<span class="string">&quot;User&quot;</span>);
+<span class="built_in">document</span>.body.innerHTML = greeter(user);
+
+
+</code></pre>
 
 <h2 id="symbol类型"><a href="#symbol类型" class="headerlink" title="symbol类型"></a>symbol类型</h2><blockquote>
 <p>自ECMAScript 2015起，symbol成为了一种新的原生类型，就像number和string一样。</p>
 </blockquote>
 <p>symbol类型的值是通过Symbol构造函数创建的。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs typeScript"><span class="hljs-keyword">let</span> sym1 = <span class="hljs-built_in">Symbol</span>();<br><br><span class="hljs-keyword">let</span> sym2 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">&quot;key&quot;</span>); <span class="hljs-comment">// 可选的字符串key</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight typeScript"><span class="keyword">let</span> sym1 = <span class="built_in">Symbol</span>();
+
+<span class="keyword">let</span> sym2 = <span class="built_in">Symbol</span>(<span class="string">&quot;key&quot;</span>); <span class="comment">// 可选的字符串key</span></code></pre>
 
 <p>Symbols是不可以改变且唯一的。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs typeScript"><span class="hljs-keyword">let</span> sym2 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">&quot;key&quot;</span>);<br><span class="hljs-keyword">let</span> sym3 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">&quot;key&quot;</span>);<br><br>sym2 === sym3; <span class="hljs-comment">// false, symbols是唯一的</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight typeScript"><span class="keyword">let</span> sym2 = <span class="built_in">Symbol</span>(<span class="string">&quot;key&quot;</span>);
+<span class="keyword">let</span> sym3 = <span class="built_in">Symbol</span>(<span class="string">&quot;key&quot;</span>);
+
+sym2 === sym3; <span class="comment">// false, symbols是唯一的</span></code></pre>
 <p>像字符串一样，symbols也可以被用做对象属性的键。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs typeScript"><span class="hljs-keyword">let</span> sym = <span class="hljs-built_in">Symbol</span>();<br><br><span class="hljs-keyword">let</span> obj = &#123;<br>    [sym]: <span class="hljs-string">&quot;value&quot;</span><br>&#125;;<br><br><span class="hljs-built_in">console</span>.log(obj[sym]); <span class="hljs-comment">// &quot;value&quot;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight typeScript"><span class="keyword">let</span> sym = <span class="built_in">Symbol</span>();
+
+<span class="keyword">let</span> obj = &#123;
+    [sym]: <span class="string">&quot;value&quot;</span>
+&#125;;
+
+<span class="built_in">console</span>.log(obj[sym]); <span class="comment">// &quot;value&quot;</span></code></pre>
 
 <p>Symbols也可以与计算出的属性名声明相结合来声明对象的属性和类成员.</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs typeScript"><span class="hljs-keyword">const</span> getClassNameSymbol = <span class="hljs-built_in">Symbol</span>();<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">C</span> </span>&#123;<br>    [getClassNameSymbol]()&#123;<br>       <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;C&quot;</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">let</span> c = <span class="hljs-keyword">new</span> C();<br><span class="hljs-keyword">let</span> className = c[getClassNameSymbol](); <span class="hljs-comment">// &quot;C&quot;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight typeScript"><span class="keyword">const</span> getClassNameSymbol = <span class="built_in">Symbol</span>();
+
+<span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;
+    [getClassNameSymbol]()&#123;
+       <span class="keyword">return</span> <span class="string">&quot;C&quot;</span>;
+    &#125;
+&#125;
+
+<span class="keyword">let</span> c = <span class="keyword">new</span> C();
+<span class="keyword">let</span> className = c[getClassNameSymbol](); <span class="comment">// &quot;C&quot;</span></code></pre>
 
 <h2 id="众所周知的Symbols"><a href="#众所周知的Symbols" class="headerlink" title="众所周知的Symbols"></a>众所周知的Symbols</h2><p>除了用户定义的symbols，还有一些已经众所周知的内置symbols。 内置symbols用来表示语言内部的行为。</p>
 <p>以下为这些symbols的列表：</p>

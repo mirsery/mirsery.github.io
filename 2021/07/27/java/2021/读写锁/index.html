@@ -35,9 +35,120 @@
 <h2 id="样例比较读写锁和重入锁的性能差距"><a href="#样例比较读写锁和重入锁的性能差距" class="headerlink" title="样例比较读写锁和重入锁的性能差距"></a>样例比较读写锁和重入锁的性能差距</h2><blockquote>
 <p>测试电脑 配置<br>2.7 GHz 双核Intel Core i5, RAM 8 GB 1867 MHz DDR3<br>openjdk 16.0.1 OpenJDK 64-Bit Server VM Homebrew (build 16.0.1+0, mixed mode, sharing)</p>
 </blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ReadWriteLockDemo</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ReentrantReadWriteLock reentrantReadWriteLock = <span class="hljs-keyword">new</span> ReentrantReadWriteLock();<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Lock readLock = reentrantReadWriteLock.readLock();<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Lock writeLock = reentrantReadWriteLock.writeLock();<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ReentrantLock reentrantLock = <span class="hljs-keyword">new</span> ReentrantLock();<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> CountDownLatch countDownLatch = <span class="hljs-keyword">new</span> CountDownLatch(<span class="hljs-number">20</span>);  <span class="hljs-comment">//多线程控制</span><br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> readThreadNum = <span class="hljs-number">20</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> writeThreadNum = <span class="hljs-number">2</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> CountDownLatch reentrantDownLatch = <span class="hljs-keyword">new</span> CountDownLatch(<span class="hljs-number">20</span>);<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> value;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">readSomething</span><span class="hljs-params">(Lock lock)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            lock.lock();<br>            Thread.sleep(<span class="hljs-number">1000</span>); <span class="hljs-comment">//模拟耗时操作</span><br>            <span class="hljs-keyword">return</span> value;<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            lock.unlock();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">writeSomething</span><span class="hljs-params">(Lock lock, <span class="hljs-keyword">int</span> newValue)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            lock.lock();<br>            Thread.sleep(<span class="hljs-number">1000</span>); <span class="hljs-comment">//模拟耗时操作</span><br>            <span class="hljs-keyword">this</span>.value = newValue;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.value;<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            lock.unlock();<br>        &#125;<br>    &#125;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        ReadWriteLockDemo demo = <span class="hljs-keyword">new</span> ReadWriteLockDemo();<br><br>        Runnable readTask = () -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                demo.readSomething(readLock);<br>                countDownLatch.countDown();<br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;;<br><br>        Runnable writeTask = () -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                demo.writeSomething(writeLock, <span class="hljs-keyword">new</span> Random().nextInt());<br>                countDownLatch.countDown();<br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;;<br><br>        Runnable readTask2 = () -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                demo.readSomething(reentrantLock);<br>                reentrantDownLatch.countDown();<br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;;<br><br>        Runnable writeTask2 = () -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                demo.writeSomething(reentrantLock, <span class="hljs-keyword">new</span> Random().nextInt());<br>                reentrantDownLatch.countDown();<br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;;<br><br><br><br>        <span class="hljs-keyword">long</span> begin = System.currentTimeMillis();<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; readThreadNum; i++) <span class="hljs-keyword">new</span> Thread(readTask).start();<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; writeThreadNum; i++) <span class="hljs-keyword">new</span> Thread(writeTask).start();<br><br>        countDownLatch.await(); <span class="hljs-comment">//等待子线程全部完成工作</span><br><br>        <span class="hljs-keyword">long</span> end = System.currentTimeMillis();<br><br>        System.out.println(<span class="hljs-string">&quot;[readWriteLock cost] &quot;</span> + (end - begin) + <span class="hljs-string">&quot;ms&quot;</span>);<br><br><br><br>        <span class="hljs-keyword">long</span> begin2 = System.currentTimeMillis();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; readThreadNum; i++) <span class="hljs-keyword">new</span> Thread(readTask2).start();<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; writeThreadNum; i++) <span class="hljs-keyword">new</span> Thread(writeTask2).start();<br><br>        reentrantDownLatch.await(); <span class="hljs-comment">//等待子线程全部完成工作</span><br><br>        <span class="hljs-keyword">long</span> end2 = System.currentTimeMillis();<br><br>        System.out.println(<span class="hljs-string">&quot;[reentrantLock cost] &quot;</span> + (end2 - begin2) + <span class="hljs-string">&quot;ms&quot;</span>);<br>    &#125;<br><br>&#125;<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java">
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadWriteLockDemo</span> </span>&#123;
+
+    <span class="keyword">private</span> <span class="keyword">static</span> ReentrantReadWriteLock reentrantReadWriteLock = <span class="keyword">new</span> ReentrantReadWriteLock();
+
+    <span class="keyword">private</span> <span class="keyword">static</span> Lock readLock = reentrantReadWriteLock.readLock();
+
+    <span class="keyword">private</span> <span class="keyword">static</span> Lock writeLock = reentrantReadWriteLock.writeLock();
+
+    <span class="keyword">private</span> <span class="keyword">static</span> ReentrantLock reentrantLock = <span class="keyword">new</span> ReentrantLock();
+
+    <span class="keyword">private</span> <span class="keyword">static</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">20</span>);  <span class="comment">//多线程控制</span>
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> readThreadNum = <span class="number">20</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> writeThreadNum = <span class="number">2</span>;
+
+    <span class="keyword">private</span> <span class="keyword">static</span> CountDownLatch reentrantDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">20</span>);
+
+    <span class="keyword">private</span> <span class="keyword">int</span> value;
+
+    <span class="function"><span class="keyword">public</span> Object <span class="title">readSomething</span><span class="params">(Lock lock)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;
+        <span class="keyword">try</span> &#123;
+            lock.lock();
+            Thread.sleep(<span class="number">1000</span>); <span class="comment">//模拟耗时操作</span>
+            <span class="keyword">return</span> value;
+        &#125; <span class="keyword">finally</span> &#123;
+            lock.unlock();
+        &#125;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> Object <span class="title">writeSomething</span><span class="params">(Lock lock, <span class="keyword">int</span> newValue)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;
+        <span class="keyword">try</span> &#123;
+            lock.lock();
+            Thread.sleep(<span class="number">1000</span>); <span class="comment">//模拟耗时操作</span>
+            <span class="keyword">this</span>.value = newValue;
+            <span class="keyword">return</span> <span class="keyword">this</span>.value;
+        &#125; <span class="keyword">finally</span> &#123;
+            lock.unlock();
+        &#125;
+    &#125;
+
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;
+        ReadWriteLockDemo demo = <span class="keyword">new</span> ReadWriteLockDemo();
+
+        Runnable readTask = () -&gt; &#123;
+            <span class="keyword">try</span> &#123;
+                demo.readSomething(readLock);
+                countDownLatch.countDown();
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;;
+
+        Runnable writeTask = () -&gt; &#123;
+            <span class="keyword">try</span> &#123;
+                demo.writeSomething(writeLock, <span class="keyword">new</span> Random().nextInt());
+                countDownLatch.countDown();
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;;
+
+        Runnable readTask2 = () -&gt; &#123;
+            <span class="keyword">try</span> &#123;
+                demo.readSomething(reentrantLock);
+                reentrantDownLatch.countDown();
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;;
+
+        Runnable writeTask2 = () -&gt; &#123;
+            <span class="keyword">try</span> &#123;
+                demo.writeSomething(reentrantLock, <span class="keyword">new</span> Random().nextInt());
+                reentrantDownLatch.countDown();
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;;
+
+
+
+        <span class="keyword">long</span> begin = System.currentTimeMillis();
+
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; readThreadNum; i++) <span class="keyword">new</span> Thread(readTask).start();
+
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; writeThreadNum; i++) <span class="keyword">new</span> Thread(writeTask).start();
+
+        countDownLatch.await(); <span class="comment">//等待子线程全部完成工作</span>
+
+        <span class="keyword">long</span> end = System.currentTimeMillis();
+
+        System.out.println(<span class="string">&quot;[readWriteLock cost] &quot;</span> + (end - begin) + <span class="string">&quot;ms&quot;</span>);
+
+
+
+        <span class="keyword">long</span> begin2 = System.currentTimeMillis();
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; readThreadNum; i++) <span class="keyword">new</span> Thread(readTask2).start();
+
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; writeThreadNum; i++) <span class="keyword">new</span> Thread(writeTask2).start();
+
+        reentrantDownLatch.await(); <span class="comment">//等待子线程全部完成工作</span>
+
+        <span class="keyword">long</span> end2 = System.currentTimeMillis();
+
+        System.out.println(<span class="string">&quot;[reentrantLock cost] &quot;</span> + (end2 - begin2) + <span class="string">&quot;ms&quot;</span>);
+    &#125;
+
+&#125;
+</code></pre>
 <h2 id="输出值"><a href="#输出值" class="headerlink" title="输出值"></a>输出值</h2><p>两者的输出值，在笔者电脑上为如下所示:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">[readWriteLock cost] 1011ms<br>[reentrantLock cost] 20069ms<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">[readWriteLock cost] 1011ms
+[reentrantLock cost] 20069ms</code></pre>
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>性能相差20倍多，不同的电脑和jdk版本表现有所不同。如果将读线程的数量或者耗时增加，则读写锁的性能优势会更加明显。在读多的场景下可以采用读写锁提升性能。</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';

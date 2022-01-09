@@ -3,13 +3,58 @@
 <p> 一般情况下，异步任务主要是处理一些相对耗时的任务。比如邮件、短信等信息的推送。</p>
 </blockquote>
 <p>springboot中使用支持异步任务开箱即用。<br>1、首先在application中添加 <em><strong>@EnableAsync</strong></em>注解<br>2、新增一个compent组件，并且在application中添加其扫描包地址<br>3、在新建的compent中使用***@Async**注解注释方法即可实现任务的异步调用。<br><br/><br>下面是示例代码<br><br/><br>1、WebTestApplication</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-meta">@EnableAsync</span><br><span class="hljs-meta">@ComponentScan(basePackages = &quot;com.xxxx.component&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WebTestApplication</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        SpringApplication.run(WebTestApplication.class, args);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@SpringBootApplication</span>
+<span class="meta">@EnableAsync</span>
+<span class="meta">@ComponentScan(basePackages = &quot;com.xxxx.component&quot;)</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebTestApplication</span> </span>&#123;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;
+        SpringApplication.run(WebTestApplication.class, args);
+    &#125;
+&#125;</code></pre>
 <br/>
 2、TestController.java
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestController</span> </span>&#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> PushCompent pushCompent;<br>    <span class="hljs-meta">@PostMapping(&quot;/testAsync&quot;)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">testAsync</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> String requestBody)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        <span class="hljs-keyword">long</span> time = System.currentTimeMillis();<br>        Future&lt;Boolean&gt; r1 = pushCompent.pushToAndroid(requestBody);<br>        Future&lt;Boolean&gt; r2 = pushCompent.pushToIos(requestBody);<br>        Future&lt;Boolean&gt; r3 = pushCompent.pushToWeb(requestBody);<br>        <span class="hljs-keyword">for</span> (; ; ) &#123;<br>            <span class="hljs-keyword">if</span> (r1.isDone() &amp;&amp; r2.isDone() &amp;&amp; r3.isDone()) &#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;cost millis is &quot;</span> + (System.currentTimeMillis() - time);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@RestController</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;
+    <span class="meta">@Autowired</span>
+    <span class="keyword">private</span> PushCompent pushCompent;
+    <span class="meta">@PostMapping(&quot;/testAsync&quot;)</span>
+    <span class="function"><span class="keyword">public</span> String <span class="title">testAsync</span><span class="params">(<span class="meta">@RequestBody</span> String requestBody)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;
+        <span class="keyword">long</span> time = System.currentTimeMillis();
+        Future&lt;Boolean&gt; r1 = pushCompent.pushToAndroid(requestBody);
+        Future&lt;Boolean&gt; r2 = pushCompent.pushToIos(requestBody);
+        Future&lt;Boolean&gt; r3 = pushCompent.pushToWeb(requestBody);
+        <span class="keyword">for</span> (; ; ) &#123;
+            <span class="keyword">if</span> (r1.isDone() &amp;&amp; r2.isDone() &amp;&amp; r3.isDone()) &#123;
+                <span class="keyword">break</span>;
+            &#125;
+        &#125;
+        <span class="keyword">return</span> <span class="string">&quot;cost millis is &quot;</span> + (System.currentTimeMillis() - time);
+    &#125;
+&#125;</code></pre>
 
 <p>3、PushCompent.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PushCompent</span> </span>&#123;<br><br>    <span class="hljs-meta">@Async</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Future&lt;Boolean&gt; <span class="hljs-title">pushToAndroid</span><span class="hljs-params">(String message)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        Thread.sleep(<span class="hljs-number">2000</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AsyncResult&lt;&gt;(<span class="hljs-keyword">true</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Async</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Future&lt;Boolean&gt; <span class="hljs-title">pushToIos</span><span class="hljs-params">(String message)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        Thread.sleep(<span class="hljs-number">2345</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AsyncResult&lt;&gt;(<span class="hljs-keyword">false</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Async</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Future&lt;Boolean&gt; <span class="hljs-title">pushToWeb</span><span class="hljs-params">(String message)</span> <span class="hljs-keyword">throws</span> InterruptedException </span>&#123;<br>        Thread.sleep(<span class="hljs-number">4567</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AsyncResult&lt;&gt;(<span class="hljs-keyword">true</span>);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Component</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PushCompent</span> </span>&#123;
+
+    <span class="meta">@Async</span>
+    <span class="function"><span class="keyword">public</span> Future&lt;Boolean&gt; <span class="title">pushToAndroid</span><span class="params">(String message)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;
+        Thread.sleep(<span class="number">2000</span>);
+        <span class="keyword">return</span> <span class="keyword">new</span> AsyncResult&lt;&gt;(<span class="keyword">true</span>);
+    &#125;
+
+    <span class="meta">@Async</span>
+    <span class="function"><span class="keyword">public</span> Future&lt;Boolean&gt; <span class="title">pushToIos</span><span class="params">(String message)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;
+        Thread.sleep(<span class="number">2345</span>);
+        <span class="keyword">return</span> <span class="keyword">new</span> AsyncResult&lt;&gt;(<span class="keyword">false</span>);
+    &#125;
+
+    <span class="meta">@Async</span>
+    <span class="function"><span class="keyword">public</span> Future&lt;Boolean&gt; <span class="title">pushToWeb</span><span class="params">(String message)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;
+        Thread.sleep(<span class="number">4567</span>);
+        <span class="keyword">return</span> <span class="keyword">new</span> AsyncResult&lt;&gt;(<span class="keyword">true</span>);
+    &#125;
+&#125;
+</code></pre>
 <hr>
 <p>注意事项:<br>如下方式会使@Async失效</p>
 <ul>

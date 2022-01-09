@@ -54,10 +54,88 @@
 <p>1、 <a href="#CacheManager_1">注册bean</a><br>2、<a href="#CacheManager_2">开启声明缓存支持</a><br>3、<a href="#CacheManager_3">声明缓存规则</a></p>
 </blockquote>
 <ol>
-<li><span id="CacheManager_1">注册Bean</span><br> 在pom.xml中引入如下:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml:n">&lt;dependency&gt;<br>    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>    &lt;artifactId&gt;spring-boot-starter-cache&lt;/artifactId&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>    &lt;groupId&gt;net.sf.ehcache&lt;/groupId&gt;<br>    &lt;artifactId&gt;ehcache&lt;/artifactId&gt;<br>    &lt;version&gt;2.10.6&lt;/version&gt;<br>&lt;/dependency&gt;<br></code></pre></td></tr></table></figure>
+<li><span id="CacheManager_1">注册Bean</span><br> 在pom.xml中引入如下:<pre><code class="highlight xml:n">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-cache&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;net.sf.ehcache&lt;/groupId&gt;
+    &lt;artifactId&gt;ehcache&lt;/artifactId&gt;
+    &lt;version&gt;2.10.6&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
 根据查看源码,可知<strong>spring-boot-starter-cache</strong> 引入<strong>spring-context-support-5.2.2.RELEASE.jar</strong> 包，查看源码<strong>org.springframework.boot.autoconfigure.cache.EhCacheCacheConfiguration</strong></li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs java:n">/*<br> * Copyright 2012-2019 the original author or authors.<br> *<br> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);<br> * you may not use this file except in compliance with the License.<br> * You may obtain a copy of the License at<br> *<br> *      https://www.apache.org/licenses/LICENSE-2.0<br> *<br> * Unless required by applicable law or agreed to in writing, software<br> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,<br> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br> * See the License for the specific language governing permissions and<br> * limitations under the License.<br> */<br><br>package org.springframework.boot.autoconfigure.cache;<br><br>import net.sf.ehcache.Cache;<br>import net.sf.ehcache.CacheManager;<br><br>import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;<br>import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;<br>import org.springframework.boot.autoconfigure.condition.ResourceCondition;<br>import org.springframework.cache.ehcache.EhCacheCacheManager;<br>import org.springframework.cache.ehcache.EhCacheManagerUtils;<br>import org.springframework.context.annotation.Bean;<br>import org.springframework.context.annotation.Conditional;<br>import org.springframework.context.annotation.Configuration;<br>import org.springframework.core.io.Resource;<br><br>/**<br> * EhCache cache configuration. Only kick in if a configuration file location is set or if<br> * a default configuration file exists.<br> *<br> * @author Eddú Meléndez<br> * @author Stephane Nicoll<br> * @author Madhura Bhave<br> */<br>@Configuration(proxyBeanMethods = false)<br>@ConditionalOnClass(&#123; Cache.class, EhCacheCacheManager.class &#125;)<br>@ConditionalOnMissingBean(org.springframework.cache.CacheManager.class)<br>@Conditional(&#123; CacheCondition.class, EhCacheCacheConfiguration.ConfigAvailableCondition.class &#125;)<br>class EhCacheCacheConfiguration &#123;<br><br>	@Bean<br>	EhCacheCacheManager cacheManager(CacheManagerCustomizers customizers, CacheManager ehCacheCacheManager) &#123;<br>		return customizers.customize(new EhCacheCacheManager(ehCacheCacheManager));<br>	&#125;<br><br>	@Bean<br>	@ConditionalOnMissingBean<br>	CacheManager ehCacheCacheManager(CacheProperties cacheProperties) &#123;<br>		Resource location = cacheProperties.resolveConfigLocation(cacheProperties.getEhcache().getConfig());<br>		if (location != null) &#123;<br>			return EhCacheManagerUtils.buildCacheManager(location);<br>		&#125;<br>		return EhCacheManagerUtils.buildCacheManager();<br>	&#125;<br>	/**<br>	 * Determine if the EhCache configuration is available. This either kick in if a<br>	 * default configuration has been found or if property referring to the file to use<br>	 * has been set.<br>	 */<br>	static class ConfigAvailableCondition extends ResourceCondition &#123;<br>		ConfigAvailableCondition() &#123;<br>			super(&quot;EhCache&quot;, &quot;spring.cache.ehcache.config&quot;, &quot;classpath:/ehcache.xml&quot;);<br>		&#125;<br><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java:n">/*
+ * Copyright 2012-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.boot.autoconfigure.cache;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ResourceCondition;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.ehcache.EhCacheManagerUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+
+/**
+ * EhCache cache configuration. Only kick in if a configuration file location is set or if
+ * a default configuration file exists.
+ *
+ * @author Eddú Meléndez
+ * @author Stephane Nicoll
+ * @author Madhura Bhave
+ */
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnClass(&#123; Cache.class, EhCacheCacheManager.class &#125;)
+@ConditionalOnMissingBean(org.springframework.cache.CacheManager.class)
+@Conditional(&#123; CacheCondition.class, EhCacheCacheConfiguration.ConfigAvailableCondition.class &#125;)
+class EhCacheCacheConfiguration &#123;
+
+	@Bean
+	EhCacheCacheManager cacheManager(CacheManagerCustomizers customizers, CacheManager ehCacheCacheManager) &#123;
+		return customizers.customize(new EhCacheCacheManager(ehCacheCacheManager));
+	&#125;
+
+	@Bean
+	@ConditionalOnMissingBean
+	CacheManager ehCacheCacheManager(CacheProperties cacheProperties) &#123;
+		Resource location = cacheProperties.resolveConfigLocation(cacheProperties.getEhcache().getConfig());
+		if (location != null) &#123;
+			return EhCacheManagerUtils.buildCacheManager(location);
+		&#125;
+		return EhCacheManagerUtils.buildCacheManager();
+	&#125;
+	/**
+	 * Determine if the EhCache configuration is available. This either kick in if a
+	 * default configuration has been found or if property referring to the file to use
+	 * has been set.
+	 */
+	static class ConfigAvailableCondition extends ResourceCondition &#123;
+		ConfigAvailableCondition() &#123;
+			super(&quot;EhCache&quot;, &quot;spring.cache.ehcache.config&quot;, &quot;classpath:/ehcache.xml&quot;);
+		&#125;
+
+	&#125;
+&#125;</code></pre>
 <p>可以自动注册bean。配置文件默认地址是<strong>classpath:/ehcache.xml</strong></p>
 <ol>
 <li><span id="CacheManager_2">开启声明缓存支持</span><br> 开启缓存支持只需要在配置类中增加**@EnableCaching**注解即可。</li>

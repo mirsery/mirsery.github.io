@@ -12,17 +12,125 @@
 <p>future 模式是多线程开发中比较常见的一种模式，他的核心思想是利用多线程来实现耗时操作的异步调用。主要利用多线程去处理耗时的任务，并支持异步回调处理相关的信息。</p>
 </blockquote>
 <h2 id="future-模式的概述"><a href="#future-模式的概述" class="headerlink" title="future 模式的概述"></a>future 模式的概述</h2><p>future模式优点类似快递订餐，比如我们利用xx软件进行外卖下单。下完单之后我们可以继续我们上班的摸鱼动作，等待骑手的电话。其中下完单之后会立刻返回一个订单号，我们可以根据这个订单号去获取相应的订单信息。对于future模式来说，虽然他并不能立刻给予我们所需要的数据（外卖），但是他会返回订单给到我们，我们可以借由订单去获取相应的骑手以及派送状态信息。可以充分的节约我们的摸鱼时间。</p>
-<h2 id="future-模式的简单实现"><a href="#future-模式的简单实现" class="headerlink" title="future 模式的简单实现"></a>future 模式的简单实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Data</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getFood</span><span class="hljs-params">()</span></span>; <span class="hljs-comment">//取餐</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+<h2 id="future-模式的简单实现"><a href="#future-模式的简单实现" class="headerlink" title="future 模式的简单实现"></a>future 模式的简单实现</h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Data</span> </span>&#123;
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> record <span class="hljs-title">RealData</span><span class="hljs-params">(String result)</span> implements Data </span>&#123;		<span class="hljs-comment">//since @jdk14</span><br><br>    <span class="hljs-keyword">public</span> RealData &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            Thread.sleep(<span class="hljs-number">5</span> * <span class="hljs-number">1000</span>);		<span class="hljs-comment">// 午餐制作</span><br>        &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getFood</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.result;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+    <span class="function"><span class="keyword">public</span> String <span class="title">getFood</span><span class="params">()</span></span>; <span class="comment">//取餐</span>
+&#125;
+</code></pre>
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FutureData</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Data</span> </span>&#123;<br><br>    <span class="hljs-keyword">protected</span> RealData realData = <span class="hljs-keyword">null</span>;<br><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> isReady = <span class="hljs-keyword">false</span>;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setRealData</span><span class="hljs-params">(RealData realData)</span> </span>&#123; <span class="hljs-comment">// 骑手取餐</span><br>        <span class="hljs-keyword">if</span> (isReady)<br>            <span class="hljs-keyword">return</span>;<br>        <span class="hljs-keyword">this</span>.realData = realData;<br>        isReady = <span class="hljs-keyword">true</span>;<br>        notifyAll();	<span class="hljs-comment">//唤醒当前对象上的等待线程</span><br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> String <span class="hljs-title">getFood</span><span class="hljs-params">()</span> </span>&#123;	<span class="hljs-comment">//用户取餐</span><br>        <span class="hljs-keyword">while</span> (!isReady) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                wait();	<span class="hljs-comment">//当前线程进入等待并释放锁</span><br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> realData.getFood();<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="function"><span class="keyword">public</span> record <span class="title">RealData</span><span class="params">(String result)</span> implements Data </span>&#123;		<span class="comment">//since @jdk14</span>
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Main</span> </span>&#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Client</span> </span>&#123;<br><br>        <span class="hljs-function"><span class="hljs-keyword">public</span> Data <span class="hljs-title">request</span><span class="hljs-params">(String order)</span> </span>&#123;<br>            FutureData futureData = <span class="hljs-keyword">new</span> FutureData();<br>            <span class="hljs-keyword">new</span> Thread(() -&gt; &#123;<br>                RealData realData = <span class="hljs-keyword">new</span> RealData(order);<br>                futureData.setRealData(realData);<br>            &#125;).start();<br>            <span class="hljs-keyword">return</span> futureData;<br>        &#125;<br>    &#125;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        Client client = <span class="hljs-keyword">new</span> Client();<br>        Data data = client.request(<span class="hljs-string">&quot;鱼香肉丝&quot;</span>); <span class="hljs-comment">//开始订餐</span><br>        System.out.println(<span class="hljs-string">&quot;订单已经提交，骑手赶往店铺&quot;</span>);<span class="hljs-comment">//订餐完成</span><br><br>        <span class="hljs-keyword">try</span> &#123;<span class="hljs-comment">// do something 摸鱼时间</span><br>            Thread.sleep(<span class="hljs-number">3000</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br><br>        System.out.println(<span class="hljs-string">&quot;food is: &quot;</span> + data.getFood()); <span class="hljs-comment">//拿到外卖</span><br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+    <span class="keyword">public</span> RealData &#123;
+        <span class="keyword">try</span> &#123;
+            Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);		<span class="comment">// 午餐制作</span>
+        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+            e.printStackTrace();
+        &#125;
 
-<h2 id="JDK中的Future模式"><a href="#JDK中的Future模式" class="headerlink" title="JDK中的Future模式"></a>JDK中的Future模式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Food</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Callable</span>&lt;<span class="hljs-title">String</span>&gt; </span>&#123;<br><br><br>    <span class="hljs-keyword">private</span> String food;<br><br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Food</span><span class="hljs-params">(String food)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.food = food;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">call</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;<br><br>        Thread.sleep(<span class="hljs-number">5</span> * <span class="hljs-number">1000</span>);	<span class="hljs-comment">//配送</span><br><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.food;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+    &#125;
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>    FutureTask&lt;String&gt; futureTask = <span class="hljs-keyword">new</span> FutureTask&lt;&gt;(<span class="hljs-keyword">new</span> Food(<span class="hljs-string">&quot;鱼香肉丝&quot;</span>));<br>    ExecutorService service = Executors.newSingleThreadExecutor();<br>    service.execute(futureTask);<br><br>    System.out.println(<span class="hljs-string">&quot;下单完成&quot;</span>);<br>    <br>    <span class="hljs-keyword">try</span> &#123;<br>        Thread.sleep(<span class="hljs-number">6</span> * <span class="hljs-number">1000</span>);<span class="hljs-comment">//摸鱼</span><br>        System.out.println(<span class="hljs-string">&quot;lunch is : &quot;</span> + futureTask.get());<br>        service.shutdown();<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException | ExecutionException e) &#123;<br>        e.printStackTrace();<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> String <span class="title">getFood</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> <span class="keyword">this</span>.result;
+    &#125;
+&#125;
+</code></pre>
+
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FutureData</span> <span class="keyword">implements</span> <span class="title">Data</span> </span>&#123;
+
+    <span class="keyword">protected</span> RealData realData = <span class="keyword">null</span>;
+
+    <span class="keyword">protected</span> <span class="keyword">boolean</span> isReady = <span class="keyword">false</span>;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setRealData</span><span class="params">(RealData realData)</span> </span>&#123; <span class="comment">// 骑手取餐</span>
+        <span class="keyword">if</span> (isReady)
+            <span class="keyword">return</span>;
+        <span class="keyword">this</span>.realData = realData;
+        isReady = <span class="keyword">true</span>;
+        notifyAll();	<span class="comment">//唤醒当前对象上的等待线程</span>
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">getFood</span><span class="params">()</span> </span>&#123;	<span class="comment">//用户取餐</span>
+        <span class="keyword">while</span> (!isReady) &#123;
+            <span class="keyword">try</span> &#123;
+                wait();	<span class="comment">//当前线程进入等待并释放锁</span>
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+        <span class="keyword">return</span> realData.getFood();
+    &#125;
+&#125;
+</code></pre>
+
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;
+
+        <span class="function"><span class="keyword">public</span> Data <span class="title">request</span><span class="params">(String order)</span> </span>&#123;
+            FutureData futureData = <span class="keyword">new</span> FutureData();
+            <span class="keyword">new</span> Thread(() -&gt; &#123;
+                RealData realData = <span class="keyword">new</span> RealData(order);
+                futureData.setRealData(realData);
+            &#125;).start();
+            <span class="keyword">return</span> futureData;
+        &#125;
+    &#125;
+
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;
+        Client client = <span class="keyword">new</span> Client();
+        Data data = client.request(<span class="string">&quot;鱼香肉丝&quot;</span>); <span class="comment">//开始订餐</span>
+        System.out.println(<span class="string">&quot;订单已经提交，骑手赶往店铺&quot;</span>);<span class="comment">//订餐完成</span>
+
+        <span class="keyword">try</span> &#123;<span class="comment">// do something 摸鱼时间</span>
+            Thread.sleep(<span class="number">3000</span>);
+        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+            e.printStackTrace();
+        &#125;
+
+        System.out.println(<span class="string">&quot;food is: &quot;</span> + data.getFood()); <span class="comment">//拿到外卖</span>
+    &#125;
+&#125;
+</code></pre>
+
+<h2 id="JDK中的Future模式"><a href="#JDK中的Future模式" class="headerlink" title="JDK中的Future模式"></a>JDK中的Future模式</h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Food</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">String</span>&gt; </span>&#123;
+
+
+    <span class="keyword">private</span> String food;
+
+
+    <span class="function"><span class="keyword">public</span> <span class="title">Food</span><span class="params">(String food)</span> </span>&#123;
+        <span class="keyword">this</span>.food = food;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;
+
+        Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);	<span class="comment">//配送</span>
+
+        <span class="keyword">return</span> <span class="keyword">this</span>.food;
+    &#125;
+&#125;
+</code></pre>
+
+<pre><code class="highlight java"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;
+    FutureTask&lt;String&gt; futureTask = <span class="keyword">new</span> FutureTask&lt;&gt;(<span class="keyword">new</span> Food(<span class="string">&quot;鱼香肉丝&quot;</span>));
+    ExecutorService service = Executors.newSingleThreadExecutor();
+    service.execute(futureTask);
+
+    System.out.println(<span class="string">&quot;下单完成&quot;</span>);
+    
+    <span class="keyword">try</span> &#123;
+        Thread.sleep(<span class="number">6</span> * <span class="number">1000</span>);<span class="comment">//摸鱼</span>
+        System.out.println(<span class="string">&quot;lunch is : &quot;</span> + futureTask.get());
+        service.shutdown();
+    &#125; <span class="keyword">catch</span> (InterruptedException | ExecutionException e) &#123;
+        e.printStackTrace();
+    &#125;
+&#125;
+</code></pre>
 
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/07/24/java/2021/Future模式/';

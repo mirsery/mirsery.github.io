@@ -4,11 +4,18 @@
 </code></pre>
 <h1 id="无需认证的远程监控配置"><a href="#无需认证的远程监控配置" class="headerlink" title="无需认证的远程监控配置"></a>无需认证的远程监控配置</h1><pre><code>所需要被监控的程序运行时需要给虚拟机添加一些运行的参数
 </code></pre>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">-Dcom.sun.management.jmxremote.port=<span class="hljs-number">60001</span>   <span class="hljs-comment">//监控的端口号</span><br>-Dcom.sun.management.jmxremote.authenticate=<span class="hljs-keyword">false</span>   <span class="hljs-comment">//关闭认证</span><br>-Dcom.sun.management.jmxremote.ssl=<span class="hljs-keyword">false</span><br>-Djava.rmi.server.hostname=<span class="hljs-number">192.168</span><span class="hljs-number">.1</span><span class="hljs-number">.50</span>    <br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java">-Dcom.sun.management.jmxremote.port=<span class="number">60001</span>   <span class="comment">//监控的端口号</span>
+-Dcom.sun.management.jmxremote.authenticate=<span class="keyword">false</span>   <span class="comment">//关闭认证</span>
+-Dcom.sun.management.jmxremote.ssl=<span class="keyword">false</span>
+-Djava.rmi.server.hostname=<span class="number">192.168</span><span class="number">.1</span><span class="number">.50</span></code></pre>
 <blockquote>
 <p>注：在linux中jvm远程使用的ip地址是hostname -i中的地址。</p>
 </blockquote>
-<h1 id="设置需要密码的远程登陆配置"><a href="#设置需要密码的远程登陆配置" class="headerlink" title="设置需要密码的远程登陆配置"></a>设置需要密码的远程登陆配置</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">-Dcom.sun.management.jmxremote.port=<span class="hljs-number">60001</span> <br>-Dcom.sun.management.jmxremote.authenticate=<span class="hljs-keyword">true</span> <br>-Dcom.sun.management.jmxremote.ssl=<span class="hljs-keyword">false</span> <br>-Dcom.sun.management.jmxremote.pwd.file= &#123;jmxremote.password&#125;Path <br>-Djava.rmi.server.hostname=<span class="hljs-number">10.211</span><span class="hljs-number">.55</span><span class="hljs-number">.7</span><br></code></pre></td></tr></table></figure>
+<h1 id="设置需要密码的远程登陆配置"><a href="#设置需要密码的远程登陆配置" class="headerlink" title="设置需要密码的远程登陆配置"></a>设置需要密码的远程登陆配置</h1><pre><code class="highlight java">-Dcom.sun.management.jmxremote.port=<span class="number">60001</span> 
+-Dcom.sun.management.jmxremote.authenticate=<span class="keyword">true</span> 
+-Dcom.sun.management.jmxremote.ssl=<span class="keyword">false</span> 
+-Dcom.sun.management.jmxremote.pwd.file= &#123;jmxremote.password&#125;Path 
+-Djava.rmi.server.hostname=<span class="number">10.211</span><span class="number">.55</span><span class="number">.7</span></code></pre>
 <p>在/usr/lib/jvm/java-8-oracle/jre/lib/management下的jmxremote.access、jmxremote.password。<br>jmxremote.access中存储用户名和对应的权限关系。<br>jmxremote.password中存储用户名密码。</p>
 <blockquote>
 <p>注：在jmxremote.password和jmxremote.access的权限为600，所有者rw权限。</p>

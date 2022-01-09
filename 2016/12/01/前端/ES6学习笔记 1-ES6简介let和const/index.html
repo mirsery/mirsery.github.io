@@ -4,19 +4,55 @@
 <h2 id="let"><a href="#let" class="headerlink" title="let"></a>let</h2><p>{<br>    let a = 10;<br>    var b = 1;<br>}</p>
 <p>a   //ReferencenError: a is not defined.<br>b   //1<br>let用来声明变量，用法类似于var，但是只在let命令所在的代码块有效。</p>
 <h2 id="typeof-并不是一个安全的操作"><a href="#typeof-并不是一个安全的操作" class="headerlink" title="typeof (并不是一个安全的操作)"></a>typeof (并不是一个安全的操作)</h2><p>操作符返回一个字符串,指示未经计算的操作数的类型。<br>typeofd的一些返回值</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">Undefined	&quot;undefined&quot;<br>Null	&quot;object&quot; (见下方)<br>Boolean	&quot;boolean&quot;<br>Number	&quot;number&quot;<br>String	&quot;string&quot;<br>Symbol (ECMAScript 6 新增)	&quot;symbol&quot;<br>宿主对象(由JS环境提供)	Implementation-dependent<br>函数对象 ( [[Call]] 在ECMA-262条款中实现了)	&quot;function&quot;<br>任何其他对象	&quot;object&quot;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">Undefined	&quot;undefined&quot;
+Null	&quot;object&quot; (见下方)
+Boolean	&quot;boolean&quot;
+Number	&quot;number&quot;
+String	&quot;string&quot;
+Symbol (ECMAScript 6 新增)	&quot;symbol&quot;
+宿主对象(由JS环境提供)	Implementation-dependent
+函数对象 ( [[Call]] 在ECMA-262条款中实现了)	&quot;function&quot;
+任何其他对象	&quot;object&quot;</code></pre>
 <p>##快级作用域</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f1</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-keyword">let</span> n = <span class="hljs-number">5</span>;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-literal">true</span>)&#123;<br>        <span class="hljs-keyword">let</span> n=<span class="hljs-number">10</span>;    <br>    &#125;<br>    <span class="hljs-built_in">console</span>.log(n);<span class="hljs-comment">//5</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight js"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;
+    <span class="keyword">let</span> n = <span class="number">5</span>;
+    <span class="keyword">if</span>(<span class="literal">true</span>)&#123;
+        <span class="keyword">let</span> n=<span class="number">10</span>;    
+    &#125;
+    <span class="built_in">console</span>.log(n);<span class="comment">//5</span>
+&#125;</code></pre>
 <h2 id="立即执行匿名函数"><a href="#立即执行匿名函数" class="headerlink" title="立即执行匿名函数"></a>立即执行匿名函数</h2><p>//IIFE写法<br>(function () {<br>    var temp = …;<br>   …<br>}());</p>
 <p>//块级作用域写法<br>{<br>    let temp = …;<br>    …<br>}</p>
 <p>另外，ES6也是规定函数本身的作用域，在其所在的块级作用域之内。</p>
 <h2 id="const命令"><a href="#const命令" class="headerlink" title="const命令"></a>const命令</h2><p>const用来声明变量，但是声明的是常量。一旦声明常量，常量的值就不能改变。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> PI = <span class="hljs-number">3.1415</span><br><br>PI = <span class="hljs-number">3</span>;<span class="hljs-comment">//PI 3.1415</span><br><br><span class="hljs-keyword">const</span> PI = <span class="hljs-number">3</span>;<span class="hljs-comment">//PI 3.1415    </span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight js"><span class="keyword">const</span> PI = <span class="number">3.1415</span>
+
+PI = <span class="number">3</span>;<span class="comment">//PI 3.1415</span>
+
+<span class="keyword">const</span> PI = <span class="number">3</span>;<span class="comment">//PI 3.1415    </span></code></pre>
 <p>对常量的重新赋值并不会报错，只会默默的失败。<br>const 的作用域与let命令相同:只在声明所在的块级作用域内有效。</p>
 <h2 id="跨模块常量"><a href="#跨模块常量" class="headerlink" title="跨模块常量"></a>跨模块常量</h2><p>const声明的常量值在当前代码块有效，如果想设置跨模块的常量可以采用如下写法：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// constants.js</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> A = <span class="hljs-number">1</span>;<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> B = <span class="hljs-number">2</span>;<br><br><span class="hljs-comment">//test.js</span><br><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> constants <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./constants&#x27;</span>;<br><span class="hljs-built_in">console</span>.log(constants.A);<span class="hljs-comment">// 1</span><br><span class="hljs-built_in">console</span>.log(constants.B);<span class="hljs-comment">// 2</span><br><br> <span class="hljs-comment">//test2.js</span><br><span class="hljs-keyword">import</span> &#123;A,B&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./constants&#x27;</span>;<br><span class="hljs-built_in">console</span>.log(A);<span class="hljs-comment">// 1</span><br><span class="hljs-built_in">console</span>.log(B);<span class="hljs-comment">// 2</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight js"><span class="comment">// constants.js</span>
+<span class="keyword">export</span> <span class="keyword">const</span> A = <span class="number">1</span>;
+<span class="keyword">export</span> <span class="keyword">const</span> B = <span class="number">2</span>;
+
+<span class="comment">//test.js</span>
+<span class="keyword">import</span> * <span class="keyword">as</span> constants <span class="keyword">from</span> <span class="string">&#x27;./constants&#x27;</span>;
+<span class="built_in">console</span>.log(constants.A);<span class="comment">// 1</span>
+<span class="built_in">console</span>.log(constants.B);<span class="comment">// 2</span>
+
+ <span class="comment">//test2.js</span>
+<span class="keyword">import</span> &#123;A,B&#125; <span class="keyword">from</span> <span class="string">&#x27;./constants&#x27;</span>;
+<span class="built_in">console</span>.log(A);<span class="comment">// 1</span>
+<span class="built_in">console</span>.log(B);<span class="comment">// 2</span></code></pre>
 <h2 id="全局对象的属性"><a href="#全局对象的属性" class="headerlink" title="全局对象的属性"></a>全局对象的属性</h2><p>全局对象是最顶层的对象，在浏览器环境指的是window对象，在Node.js中指的是Global对象，在JavaScript语言中，所有的全局变量都是全局对象的属性。<br>ES6规定，var命令和function命令声明的全局变量属于全局对象的属性;let命令、const命令、class命令声明的全局变量，不属于全局对象的属性。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>;<br><span class="hljs-comment">//node.js中可以写成 global.a</span><br><span class="hljs-comment">//通用打法 this.a</span><br><span class="hljs-built_in">window</span>.a <span class="hljs-comment">//1</span><br><br><span class="hljs-keyword">let</span> b = <span class="hljs-number">1</span>;<br><span class="hljs-built_in">window</span>.b <span class="hljs-comment">//undefined</span><br></code></pre></td></tr></table></figure></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+<pre><code class="highlight js"><span class="keyword">var</span> a = <span class="number">1</span>;
+<span class="comment">//node.js中可以写成 global.a</span>
+<span class="comment">//通用打法 this.a</span>
+<span class="built_in">window</span>.a <span class="comment">//1</span>
+
+<span class="keyword">let</span> b = <span class="number">1</span>;
+<span class="built_in">window</span>.b <span class="comment">//undefined</span></code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2016/12/01/前端/ES6学习笔记 1-ES6简介let和const/';
 var disqus_title = 'ES6学习笔记 1-ES6简介let和const';
 var disqus_url = 'https://mirsery.github.io/2016/12/01/前端/ES6学习笔记 1-ES6简介let和const/';

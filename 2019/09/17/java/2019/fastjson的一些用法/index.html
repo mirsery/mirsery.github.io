@@ -16,21 +16,139 @@
 </ul>
 <!-- tocstop -->
 
-<h2 id="导入依赖"><a href="#导入依赖" class="headerlink" title="导入依赖"></a>导入依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.alibaba<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>fastjson<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.2.60<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h2 id="导入依赖"><a href="#导入依赖" class="headerlink" title="导入依赖"></a>导入依赖</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+  <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.60<span class="tag">&lt;/<span class="name">version</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></code></pre>
 <h2 id="JSON字符串-gt-类实例"><a href="#JSON字符串-gt-类实例" class="headerlink" title="JSON字符串 -&gt; 类实例"></a>JSON字符串 -&gt; 类实例</h2><h3 id="简单json字符串-gt-java对象"><a href="#简单json字符串-gt-java对象" class="headerlink" title="简单json字符串 -&gt; java对象"></a>简单json字符串 -&gt; java对象</h3><p>app.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> </span><br><span class="hljs-class"></span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">( String[] args )</span></span><br><span class="hljs-function">    </span>&#123;<br>        String msg = <span class="hljs-string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24&#125;&quot;</span>;<br>        User user = JSON.parseObject(msg, User.class);<br>        System.out.println(user);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>
+<span class="class"></span>&#123;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span>
+<span class="function">    </span>&#123;
+        String msg = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24&#125;&quot;</span>;
+        User user = JSON.parseObject(msg, User.class);
+        System.out.println(user);
+    &#125;
+&#125;</code></pre>
 <p>User.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>&#123;<br>    <span class="hljs-meta">@JSONField(name = &quot;name&quot;)</span><br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-meta">@JSONField(name = &quot;sex&quot;)</span><br>    <span class="hljs-keyword">private</span> String sex;<br>    <span class="hljs-meta">@JSONField(name = &quot;age&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> age;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> name;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setName</span><span class="hljs-params">(String name)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.name = name;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getSex</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> sex;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setSex</span><span class="hljs-params">(String sex)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.sex = sex;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> age;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> age)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.age = age;<br>    &#125;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;User&#123;&quot;</span> +<br>                <span class="hljs-string">&quot;name=&#x27;&quot;</span> + name + <span class="hljs-string">&#x27;\&#x27;&#x27;</span> +<br>                <span class="hljs-string">&quot;, sex=&#x27;&quot;</span> + sex + <span class="hljs-string">&#x27;\&#x27;&#x27;</span> +<br>                <span class="hljs-string">&quot;, age=&quot;</span> + age +<br>                <span class="hljs-string">&#x27;&#125;&#x27;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<h3 id="简单json字符串-gt-Json对象"><a href="#简单json字符串-gt-Json对象" class="headerlink" title="简单json字符串 -&gt; Json对象"></a>简单json字符串 -&gt; Json对象</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">String msg = <span class="hljs-string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24&#125;&quot;</span>;<br>JSONObject jsonObject = JSON.parseObject(msg);<br>System.out.println(jsonObject);<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;
+    <span class="meta">@JSONField(name = &quot;name&quot;)</span>
+    <span class="keyword">private</span> String name;
+    <span class="meta">@JSONField(name = &quot;sex&quot;)</span>
+    <span class="keyword">private</span> String sex;
+    <span class="meta">@JSONField(name = &quot;age&quot;)</span>
+    <span class="keyword">private</span> <span class="keyword">int</span> age;
+    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> name;
+    &#125;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;
+        <span class="keyword">this</span>.name = name;
+    &#125;
+    <span class="function"><span class="keyword">public</span> String <span class="title">getSex</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> sex;
+    &#125;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSex</span><span class="params">(String sex)</span> </span>&#123;
+        <span class="keyword">this</span>.sex = sex;
+    &#125;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> age;
+    &#125;
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;
+        <span class="keyword">this</span>.age = age;
+    &#125;
+    <span class="meta">@Override</span>
+    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> <span class="string">&quot;User&#123;&quot;</span> +
+                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +
+                <span class="string">&quot;, sex=&#x27;&quot;</span> + sex + <span class="string">&#x27;\&#x27;&#x27;</span> +
+                <span class="string">&quot;, age=&quot;</span> + age +
+                <span class="string">&#x27;&#125;&#x27;</span>;
+    &#125;
+&#125;</code></pre>
+<h3 id="简单json字符串-gt-Json对象"><a href="#简单json字符串-gt-Json对象" class="headerlink" title="简单json字符串 -&gt; Json对象"></a>简单json字符串 -&gt; Json对象</h3><pre><code class="highlight java">String msg = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24&#125;&quot;</span>;
+JSONObject jsonObject = JSON.parseObject(msg);
+System.out.println(jsonObject);</code></pre>
 
-<h3 id="稍复杂json字符串-gt-Json对象"><a href="#稍复杂json字符串-gt-Json对象" class="headerlink" title="稍复杂json字符串 -&gt;Json对象"></a>稍复杂json字符串 -&gt;Json对象</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">String msg = <span class="hljs-string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24,\&quot;pets\&quot;:[&#123;\&quot;nick_name\&quot;:\&quot;coco\&quot;,\&quot;type\&quot;:\&quot;cat\&quot;&#125;,&#123;\&quot;nick_name\&quot;:\&quot;kimi\&quot;,\&quot;type\&quot;:\&quot;dog\&quot;&#125;]&#125;&quot;</span>;<br>  JSONObject jsonObject = JSON.parseObject(msg);<br></code></pre></td></tr></table></figure>
+<h3 id="稍复杂json字符串-gt-Json对象"><a href="#稍复杂json字符串-gt-Json对象" class="headerlink" title="稍复杂json字符串 -&gt;Json对象"></a>稍复杂json字符串 -&gt;Json对象</h3><pre><code class="highlight java">String msg = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24,\&quot;pets\&quot;:[&#123;\&quot;nick_name\&quot;:\&quot;coco\&quot;,\&quot;type\&quot;:\&quot;cat\&quot;&#125;,&#123;\&quot;nick_name\&quot;:\&quot;kimi\&quot;,\&quot;type\&quot;:\&quot;dog\&quot;&#125;]&#125;&quot;</span>;
+  JSONObject jsonObject = JSON.parseObject(msg);</code></pre>
 
-<h3 id="稍复杂json字符串-gt-Java对象"><a href="#稍复杂json字符串-gt-Java对象" class="headerlink" title="稍复杂json字符串 -&gt;Java对象"></a>稍复杂json字符串 -&gt;Java对象</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">( String[] args )</span></span><br><span class="hljs-function">   </span>&#123;<br>       String msg = <span class="hljs-string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24,\&quot;pets\&quot;:[&#123;\&quot;nick_name\&quot;:\&quot;coco\&quot;,\&quot;type\&quot;:\&quot;cat\&quot;&#125;,&#123;\&quot;nick_name\&quot;:\&quot;kimi\&quot;,\&quot;type\&quot;:\&quot;dog\&quot;&#125;]&#125;&quot;</span>;<br>       User user = JSON.parseObject(msg, <span class="hljs-keyword">new</span> TypeReference&lt;User&lt;Pet&gt;&gt;()&#123;&#125;);<br>       System.out.println(user);<br>   &#125;<br></code></pre></td></tr></table></figure>
+<h3 id="稍复杂json字符串-gt-Java对象"><a href="#稍复杂json字符串-gt-Java对象" class="headerlink" title="稍复杂json字符串 -&gt;Java对象"></a>稍复杂json字符串 -&gt;Java对象</h3><pre><code class="highlight java"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span>
+<span class="function">   </span>&#123;
+       String msg = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24,\&quot;pets\&quot;:[&#123;\&quot;nick_name\&quot;:\&quot;coco\&quot;,\&quot;type\&quot;:\&quot;cat\&quot;&#125;,&#123;\&quot;nick_name\&quot;:\&quot;kimi\&quot;,\&quot;type\&quot;:\&quot;dog\&quot;&#125;]&#125;&quot;</span>;
+       User user = JSON.parseObject(msg, <span class="keyword">new</span> TypeReference&lt;User&lt;Pet&gt;&gt;()&#123;&#125;);
+       System.out.println(user);
+   &#125;</code></pre>
 <p>User.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;<br><br>    <span class="hljs-meta">@JSONField(name = &quot;name&quot;)</span><br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-meta">@JSONField(name = &quot;sex&quot;)</span><br>    <span class="hljs-keyword">private</span> String sex;<br>    <span class="hljs-meta">@JSONField(name = &quot;age&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> age;<br>    <span class="hljs-meta">@JSONField(name = &quot;pets&quot;)</span><br>    <span class="hljs-keyword">private</span> T[] pets;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> name;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setName</span><span class="hljs-params">(String name)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.name = name;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getSex</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> sex;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setSex</span><span class="hljs-params">(String sex)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.sex = sex;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> age;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> age)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.age = age;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> T[] getPets() &#123;<br>        <span class="hljs-keyword">return</span> pets;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setPets</span><span class="hljs-params">(T[] pets)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.pets = pets;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span>&lt;<span class="title">T</span>&gt; </span>&#123;
+
+    <span class="meta">@JSONField(name = &quot;name&quot;)</span>
+    <span class="keyword">private</span> String name;
+    <span class="meta">@JSONField(name = &quot;sex&quot;)</span>
+    <span class="keyword">private</span> String sex;
+    <span class="meta">@JSONField(name = &quot;age&quot;)</span>
+    <span class="keyword">private</span> <span class="keyword">int</span> age;
+    <span class="meta">@JSONField(name = &quot;pets&quot;)</span>
+    <span class="keyword">private</span> T[] pets;
+
+    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> name;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;
+        <span class="keyword">this</span>.name = name;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> String <span class="title">getSex</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> sex;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSex</span><span class="params">(String sex)</span> </span>&#123;
+        <span class="keyword">this</span>.sex = sex;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> age;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;
+        <span class="keyword">this</span>.age = age;
+    &#125;
+
+    <span class="keyword">public</span> T[] getPets() &#123;
+        <span class="keyword">return</span> pets;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPets</span><span class="params">(T[] pets)</span> </span>&#123;
+        <span class="keyword">this</span>.pets = pets;
+    &#125;
+&#125;</code></pre>
 
 <p>Pet.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Pet</span> </span>&#123;<br><br>    <span class="hljs-meta">@JSONField(name = &quot;nick_name&quot;)</span><br>    <span class="hljs-keyword">private</span> String nickName;<br><br>    <span class="hljs-meta">@JSONField(name = &quot;type&quot;)</span><br>    <span class="hljs-keyword">private</span> String type;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getNickName</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> nickName;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setNickName</span><span class="hljs-params">(String nickName)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.nickName = nickName;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getType</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> type;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setType</span><span class="hljs-params">(String type)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.type = type;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pet</span> </span>&#123;
+
+    <span class="meta">@JSONField(name = &quot;nick_name&quot;)</span>
+    <span class="keyword">private</span> String nickName;
+
+    <span class="meta">@JSONField(name = &quot;type&quot;)</span>
+    <span class="keyword">private</span> String type;
+
+    <span class="function"><span class="keyword">public</span> String <span class="title">getNickName</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> nickName;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNickName</span><span class="params">(String nickName)</span> </span>&#123;
+        <span class="keyword">this</span>.nickName = nickName;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> String <span class="title">getType</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> type;
+    &#125;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setType</span><span class="params">(String type)</span> </span>&#123;
+        <span class="keyword">this</span>.type = type;
+    &#125;
+&#125;</code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2019/09/17/java/2019/fastjson的一些用法/';
 var disqus_title = 'fastjson的简单用法';
 var disqus_url = 'https://mirsery.github.io/2019/09/17/java/2019/fastjson的一些用法/';

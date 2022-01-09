@@ -26,18 +26,167 @@
 <h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>插件安装完成之后，点击File -&gt; New -&gt; Project<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143958150.png"><br>选择右侧的Spring 在选择中间的Spring MVC<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144006692.png"><br>点击下一步，填写项目名称<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144016971.png"></p>
 <h3 id="添加maven构建"><a href="#添加maven构建" class="headerlink" title="添加maven构建"></a>添加maven构建</h3><p>点击finish完成项目，完成项目之后右键项目添加maven框架<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144028351.png"><br>右侧选择maven 项目<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144035131.png"><br>完成之后的目录结构如下所示<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144044221.png"></p>
 <h3 id="添加项目依赖"><a href="#添加项目依赖" class="headerlink" title="添加项目依赖"></a>添加项目依赖</h3><p>添加项目依赖，在pom.xml文件中添加以下信息</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br>&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;;<br>xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;;<br>xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;;&gt;<br>&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;<br>&lt;groupId&gt;org.py&lt;/groupId&gt;<br>&lt;artifactId&gt;SpringMvcDemo&lt;/artifactId&gt;<br>&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;<br>&lt;packaging&gt;war&lt;/packaging&gt;<br>&lt;build&gt;<br>&lt;plugins&gt;<br>&lt;plugin&gt;<br>&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;<br>&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;<br>&lt;configuration&gt;<br>&lt;source&gt;1.7&lt;/source&gt;<br>&lt;target&gt;1.7&lt;/target&gt;<br>&lt;/configuration&gt;<br>&lt;/plugin&gt;<br>&lt;/plugins&gt;<br>&lt;/build&gt;<br>&lt;dependencies&gt;<br>&lt;dependency&gt;<br>&lt;groupId&gt;org.springframework&lt;/groupId&gt;<br>&lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;<br>&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>&lt;groupId&gt;org.springframework&lt;/groupId&gt;<br>&lt;artifactId&gt;spring-test&lt;/artifactId&gt;<br>&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>&lt;groupId&gt;junit&lt;/groupId&gt;<br>&lt;artifactId&gt;junit&lt;/artifactId&gt;<br>&lt;version&gt;4.12&lt;/version&gt;<br>&lt;scope&gt;test&lt;/scope&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>&lt;groupId&gt;org.springframework&lt;/groupId&gt;<br>&lt;artifactId&gt;spring-web&lt;/artifactId&gt;<br>&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>&lt;groupId&gt;org.springframework&lt;/groupId&gt;<br>&lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;<br>&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;dependency&gt;<br>&lt;groupId&gt;javax.servlet&lt;/groupId&gt;<br>&lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;<br>&lt;version&gt;3.1.0&lt;/version&gt;<br>&lt;/dependency&gt;<br>&lt;/dependencies&gt;<br>&lt;/project&gt;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;;
+xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;;&gt;
+&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+&lt;groupId&gt;org.py&lt;/groupId&gt;
+&lt;artifactId&gt;SpringMvcDemo&lt;/artifactId&gt;
+&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+&lt;packaging&gt;war&lt;/packaging&gt;
+&lt;build&gt;
+&lt;plugins&gt;
+&lt;plugin&gt;
+&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+&lt;configuration&gt;
+&lt;source&gt;1.7&lt;/source&gt;
+&lt;target&gt;1.7&lt;/target&gt;
+&lt;/configuration&gt;
+&lt;/plugin&gt;
+&lt;/plugins&gt;
+&lt;/build&gt;
+&lt;dependencies&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+&lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+&lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;junit&lt;/groupId&gt;
+&lt;artifactId&gt;junit&lt;/artifactId&gt;
+&lt;version&gt;4.12&lt;/version&gt;
+&lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+&lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+&lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+&lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+&lt;version&gt;3.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
 <p>右键pom.xml文件选择maven-&gt;reimport注入依赖<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144059094.png"></p>
 <h3 id="配置配置文件"><a href="#配置配置文件" class="headerlink" title="配置配置文件"></a>配置配置文件</h3><p>打开web/WEB-INF/目录下的web.xml文件配置web.xml文件</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">web-app</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span>;</span><br><span class="hljs-tag"><span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>;</span><br><span class="hljs-tag"><span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://xmlns.jcp.org/xml/ns/javaeehttp://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot;</span>;</span><br><span class="hljs-tag"><span class="hljs-attr">version</span>=<span class="hljs-string">&quot;3.1&quot;</span>&gt;</span><br><span class="hljs-comment">&lt;!-- 配置前端控制器 --&gt;</span><br><span class="hljs-comment">&lt;!--&lt;servlet&gt;--&gt;</span><br><span class="hljs-comment">&lt;!--&lt;servlet-name&gt;web-dispatcher&lt;/servlet-name&gt;--&gt;</span><br><span class="hljs-comment">&lt;!--&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;--&gt;</span><br><span class="hljs-comment">&lt;!--&lt;init-param&gt;--&gt;</span><br><span class="hljs-comment">&lt;!--&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;--&gt;</span><br><span class="hljs-comment">&lt;!--&lt;param-value&gt;classpath:spring-mvc.xml&lt;/param-value&gt;--&gt;</span><br><span class="hljs-comment">&lt;!--&lt;/init-param&gt;--&gt;</span><br><span class="hljs-comment">&lt;!--&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;--&gt;</span><br><span class="hljs-comment">&lt;!--&lt;/servlet&gt;--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">servlet</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">servlet-name</span>&gt;</span>SpringMVC<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-name</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-class</span>&gt;</span><br><span class="hljs-comment">&lt;!--加载前端控制器配置文件 上下文配置位置--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">init-param</span>&gt;</span><br><span class="hljs-comment">&lt;!-- 备注：</span><br><span class="hljs-comment">contextConfigLocation：指定 SpringMVC 配置的加载位置，如果不指定则默认加载</span><br><span class="hljs-comment">WEB-INF/[DispatcherServlet 的 Servlet 名字]-servlet.xml</span><br><span class="hljs-comment">--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">param-name</span>&gt;</span>contextConfigLocation<span class="hljs-tag">&lt;/<span class="hljs-name">param-name</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">param-value</span>&gt;</span>classpath:spring-mvc.xml<span class="hljs-tag">&lt;/<span class="hljs-name">param-value</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">init-param</span>&gt;</span><br><span class="hljs-comment">&lt;!-- 表示随WEB服务器启动 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">load-on-startup</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">load-on-startup</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">servlet</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">servlet-mapping</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">servlet-name</span>&gt;</span>SpringMVC<span class="hljs-tag">&lt;/<span class="hljs-name">servlet-name</span>&gt;</span><br><span class="hljs-comment">&lt;!-- 备注：可以拦截三种请求</span><br><span class="hljs-comment">第一种：拦截固定后缀的url，比如设置为 *.do、*.action，</span><br><span class="hljs-comment"> 例如：/user/add.action 此方法最简单,不会导致静态资源（jpg,js,css）被拦截</span><br><span class="hljs-comment">第二种：拦截所有,设置为/，例如：/user/add</span><br><span class="hljs-comment"> /user/add.action此方法可以实现REST风格的url,</span><br><span class="hljs-comment">很多互联网类型的应用使用这种方式.但是此方法会导致静态文件(jpg,js,css)被拦截后不能正常显示.需要特殊处理</span><br><span class="hljs-comment">第三种：拦截所有,设置为/*，此设置方法错误,因为请求到Action,当action转到jsp时再次被拦截,提示不能根据jsp路径mapping成功</span><br><span class="hljs-comment">--&gt;</span><br><span class="hljs-comment">&lt;!-- 默认匹配所有的请求 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">url-pattern</span>&gt;</span>/<span class="hljs-tag">&lt;/<span class="hljs-name">url-pattern</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">servlet-mapping</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">web-app</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight xml"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;<span class="name">web-app</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span>;</span>
+<span class="tag"><span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>;</span>
+<span class="tag"><span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaeehttp://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot;</span>;</span>
+<span class="tag"><span class="attr">version</span>=<span class="string">&quot;3.1&quot;</span>&gt;</span>
+<span class="comment">&lt;!-- 配置前端控制器 --&gt;</span>
+<span class="comment">&lt;!--&lt;servlet&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;servlet-name&gt;web-dispatcher&lt;/servlet-name&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;init-param&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;param-value&gt;classpath:spring-mvc.xml&lt;/param-value&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;/init-param&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;/servlet&gt;--&gt;</span>
+<span class="tag">&lt;<span class="name">servlet</span>&gt;</span>
+<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>SpringMVC<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span>
+<span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span>
+<span class="comment">&lt;!--加载前端控制器配置文件 上下文配置位置--&gt;</span>
+<span class="tag">&lt;<span class="name">init-param</span>&gt;</span>
+<span class="comment">&lt;!-- 备注：</span>
+<span class="comment">contextConfigLocation：指定 SpringMVC 配置的加载位置，如果不指定则默认加载</span>
+<span class="comment">WEB-INF/[DispatcherServlet 的 Servlet 名字]-servlet.xml</span>
+<span class="comment">--&gt;</span>
+<span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span>
+<span class="tag">&lt;<span class="name">param-value</span>&gt;</span>classpath:spring-mvc.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">init-param</span>&gt;</span>
+<span class="comment">&lt;!-- 表示随WEB服务器启动 --&gt;</span>
+<span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">servlet</span>&gt;</span>
+<span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span>
+<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>SpringMVC<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span>
+<span class="comment">&lt;!-- 备注：可以拦截三种请求</span>
+<span class="comment">第一种：拦截固定后缀的url，比如设置为 *.do、*.action，</span>
+<span class="comment"> 例如：/user/add.action 此方法最简单,不会导致静态资源（jpg,js,css）被拦截</span>
+<span class="comment">第二种：拦截所有,设置为/，例如：/user/add</span>
+<span class="comment"> /user/add.action此方法可以实现REST风格的url,</span>
+<span class="comment">很多互联网类型的应用使用这种方式.但是此方法会导致静态文件(jpg,js,css)被拦截后不能正常显示.需要特殊处理</span>
+<span class="comment">第三种：拦截所有,设置为/*，此设置方法错误,因为请求到Action,当action转到jsp时再次被拦截,提示不能根据jsp路径mapping成功</span>
+<span class="comment">--&gt;</span>
+<span class="comment">&lt;!-- 默认匹配所有的请求 --&gt;</span>
+<span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></code></pre>
 <p>配置spring mvc的配置文件，在resources下面新建一个spring-mvc.xml</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beans&quot;</span>;</span><br><span class="hljs-tag"><span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>;</span><br><span class="hljs-tag"><span class="hljs-attr">xmlns:context</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/context&quot;</span>;</span><br><span class="hljs-tag"><span class="hljs-attr">xmlns:mvc</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/mvc&quot;</span>;</span><br><span class="hljs-tag"><span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://www.springframework.org/schema/beanshttp://www.springframework.org/schema/beans/spring-beans.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">http://www.springframework.org/schema/contexthttp://www.springframework.org/schema/context/spring-context.xsd</span></span><br><span class="hljs-string"><span class="hljs-tag">http://www.springframework.org/schema/mvchttp://www.springframework.org/schema/mvc/spring-mvc.xsd&quot;</span>;&gt;</span><br><span class="hljs-comment">&lt;!-- 自动加载RequestMappingHandlerMapping和RequestMappingHandlerAdapter， --&gt;</span><br><span class="hljs-comment">&lt;!-- 可用在xml配置文件中使用&lt;mvc:annotation-driven&gt;替代注解处理器和适配器的配置。 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">mvc:annotation-driven</span>/&gt;</span><br><span class="hljs-comment">&lt;!-- 组件扫描器：可以扫描 @Controller、@Service、@Repository 等等 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">context:component-scan</span> <span class="hljs-attr">base-package</span>=<span class="hljs-string">&quot;com.controller&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">context:include-filter</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;annotation&quot;</span> <span class="hljs-attr">expression</span>=<span class="hljs-string">&quot;org.springframework.stereotype.Controller&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">context:component-scan</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;prefix&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;/WEB-INF/views/&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;suffix&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;.jsp&quot;</span>/&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight xml"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span>;</span>
+<span class="tag"><span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>;</span>
+<span class="tag"><span class="attr">xmlns:context</span>=<span class="string">&quot;http://www.springframework.org/schema/context&quot;</span>;</span>
+<span class="tag"><span class="attr">xmlns:mvc</span>=<span class="string">&quot;http://www.springframework.org/schema/mvc&quot;</span>;</span>
+<span class="tag"><span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beanshttp://www.springframework.org/schema/beans/spring-beans.xsd</span></span>
+<span class="string"><span class="tag">http://www.springframework.org/schema/contexthttp://www.springframework.org/schema/context/spring-context.xsd</span></span>
+<span class="string"><span class="tag">http://www.springframework.org/schema/mvchttp://www.springframework.org/schema/mvc/spring-mvc.xsd&quot;</span>;&gt;</span>
+<span class="comment">&lt;!-- 自动加载RequestMappingHandlerMapping和RequestMappingHandlerAdapter， --&gt;</span>
+<span class="comment">&lt;!-- 可用在xml配置文件中使用&lt;mvc:annotation-driven&gt;替代注解处理器和适配器的配置。 --&gt;</span>
+<span class="tag">&lt;<span class="name">mvc:annotation-driven</span>/&gt;</span>
+<span class="comment">&lt;!-- 组件扫描器：可以扫描 @Controller、@Service、@Repository 等等 --&gt;</span>
+<span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;com.controller&quot;</span>&gt;</span>
+<span class="tag">&lt;<span class="name">context:include-filter</span> <span class="attr">type</span>=<span class="string">&quot;annotation&quot;</span> <span class="attr">expression</span>=<span class="string">&quot;org.springframework.stereotype.Controller&quot;</span>/&gt;</span>
+<span class="tag">&lt;/<span class="name">context:component-scan</span>&gt;</span>
+<span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;</span>&gt;</span>
+<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;prefix&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/WEB-INF/views/&quot;</span>/&gt;</span>
+<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;suffix&quot;</span> <span class="attr">value</span>=<span class="string">&quot;.jsp&quot;</span>/&gt;</span>
+<span class="tag">&lt;/<span class="name">bean</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">beans</span>&gt;</span></code></pre>
 <p><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144109206.png"><br>再弹出框中勾选相应的xml文件添加到context<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144114057.png"></p>
 <h3 id="添加tomcat服务"><a href="#添加tomcat服务" class="headerlink" title="添加tomcat服务"></a>添加tomcat服务</h3><p>点击右上角的编辑<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144123355.png"><br>选择添加一个tomcat服务<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144128603.png"><br>配置服务<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144141102.png"><br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144148088.png"><br>点击ok，配置完成。</p>
 <h3 id="编写控制器和页面"><a href="#编写控制器和页面" class="headerlink" title="编写控制器和页面"></a>编写控制器和页面</h3><p>在scr/main/java 下面创建一个新包 com.controller ，然后在包里面新建一个IndexController类<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144157485.png"><br>IndexController类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.controller;<br><br><span class="hljs-keyword">import</span> org.springframework.stereotype.Controller;<br><span class="hljs-keyword">import</span> org.springframework.ui.Model;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;<br><span class="hljs-keyword">import</span> org.springframework.web.servlet.ModelAndView;<br><br><br><span class="hljs-meta">@Controller</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IndexController</span> </span>&#123;<br><br><span class="hljs-comment">//返回字符串</span><br><span class="hljs-meta">@ResponseBody</span><br><span class="hljs-meta">@RequestMapping(value = &quot;/HelloWord&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">HelloWord</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-keyword">return</span> <span class="hljs-string">&quot;HelloWord&quot;</span>;<br>&#125;<br><span class="hljs-comment">//返回jsp视图</span><br><span class="hljs-meta">@RequestMapping(value = &quot;/index&quot;)</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">index</span><span class="hljs-params">(Model model)</span></span>&#123;<br>model.addAttribute(<span class="hljs-string">&quot;name&quot;</span>,<span class="hljs-string">&quot;jsp页面展示&quot;</span>);<br><span class="hljs-keyword">return</span> <span class="hljs-string">&quot;index&quot;</span>;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">package</span> com.controller;
+
+<span class="keyword">import</span> org.springframework.stereotype.Controller;
+<span class="keyword">import</span> org.springframework.ui.Model;
+<span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;
+<span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;
+<span class="keyword">import</span> org.springframework.web.servlet.ModelAndView;
+
+
+<span class="meta">@Controller</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> </span>&#123;
+
+<span class="comment">//返回字符串</span>
+<span class="meta">@ResponseBody</span>
+<span class="meta">@RequestMapping(value = &quot;/HelloWord&quot;)</span>
+<span class="function"><span class="keyword">public</span> String <span class="title">HelloWord</span><span class="params">()</span></span>&#123;
+<span class="keyword">return</span> <span class="string">&quot;HelloWord&quot;</span>;
+&#125;
+<span class="comment">//返回jsp视图</span>
+<span class="meta">@RequestMapping(value = &quot;/index&quot;)</span>
+<span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">(Model model)</span></span>&#123;
+model.addAttribute(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;jsp页面展示&quot;</span>);
+<span class="keyword">return</span> <span class="string">&quot;index&quot;</span>;
+&#125;
+&#125;</code></pre>
 <p>根据spring-mvc的配置文件在/WEB-INF/views/目录下创建一个index.jsp文件<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144221153.png"><br>效果如下<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144229011.png"><br>index.jsp文件</p>
-<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs jsp">&lt;%@ page contentType=<span class="hljs-string">&quot;text/html;charset=UTF-8&quot;</span> language=<span class="hljs-string">&quot;java&quot;</span><br> %&gt;<br>&lt;html&gt;<br>&lt;head&gt;<br>&lt;title&gt;$Title$&lt;/title&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br>$&#123;name&#125;<br>&lt;/body&gt;<br>&lt;/html&gt;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight jsp">&lt;%@ page contentType=<span class="string">&quot;text/html;charset=UTF-8&quot;</span> language=<span class="string">&quot;java&quot;</span>
+ %&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;$Title$&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+$&#123;name&#125;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
 <p>启动项目<br> 点击运行启动项目。</p>
 <h2 id="使用maven搭建spring-mvc环境"><a href="#使用maven搭建spring-mvc环境" class="headerlink" title="使用maven搭建spring mvc环境"></a>使用maven搭建spring mvc环境</h2><p>###新建项目<br>首先，跟第一种方法一样点击菜单栏File-&gt;NEW-&gt;Project选择maven，然后勾选Create form archetype 选中webapp 如图:<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144335442.png"><br>填写GroupId和ArtifactId后点击next下一步:<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144344610.png"><br>在配置里面添加archetypeCatalog=internal (可以加快maven的生成速度，网上说的(⊙o⊙)…)<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144414964.png"><br>点击finish完成。<br>###创建项目目录结构<br>点击finish后完成的项目目录结构如下所示<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144434399.png"><br>这里我们需要在main目录下创建一个java目录，java下放置java 的源码，再在java项目创建一个包com.controller包。<br>最终项目的目录结构为<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144442903.png"><br>之后对项目的资源分类，选中项目按F4<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144450969.png"><br>在弹出界面中奖java文件夹设置为项目源码Sources<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144610012.png"><br>把resource设置为项目的资源库Resources<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144621818.png"><br>设置完后相应的文件夹颜色也会变化，且右侧也会有列表信息<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144629644.png"></p>
 <h3 id="配置配置文件-1"><a href="#配置配置文件-1" class="headerlink" title="配置配置文件"></a>配置配置文件</h3><p>之后同第一种方法一样配置web.xml，spring-mvc.xml文件，添加tomcat服务器，创建IndexController控制器，index.jsp视图文件之后就完成了springmvc环境搭建<br>启动项目就可以得到如上的结果。（注该方法无需修改iml文件里面的路径，而web.xml文件放在/webaap/WEB-INF/路径下）<br>最终项目路径<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144640312.png"></p>

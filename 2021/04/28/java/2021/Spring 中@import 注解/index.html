@@ -3,17 +3,91 @@
 <p> @import注解是Spring基于java注解配置的主要组成部分，import注解提供了@Bean注解的功能，同时还有原来组织多个分散的@Configuration的功能。</p>
 </blockquote>
 <h2 id="import注解可以引入其他的configuration"><a href="#import注解可以引入其他的configuration" class="headerlink" title="import注解可以引入其他的configuration"></a>import注解可以引入其他的configuration</h2><p>example  code :</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">TestService</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span>;<br>&#125;<br><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@Import(&#123;ConfigB.class&#125;)</span>     <span class="hljs-comment">//@Import的优先于本身的的类定义加载</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConfigA</span> </span>&#123;<br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-meta">@ConditionalOnMissingBean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> TestService <span class="hljs-title">getTestService</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TestServiceA();<br>    &#125;<br>&#125;<br><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConfigB</span> </span>&#123;<br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-meta">@ConditionalOnMissingBean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> TestService <span class="hljs-title">getTestServiceB</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TestServiceB();<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-<p>场景类代码:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>    ApplicationContext applicationContext = <span class="hljs-keyword">new</span> AnnotationConfigApplicationContext(ConfigA.class);<br>    TestService testService = applicationContext.getBean(TestService.class);<br>    testService.test();<br>    <span class="hljs-comment">//generate TestServiceB</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TestService</span> </span>&#123;
+    <span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span></span>;
+&#125;
 
-<h2 id="import-注解也可以直接初始化其他类的Bean"><a href="#import-注解也可以直接初始化其他类的Bean" class="headerlink" title="import 注解也可以直接初始化其他类的Bean"></a>import 注解也可以直接初始化其他类的Bean</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@Import(&#123;TestServiceC.class&#125;)</span>     <span class="hljs-comment">//@Import的优先于本身的的类定义加载</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConfigA</span> </span>&#123;<br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-meta">@ConditionalOnMissingBean</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> TestService <span class="hljs-title">getTestService</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TestServiceA();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<span class="meta">@Configuration</span>
+<span class="meta">@Import(&#123;ConfigB.class&#125;)</span>     <span class="comment">//@Import的优先于本身的的类定义加载</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConfigA</span> </span>&#123;
+    <span class="meta">@Bean</span>
+    <span class="meta">@ConditionalOnMissingBean</span>
+    <span class="function"><span class="keyword">public</span> TestService <span class="title">getTestService</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> TestServiceA();
+    &#125;
+&#125;
+
+<span class="meta">@Configuration</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConfigB</span> </span>&#123;
+    <span class="meta">@Bean</span>
+    <span class="meta">@ConditionalOnMissingBean</span>
+    <span class="function"><span class="keyword">public</span> TestService <span class="title">getTestServiceB</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> TestServiceB();
+    &#125;
+&#125;
+</code></pre>
+<p>场景类代码:</p>
+<pre><code class="highlight java"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;
+    ApplicationContext applicationContext = <span class="keyword">new</span> AnnotationConfigApplicationContext(ConfigA.class);
+    TestService testService = applicationContext.getBean(TestService.class);
+    testService.test();
+    <span class="comment">//generate TestServiceB</span>
+&#125;</code></pre>
+
+<h2 id="import-注解也可以直接初始化其他类的Bean"><a href="#import-注解也可以直接初始化其他类的Bean" class="headerlink" title="import 注解也可以直接初始化其他类的Bean"></a>import 注解也可以直接初始化其他类的Bean</h2><pre><code class="highlight java"><span class="meta">@Configuration</span>
+<span class="meta">@Import(&#123;TestServiceC.class&#125;)</span>     <span class="comment">//@Import的优先于本身的的类定义加载</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConfigA</span> </span>&#123;
+    <span class="meta">@Bean</span>
+    <span class="meta">@ConditionalOnMissingBean</span>
+    <span class="function"><span class="keyword">public</span> TestService <span class="title">getTestService</span><span class="params">()</span> </span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> TestServiceA();
+    &#125;
+&#125;</code></pre>
 <p>场景类保持不变，此时TestService实例会变成TestServiceC 的实例。</p>
 <h2 id="个性化加载，指定实现ImportSelector"><a href="#个性化加载，指定实现ImportSelector" class="headerlink" title="个性化加载，指定实现ImportSelector"></a>个性化加载，指定实现ImportSelector</h2><p>实现importSelector接口可实现个性化加载，下面是示例代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyimportSelector</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ImportSelector</span> </span>&#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Select and return the names of which class(es) should be imported based on the &#123;<span class="hljs-doctag">@link</span> AnnotationMetadata&#125; of the</span><br><span class="hljs-comment">     * importing @&#123;<span class="hljs-doctag">@link</span> Configuration&#125; class.</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> importingClassMetadata</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String[] selectImports(AnnotationMetadata importingClassMetadata) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> String[]&#123;<span class="hljs-string">&quot;com.mirsery.test.webtest.anno.TestServiceA&quot;</span>&#125;;<span class="hljs-comment">//    可以直接返回实体或者对应的config配置类</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyimportSelector</span> <span class="keyword">implements</span> <span class="title">ImportSelector</span> </span>&#123;
+    <span class="comment">/**</span>
+<span class="comment">     * Select and return the names of which class(es) should be imported based on the &#123;<span class="doctag">@link</span> AnnotationMetadata&#125; of the</span>
+<span class="comment">     * importing @&#123;<span class="doctag">@link</span> Configuration&#125; class.</span>
+<span class="comment">     *</span>
+<span class="comment">     * <span class="doctag">@param</span> importingClassMetadata</span>
+<span class="comment">     */</span>
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> String[] selectImports(AnnotationMetadata importingClassMetadata) &#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> String[]&#123;<span class="string">&quot;com.mirsery.test.webtest.anno.TestServiceA&quot;</span>&#125;;<span class="comment">//    可以直接返回实体或者对应的config配置类</span>
+    &#125;
+&#125;</code></pre>
 
 <p>基于AnnotationMetadata的参数实现动态加载类示例:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Target(ElementType.TYPE)</span><br><span class="hljs-meta">@Import(My1importSelector.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> EnableTestService &#123;<br>    <span class="hljs-function">String <span class="hljs-title">name</span><span class="hljs-params">()</span></span>;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">My1importSelector</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ImportSelector</span> </span>&#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Select and return the names of which class(es) should be imported based on the &#123;<span class="hljs-doctag">@link</span> AnnotationMetadata&#125; of the</span><br><span class="hljs-comment">     * importing @&#123;<span class="hljs-doctag">@link</span> Configuration&#125; class.</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> importingClassMetadata</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String[] selectImports(AnnotationMetadata importingClassMetadata) &#123;<br>        Map&lt;String , Object&gt; map = importingClassMetadata.getAnnotationAttributes(EnableTestService.class.getName(), <span class="hljs-keyword">true</span>);<br>        String name = (String) map.get(<span class="hljs-string">&quot;name&quot;</span>);<br>        <span class="hljs-keyword">if</span> (Objects.equals(name, <span class="hljs-string">&quot;B&quot;</span>)) &#123;<span class="hljs-comment">//</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> String[]&#123;<span class="hljs-string">&quot;com.mirsery.test.webtest.anno.ConfigB&quot;</span>&#125;;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> String[<span class="hljs-number">0</span>];<br>    &#125;<br>&#125;<br><br><br>场景类直接使用标注<br><span class="hljs-meta">@EnableTestService(name=&quot;B&quot;)</span><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span>
+<span class="meta">@Documented</span>
+<span class="meta">@Target(ElementType.TYPE)</span>
+<span class="meta">@Import(My1importSelector.class)</span>
+<span class="keyword">public</span> <span class="meta">@interface</span> EnableTestService &#123;
+    <span class="function">String <span class="title">name</span><span class="params">()</span></span>;
+&#125;
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">My1importSelector</span> <span class="keyword">implements</span> <span class="title">ImportSelector</span> </span>&#123;
+    <span class="comment">/**</span>
+<span class="comment">     * Select and return the names of which class(es) should be imported based on the &#123;<span class="doctag">@link</span> AnnotationMetadata&#125; of the</span>
+<span class="comment">     * importing @&#123;<span class="doctag">@link</span> Configuration&#125; class.</span>
+<span class="comment">     *</span>
+<span class="comment">     * <span class="doctag">@param</span> importingClassMetadata</span>
+<span class="comment">     */</span>
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> String[] selectImports(AnnotationMetadata importingClassMetadata) &#123;
+        Map&lt;String , Object&gt; map = importingClassMetadata.getAnnotationAttributes(EnableTestService.class.getName(), <span class="keyword">true</span>);
+        String name = (String) map.get(<span class="string">&quot;name&quot;</span>);
+        <span class="keyword">if</span> (Objects.equals(name, <span class="string">&quot;B&quot;</span>)) &#123;<span class="comment">//</span>
+            <span class="keyword">return</span> <span class="keyword">new</span> String[]&#123;<span class="string">&quot;com.mirsery.test.webtest.anno.ConfigB&quot;</span>&#125;;
+        &#125;
+        <span class="keyword">return</span> <span class="keyword">new</span> String[<span class="number">0</span>];
+    &#125;
+&#125;
+
+
+场景类直接使用标注
+<span class="meta">@EnableTestService(name=&quot;B&quot;)</span></code></pre>
 
 <h2 id="实现ImportBeanDefinitionRegistrar-接口个性化加载"><a href="#实现ImportBeanDefinitionRegistrar-接口个性化加载" class="headerlink" title="实现ImportBeanDefinitionRegistrar 接口个性化加载"></a>实现ImportBeanDefinitionRegistrar 接口个性化加载</h2><p>和importSelector 类型，想要重新定义Bean，例如动态注入属性改变Bean的类型和Scope等等就需要通过实现ImportBeanDefinitionRegister的类实现,下面是示例代码:<br>//TODO</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';

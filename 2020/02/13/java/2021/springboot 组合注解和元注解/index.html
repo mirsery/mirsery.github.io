@@ -1,14 +1,42 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> springboot 组合注解和元注解 · mirsery</title><meta name="description" content="springboot 组合注解和元注解 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">springboot 组合注解和元注解</h1><div class="post-info">作者: mirsery         创建日期: 2020年2月14日</div><div class="post-content"><h1 id="springboot-组合注解和元注解"><a href="#springboot-组合注解和元注解" class="headerlink" title="springboot 组合注解和元注解"></a>springboot 组合注解和元注解</h1><p><strong>元注解</strong> 指可以注解到别的注解上的注解，被注解的注解称之为组合注解，组合注解具有元注解的功能。<br>示例<br>AnnotationMain</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AnnotationMain</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;<br>        AnnotationConfigApplicationContext context = <span class="hljs-keyword">new</span> AnnotationConfigApplicationContext(DemoConfig.class);<br>        DemoService service = context.getBean(DemoService.class);<br>        service.outputResult();<br>        context.close();<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AnnotationMain</span> </span>&#123;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;
+        AnnotationConfigApplicationContext context = <span class="keyword">new</span> AnnotationConfigApplicationContext(DemoConfig.class);
+        DemoService service = context.getBean(DemoService.class);
+        service.outputResult();
+        context.close();
+    &#125;
+
+&#125;</code></pre>
 <p>WiselyConfiguration</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Target(ElementType.TYPE)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-meta">@Documented</span><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@ComponentScan</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> WiselyConfiguration &#123;<br><br>    String[] value() <span class="hljs-keyword">default</span> &#123;&#125;;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Target(ElementType.TYPE)</span>
+<span class="meta">@Retention(RetentionPolicy.RUNTIME)</span>
+<span class="meta">@Documented</span>
+<span class="meta">@Configuration</span>
+<span class="meta">@ComponentScan</span>
+<span class="keyword">public</span> <span class="meta">@interface</span> WiselyConfiguration &#123;
+
+    String[] value() <span class="keyword">default</span> &#123;&#125;;
+&#125;
+</code></pre>
 
 <p>DemoConfig</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@WiselyConfiguration(&quot;com.xx.annotation&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoConfig</span> </span>&#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@WiselyConfiguration(&quot;com.xx.annotation&quot;)</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoConfig</span> </span>&#123;
+
+&#125;</code></pre>
 
 <p>DemoService</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoService</span> </span>&#123;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">outputResult</span><span class="hljs-params">()</span></span>&#123;<br>        System.out.println(<span class="hljs-string">&quot;从组合注解中获取bean&quot;</span>);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Service</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoService</span> </span>&#123;
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">outputResult</span><span class="params">()</span></span>&#123;
+        System.out.println(<span class="string">&quot;从组合注解中获取bean&quot;</span>);
+    &#125;
+
+&#125;</code></pre>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2020/02/13/java/2021/springboot 组合注解和元注解/';
 var disqus_title = 'springboot 组合注解和元注解';
