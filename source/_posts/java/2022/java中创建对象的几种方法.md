@@ -6,7 +6,9 @@ comments: false
 date: 2022-01-09 21:38:03
 updated: 2022-01-09 21:38:03
 tags:
+    - jvm
 categories:
+    - java
 excerpt: '常见的对象常见方法有4种：使用new关键字/使用clone方法/反射机制/反序列化'
 ---
 
@@ -71,8 +73,14 @@ public static void main(String[] args) throw Exception {
 
     //反射创建对象
     Class carClass = Class.forName(Car.class.getName());
-    Car car3 = (Car) carClass.getDeclaredConstructor(new Class[]{String.class}).newInstance("mike3");
-    car3.run();
+
+    Object obj = carClass.getDeclaredConstructor(new Class[]{String.class}).newInstance("mike3");
+    Method method = obj.getClass().getMethod("run");
+    method.invoke(obj);
+
+    // Car car3 = (Car) carClass.getDeclaredConstructor(new Class[]{String.class}).newInstance("mike3");
+    // car3.run();
+
     System.out.println("=================");
 
     //反序列化创建对象
