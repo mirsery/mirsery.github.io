@@ -62,8 +62,14 @@
 
     <span class="comment">//反射创建对象</span>
     Class carClass = Class.forName(Car.class.getName());
-    Car car3 = (Car) carClass.getDeclaredConstructor(<span class="keyword">new</span> Class[]&#123;String.class&#125;).newInstance(<span class="string">&quot;mike3&quot;</span>);
-    car3.run();
+
+    Object obj = carClass.getDeclaredConstructor(<span class="keyword">new</span> Class[]&#123;String.class&#125;).newInstance(<span class="string">&quot;mike3&quot;</span>);
+    Method method = obj.getClass().getMethod(<span class="string">&quot;run&quot;</span>);
+    method.invoke(obj);
+
+    <span class="comment">// Car car3 = (Car) carClass.getDeclaredConstructor(new Class[]&#123;String.class&#125;).newInstance(&quot;mike3&quot;);</span>
+    <span class="comment">// car3.run();</span>
+
     System.out.println(<span class="string">&quot;=================&quot;</span>);
 
     <span class="comment">//反序列化创建对象</span>

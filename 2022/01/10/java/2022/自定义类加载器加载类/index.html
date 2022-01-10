@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 自定义类加载器加载类 · mirsery</title><meta name="description" content="自定义类加载器加载类 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">自定义类加载器加载类</h1><div class="post-info">作者: mirsery         创建日期: 2022年1月10日</div><div class="post-content"><!-- toc -->
+
+<ul>
+<li><a href="#-----------">自定义加载器的编码实现</a></li>
+</ul>
+<!-- tocstop -->
+
+<p>一般情况下在程序中开发人员使用自己编写的自定义加载器来与默认的加载器共同执行类加载任务的情况并不多见。实现一个自定义类加载器是非常简单的，只需要继承抽象类ClassLoader，并重写其findClass()方法即可。</p>
+<h2 id="自定义加载器的编码实现"><a href="#自定义加载器的编码实现" class="headerlink" title="自定义加载器的编码实现"></a>自定义加载器的编码实现</h2><pre><code class="highlight java">
+<span class="comment">//自定义类加载器 myClassLoader</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span></span>&#123;
+
+    <span class="keyword">private</span> String codePath;
+
+
+    <span class="function"><span class="keyword">public</span> <span class="title">MyClassLoader</span><span class="params">(String codePath)</span> </span>&#123;
+        <span class="keyword">this</span>.codePath = codePath;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;
+
+        <span class="keyword">byte</span>[] value = <span class="keyword">null</span>;
+        BufferedInputStream in = <span class="keyword">null</span>;
+        <span class="keyword">try</span> &#123;
+            in = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(codePath+name+<span class="string">&quot;.class&quot;</span>));
+            value = <span class="keyword">new</span> <span class="keyword">byte</span>[in.available()];
+            in.read(value);
+        &#125; <span class="keyword">catch</span> (IOException e) &#123;
+            e.printStackTrace();
+        &#125;<span class="keyword">finally</span> &#123;
+            <span class="keyword">try</span> &#123;
+                in.close();
+            &#125; <span class="keyword">catch</span> (IOException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+        <span class="keyword">assert</span> value != <span class="keyword">null</span>;
+        <span class="keyword">return</span> defineClass(<span class="keyword">this</span>.getClass().getPackageName()+<span class="string">&quot;.&quot;</span>+name,value,<span class="number">0</span>,value.length);
+    &#125;
+
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException </span>&#123;
+        MyClassLoader myClassLoader = <span class="keyword">new</span> MyClassLoader(<span class="string">&quot;/xxx/xxx/&quot;</span>);
+        Class carClass  = myClassLoader.loadClass(<span class="string">&quot;Car&quot;</span>);
+        Object o = carClass.getDeclaredConstructor(<span class="keyword">new</span> Class[]&#123;String.class&#125;).newInstance(<span class="keyword">new</span> String[]&#123;<span class="string">&quot;hello&quot;</span>&#125;);
+        Method method = o.getClass().getMethod(<span class="string">&quot;run&quot;</span>);
+        method.invoke(o);
+
+        System.out.println(o.getClass().getClassLoader());
+        
+        System.out.println(myClassLoader.getClass().getClassLoader());
+
+    &#125;
+
+&#125;
+</code></pre></div></div></div></main><footer class="footer-container"><div class="paginator"><a class="next" href="/2022/01/10/java/2022/%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
