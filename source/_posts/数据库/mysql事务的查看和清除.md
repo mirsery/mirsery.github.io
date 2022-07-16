@@ -6,8 +6,10 @@ comments: false
 date: 2022-07-16 17:03:53
 updated: 2022-07-16 17:03:53
 tags:
+    - mysql
 categories:
-excerpt:
+    - mysql
+excerpt: 'mysql的一些调试指令'
 ---
 
 
