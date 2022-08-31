@@ -18,6 +18,9 @@ friend_links:
     - ['BlitheZhu','小朱的博客','https://blitheZhu.github.io']
     - ['happyafa','阿发的博客','https://happyafa.github.io']
 
+pay_icons:
+    - '/images/pay/wepay.jpg'
+    - '/images/pay/alipay.jpg'
 
 # About
 about_info:

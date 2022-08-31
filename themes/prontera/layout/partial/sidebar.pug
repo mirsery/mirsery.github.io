@@ -19,3 +19,13 @@ div#friend-links-panel
           .site-name
             = link[0] 
           .site-desc= link[1]
+
+div#pay
+  div.panel-title 
+    p 请作者喝杯咖啡 ☕
+  - var pay_imgs = theme.pay_icons;
+  div(style="clear:both;width:330px")
+    div(style="float:left;")
+      img(src=pay_imgs[0] style="width:164px")
+    div(style="float:right")
+      img(src=pay_imgs[1] style="width:164px")  
