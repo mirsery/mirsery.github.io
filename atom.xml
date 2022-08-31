@@ -6,7 +6,7 @@
   <link href="https://mirsery.github.io/atom.xml" rel="self"/>
   
   <link href="https://mirsery.github.io/"/>
-  <updated>2022-07-16T09:03:53.000Z</updated>
+  <updated>2022-08-31T04:59:08.000Z</updated>
   <id>https://mirsery.github.io/</id>
   
   <author>
@@ -15,6 +15,48 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>配置oh-my-posh</title>
+    <link href="https://mirsery.github.io/2022/08/31/talk/2022/%E9%85%8D%E7%BD%AEoh-my-posh/"/>
+    <id>https://mirsery.github.io/2022/08/31/talk/2022/%E9%85%8D%E7%BD%AEoh-my-posh/</id>
+    <published>2022-08-31T04:59:08.000Z</published>
+    <updated>2022-08-31T04:59:08.000Z</updated>
+    
+    <content type="html"><![CDATA[<!-- toc --><ul><li><a href="#----oh-my-posh">下载安装oh-my-posh</a></li><li><a href="#---------">下载并预览主题文件</a></li><li><a href="#--">主题</a><ul><li><a href="#--------">新建主题保存目录</a></li><li><a href="#------">修改应用主题</a></li></ul></li></ul><!-- tocstop --><h2 id="下载安装oh-my-posh"><a href="#下载安装oh-my-posh" class="headerlink" title="下载安装oh-my-posh"></a>下载安装oh-my-posh</h2><ul><li>window平台</li></ul><pre><code class="highlight shell">scoop install oh-my-posh</code></pre><ul><li>macos</li></ul><pre><code class="highlight shell">brew install oh-my-posh</code></pre><h2 id="下载并预览主题文件"><a href="#下载并预览主题文件" class="headerlink" title="下载并预览主题文件"></a>下载并预览主题文件</h2><p><a href="https://ohmyposh.dev/docs/themes">主题预览地址https://ohmyposh.dev/docs/themes</a> ，点击即可预览相关的主题文件。</p><p><a href="https://github.com/JanDeDobbeleer/oh-my-posh/tree/main/themes">主题下载地址https://github.com/JanDeDobbeleer/oh-my-posh/tree/main/themes</a>点击可以下载对应预览页面的主题文件</p><h2 id="主题"><a href="#主题" class="headerlink" title="主题"></a>主题</h2><h3 id="新建主题保存目录"><a href="#新建主题保存目录" class="headerlink" title="新建主题保存目录"></a>新建主题保存目录</h3><ul><li><p>window平台<br>创建文件</p><pre><code class="highlight shell">oh-my-posh init pwsh | Invoke-Expression</code></pre><p>在terminal中执行如下指令:</p><pre><code class="highlight shell">notepad $profile</code></pre><p>在文件中添加如下代码:</p><pre><code class="highlight plaintext">oh-my-posh --init --shell pwsh --config 主题路径 | Invoke-ExpressionSet-PoshPrompt -Theme 主题名</code></pre></li><li><p>linux和mac os平台</p><ul><li>bash<br>  Bash 的配置文件一般是<del>/.bashrc 或者</del>/.profile  <pre><code class="highlight shell">eval &quot;$(oh-my-posh --init --shell bash --config 主题路径)&quot;</code></pre></li><li>zsh<br>  Zsh 的配置文件为~/.zshrc  <pre><code class="highlight shell">eval &quot;$(oh-my-posh --init --shell zsh --config 主题路径)&quot;</code></pre></li></ul></li></ul><h3 id="修改应用主题"><a href="#修改应用主题" class="headerlink" title="修改应用主题"></a>修改应用主题</h3><p>windows下面可以执行<strong>Get-PoshThemes</strong>查看主题保存的路径，并根据提示可以修改应用相关的主题</p><pre><code class="highlight shell">oh-my-posh init pwsh --config &quot;$env:POSH_THEMES_PATH/jandedobbeleer.omp.json&quot; | Invoke-Expression</code></pre><p>其他的操作系统参考上一小节</p>]]></content>
+    
+    
+    <summary type="html">全平台通用神器oh-my-posh 美化终端..</summary>
+    
+    
+    
+    <category term="装机必备" scheme="https://mirsery.github.io/categories/%E8%A3%85%E6%9C%BA%E5%BF%85%E5%A4%87/"/>
+    
+    
+    <category term="shell" scheme="https://mirsery.github.io/tags/shell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>win11使用git的小问题</title>
+    <link href="https://mirsery.github.io/2022/08/31/git/win11%E4%BD%BF%E7%94%A8git%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/"/>
+    <id>https://mirsery.github.io/2022/08/31/git/win11%E4%BD%BF%E7%94%A8git%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/</id>
+    <published>2022-08-31T02:49:40.000Z</published>
+    <updated>2022-08-31T02:49:40.000Z</updated>
+    
+    <content type="html"><![CDATA[<!-- toc --><ul><li><a href="#----">解决问题</a></li></ul><!-- tocstop --><p>参考资料<a href="https://brendanforster.com/notes/fixing-invalid-git-paths-on-windows/">invalid-git-paths-on-windows/</a></p><p>近期换了笔记本，win11的操作系统。在使用git的时候突然发现了一个问题，在下载项目的时候报了一个比较奇怪的错误，错误内容如下所示：</p><pre><code class="highlight plaintext">error: invalid path &#x27;....*******......&#x27;</code></pre><p>类似这种路径不合法的错误，一开始我在远程仓库修改文件的名称，但是于事无补。</p><p>其他的电脑访问这个仓库没有任何异常。</p><h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><p>一开始我以为是git版本的问题，随即就更新了git的版本</p><pre><code class="highlight shell">scoop update git</code></pre><p>但是更新完成之后错误依然在。查了下资料发现是由于ntfs格式的保护原因，关闭ntfs的保护即可解决问题</p><pre><code class="highlight shell">git global config core.protectNTFS false</code></pre>]]></content>
+    
+    
+    <summary type="html">mac电脑切换win11 git 遇到的一些奇怪的问题...</summary>
+    
+    
+    
+    <category term="随笔" scheme="https://mirsery.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+    <category term="git" scheme="https://mirsery.github.io/tags/git/"/>
+    
+  </entry>
   
   <entry>
     <title>mysql事务的查看和清除</title>
@@ -387,48 +429,6 @@
     
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>npm下载包路径设置</title>
-    <link href="https://mirsery.github.io/2021/11/18/web/2021/npm%E4%B8%8B%E8%BD%BD%E5%8C%85%E8%B7%AF%E5%BE%84%E8%AE%BE%E7%BD%AE/"/>
-    <id>https://mirsery.github.io/2021/11/18/web/2021/npm%E4%B8%8B%E8%BD%BD%E5%8C%85%E8%B7%AF%E5%BE%84%E8%AE%BE%E7%BD%AE/</id>
-    <published>2021-11-18T08:39:45.000Z</published>
-    <updated>2021-11-18T08:39:45.000Z</updated>
-    
-    <content type="html"><![CDATA[<!-- toc --><ul><li><a href="#mac-npm--------">MAC npm 下载包路径设置</a><ul><li><a href="#--npm-prefix-cache------">查看npm的prefix和cache路径配置信息</a></li><li><a href="#-----------">设置下载路径 缓存路径</a></li><li><a href="#--npm----">查看npm配置信息</a></li><li><a href="#--npm--">清空npm缓存</a></li><li><a href="#---------------------">验证缓存数据的有效性和完整性，清理垃圾数据</a></li></ul></li></ul><!-- tocstop --><h1 id="MAC-npm-下载包路径设置"><a href="#MAC-npm-下载包路径设置" class="headerlink" title="MAC npm 下载包路径设置"></a>MAC npm 下载包路径设置</h1><h2 id="查看npm的prefix和cache路径配置信息"><a href="#查看npm的prefix和cache路径配置信息" class="headerlink" title="查看npm的prefix和cache路径配置信息"></a>查看npm的prefix和cache路径配置信息</h2><pre><code class="highlight shell">npm config get cachenpm config get prefix</code></pre><h2 id="设置下载路径-缓存路径"><a href="#设置下载路径-缓存路径" class="headerlink" title="设置下载路径 缓存路径"></a>设置下载路径 缓存路径</h2><pre><code class="highlight shell">npm config set cache &quot;/cachePath&quot;npm config set prefix &quot;/prefixPath&quot;</code></pre><h2 id="查看npm配置信息"><a href="#查看npm配置信息" class="headerlink" title="查看npm配置信息"></a>查看npm配置信息</h2><pre><code class="highlight shell">npm config list</code></pre><h2 id="清空npm缓存"><a href="#清空npm缓存" class="headerlink" title="清空npm缓存"></a>清空npm缓存</h2><pre><code class="highlight shell">npm cache clean -f</code></pre><h2 id="验证缓存数据的有效性和完整性，清理垃圾数据"><a href="#验证缓存数据的有效性和完整性，清理垃圾数据" class="headerlink" title="验证缓存数据的有效性和完整性，清理垃圾数据"></a>验证缓存数据的有效性和完整性，清理垃圾数据</h2><pre><code class="highlight shell">npm cache verfy</code></pre>]]></content>
-    
-    
-    <summary type="html">MAC npm 下载包路径设置</summary>
-    
-    
-    
-    <category term="前端" scheme="https://mirsery.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
-    
-    
-    <category term="js" scheme="https://mirsery.github.io/tags/js/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>hls测试流部署</title>
-    <link href="https://mirsery.github.io/2021/11/17/talk/2021/hls%E6%B5%8B%E8%AF%95%E6%B5%81%E9%83%A8%E7%BD%B2/"/>
-    <id>https://mirsery.github.io/2021/11/17/talk/2021/hls%E6%B5%8B%E8%AF%95%E6%B5%81%E9%83%A8%E7%BD%B2/</id>
-    <published>2021-11-17T02:36:39.000Z</published>
-    <updated>2021-11-17T02:36:39.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><p>利用nginx/ffmpeg将mp4格式的文件转换成m3u8流，并利用web服务器进行发布</p></blockquote><!-- toc --><ul><li><a href="#hls----------">hls测试流简易部署全过程</a><ul><li><a href="#------------m3u8">第一步将下载的视频切片成m3u8</a></li><li><a href="#------------web------">第二步将切片的文件部署到web服务器中发布</a></li></ul></li></ul><!-- tocstop --><h1 id="hls测试流简易部署全过程"><a href="#hls测试流简易部署全过程" class="headerlink" title="hls测试流简易部署全过程"></a>hls测试流简易部署全过程</h1><p>web开发的过程中有时候会遇到缺少hls在线测试流的情况，这个时候就需要我们自己搭建可用的测试流服务。</p><h2 id="第一步将下载的视频切片成m3u8"><a href="#第一步将下载的视频切片成m3u8" class="headerlink" title="第一步将下载的视频切片成m3u8"></a>第一步将下载的视频切片成m3u8</h2><p>在此操作之前我们需要用到ffmpeg（<a href="https://ffmpeg.org/download.html">点击下载</a>). FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源计算机程序。采用LGPL或GPL许可证。它提供了录制、转换以及流化音视频的完整解决方案。它包含了非常先进的音频/视频编解码库libavcodec。</p><p>下载安装完之后我们可以调用如下命令:</p><pre><code class="highlight shell">ffmpeg -i yoursource.mp4 -f segment -segment_time 60 -segment_format mpegts -segment_list yourtarget.m3u8 -c copy -bsf:v h264_mp4toannexb -map 0 yourtarget-%04d.ts</code></pre><p>上述命令会按照60s的间隔对mp4文件进行切片。</p><h2 id="第二步将切片的文件部署到web服务器中发布"><a href="#第二步将切片的文件部署到web服务器中发布" class="headerlink" title="第二步将切片的文件部署到web服务器中发布"></a>第二步将切片的文件部署到web服务器中发布</h2><p>以下是nginx服务器的简单部署配置示例</p><pre><code class="highlight plaintext">server &#123;        listen 80;        index index.html;        server_name xxxxxx; // 服务名        location /&#123;            add_header Access-Control-Allow-Origin *; //允许跨域            root /xxxx/videoPath; //视频切片存放路径        &#125; &#125;</code></pre><p>完成以上配置之后直接访问m3u8文件的web地址即可播放视频流</p>]]></content>
-    
-    
-    <summary type="html">hls测试流简易部署全过程</summary>
-    
-    
-    
-    <category term="生活" scheme="https://mirsery.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
-    
-    
-    <category term="闲谈" scheme="https://mirsery.github.io/tags/%E9%97%B2%E8%B0%88/"/>
     
   </entry>
   
