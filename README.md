@@ -81,7 +81,3 @@ npm run build
 * [hexo-server](https://github.com/hexojs/hexo-server)
 * [hexo-toc](https://github.com/bubkoo/hexo-toc)
 
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
