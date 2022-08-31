@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 将exe封装为系统服务开机自启 · mirsery</title><meta name="description" content="将exe封装为系统服务开机自启 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">将exe封装为系统服务开机自启</h1><div class="post-info">作者: mirsery         创建日期: 2022年8月31日</div><div class="post-content"><!-- toc -->
+
+<ul>
+<li><a href="#--------">目录列表如下所示</a></li>
+<li><a href="#installbat------------">install.bat 安装程序为系统服务脚本</a></li>
+<li><a href="#uninstallbat-------">uninstall.bat 移除服务脚本</a></li>
+</ul>
+<!-- tocstop -->
+
+<blockquote>
+<p>本文使用的资源地址</p>
+</blockquote>
+<p><a href="tools.zip">点击下载微软提供的开发者工具</a></p>
+<h2 id="目录列表如下所示"><a href="#目录列表如下所示" class="headerlink" title="目录列表如下所示"></a>目录列表如下所示</h2><p>将下载下的资源解压到根目录，目录结构如下所示:</p>
+<pre><code class="highlight plaintext">instsrv.exe
+srvany.exe
+[targetEXE].exe
+install.bat
+uninstall.bat</code></pre>
+
+<blockquote>
+<p>其中 <strong>[targetEXE].exe</strong> 为所需要打包的exe程序，<strong>instsrv.exe 和 srvany.exe</strong>是开发工具内的文件</p>
+</blockquote>
+<h2 id="install-bat-安装程序为系统服务脚本"><a href="#install-bat-安装程序为系统服务脚本" class="headerlink" title="install.bat 安装程序为系统服务脚本"></a>install.bat 安装程序为系统服务脚本</h2><pre><code class="highlight bat">@<span class="built_in">echo</span> off
+<span class="built_in">cd</span> /d %~dp0
+<span class="comment"></span>
+<span class="comment">rem 定义需要运行的程序路径</span>
+<span class="built_in">set</span> curExe=%~dp0[targetEXE].exe
+<span class="comment">rem 定义注册表路径</span>
+<span class="built_in">set</span> regpath=HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\[customServieName]\Parameters\
+<span class="comment">rem 定义srvany.exe文件路径</span>
+<span class="built_in">set</span> sourcePath=%~dp0srvany.exe
+<span class="comment"></span>
+<span class="comment">rem 安装引导服务</span>
+instsrv [customServieName]  &quot;<span class="variable">%sourcePath%</span>&quot;
+@<span class="built_in">echo</span> 服务添加完成
+<span class="comment"></span>
+<span class="comment">rem 添加注册表语法: reg add 注册表路径 /v 项名称 /t 值类型 /d 数据 /f 表示强行修改不提示</span>
+<span class="comment"></span>
+<span class="comment">rem 名称 Application 值为你要作为服务运行的程序地址 /d对应的参数有斜杠不是为了转义引号，而是路径还有斜杠，默认将引号转义了，额外添加斜杠是为了保留引号</span>
+reg add <span class="variable">%regpath%</span> /v AppDirectory /t REG_SZ /d &quot;%~dp0\&quot; /f
+<span class="comment"></span>
+<span class="comment">rem 名称 AppDirectory 值为你要作为服务运行的程序所在文件夹路径</span>
+reg add <span class="variable">%regpath%</span> /v Application /t REG_SZ /d &quot;<span class="variable">%curExe%</span>&quot; /f
+<span class="comment"></span>
+<span class="comment">rem 名称 AppParameters 值为你要作为服务运行的程序启动所需要的参数</span>
+reg add <span class="variable">%regpath%</span> /v AppParameters /t REG_SZ /f
+
+<span class="built_in">net</span> <span class="built_in">start</span> [customServieName]
+
+@<span class="built_in">echo</span> 注册表添加完成
+<span class="built_in">pause</span>
+</code></pre>
+
+<h2 id="uninstall-bat-移除服务脚本"><a href="#uninstall-bat-移除服务脚本" class="headerlink" title="uninstall.bat 移除服务脚本"></a>uninstall.bat 移除服务脚本</h2><pre><code class="highlight bat">@<span class="built_in">echo</span> off
+<span class="comment">rem 进入当前目录</span>
+<span class="built_in">cd</span> /d %~dp0
+
+<span class="built_in">net</span> stop [customServieName]
+<span class="comment"></span>
+<span class="comment">rem 卸载引导服务</span>
+instsrv [customServieName] remove
+@<span class="built_in">echo</span> 卸载完成
+<span class="built_in">pause</span>
+</code></pre></div></div></div></main><footer class="footer-container"><div class="paginator"><a class="next" href="/2022/08/31/talk/2022/%E9%85%8D%E7%BD%AEoh-my-posh/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

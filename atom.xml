@@ -6,7 +6,7 @@
   <link href="https://mirsery.github.io/atom.xml" rel="self"/>
   
   <link href="https://mirsery.github.io/"/>
-  <updated>2022-08-31T04:59:08.000Z</updated>
+  <updated>2022-08-31T07:10:57.000Z</updated>
   <id>https://mirsery.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>将exe封装为系统服务开机自启</title>
+    <link href="https://mirsery.github.io/2022/08/31/talk/2022/%E5%B0%86exe%E5%B0%81%E8%A3%85%E4%B8%BA%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF/"/>
+    <id>https://mirsery.github.io/2022/08/31/talk/2022/%E5%B0%86exe%E5%B0%81%E8%A3%85%E4%B8%BA%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF/</id>
+    <published>2022-08-31T07:10:57.000Z</published>
+    <updated>2022-08-31T07:10:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<!-- toc --><ul><li><a href="#--------">目录列表如下所示</a></li><li><a href="#installbat------------">install.bat 安装程序为系统服务脚本</a></li><li><a href="#uninstallbat-------">uninstall.bat 移除服务脚本</a></li></ul><!-- tocstop --><blockquote><p>本文使用的资源地址</p></blockquote><p><a href="tools.zip">点击下载微软提供的开发者工具</a></p><h2 id="目录列表如下所示"><a href="#目录列表如下所示" class="headerlink" title="目录列表如下所示"></a>目录列表如下所示</h2><p>将下载下的资源解压到根目录，目录结构如下所示:</p><pre><code class="highlight plaintext">instsrv.exesrvany.exe[targetEXE].exeinstall.batuninstall.bat</code></pre><blockquote><p>其中 <strong>[targetEXE].exe</strong> 为所需要打包的exe程序，<strong>instsrv.exe 和 srvany.exe</strong>是开发工具内的文件</p></blockquote><h2 id="install-bat-安装程序为系统服务脚本"><a href="#install-bat-安装程序为系统服务脚本" class="headerlink" title="install.bat 安装程序为系统服务脚本"></a>install.bat 安装程序为系统服务脚本</h2><pre><code class="highlight bat">@<span class="built_in">echo</span> off<span class="built_in">cd</span> /d %~dp0<span class="comment"></span><span class="comment">rem 定义需要运行的程序路径</span><span class="built_in">set</span> curExe=%~dp0[targetEXE].exe<span class="comment">rem 定义注册表路径</span><span class="built_in">set</span> regpath=HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\[customServieName]\Parameters\<span class="comment">rem 定义srvany.exe文件路径</span><span class="built_in">set</span> sourcePath=%~dp0srvany.exe<span class="comment"></span><span class="comment">rem 安装引导服务</span>instsrv [customServieName]  &quot;<span class="variable">%sourcePath%</span>&quot;@<span class="built_in">echo</span> 服务添加完成<span class="comment"></span><span class="comment">rem 添加注册表语法: reg add 注册表路径 /v 项名称 /t 值类型 /d 数据 /f 表示强行修改不提示</span><span class="comment"></span><span class="comment">rem 名称 Application 值为你要作为服务运行的程序地址 /d对应的参数有斜杠不是为了转义引号，而是路径还有斜杠，默认将引号转义了，额外添加斜杠是为了保留引号</span>reg add <span class="variable">%regpath%</span> /v AppDirectory /t REG_SZ /d &quot;%~dp0\&quot; /f<span class="comment"></span><span class="comment">rem 名称 AppDirectory 值为你要作为服务运行的程序所在文件夹路径</span>reg add <span class="variable">%regpath%</span> /v Application /t REG_SZ /d &quot;<span class="variable">%curExe%</span>&quot; /f<span class="comment"></span><span class="comment">rem 名称 AppParameters 值为你要作为服务运行的程序启动所需要的参数</span>reg add <span class="variable">%regpath%</span> /v AppParameters /t REG_SZ /f<span class="built_in">net</span> <span class="built_in">start</span> [customServieName]@<span class="built_in">echo</span> 注册表添加完成<span class="built_in">pause</span></code></pre><h2 id="uninstall-bat-移除服务脚本"><a href="#uninstall-bat-移除服务脚本" class="headerlink" title="uninstall.bat 移除服务脚本"></a>uninstall.bat 移除服务脚本</h2><pre><code class="highlight bat">@<span class="built_in">echo</span> off<span class="comment">rem 进入当前目录</span><span class="built_in">cd</span> /d %~dp0<span class="built_in">net</span> stop [customServieName]<span class="comment"></span><span class="comment">rem 卸载引导服务</span>instsrv [customServieName] remove@<span class="built_in">echo</span> 卸载完成<span class="built_in">pause</span></code></pre>]]></content>
+    
+    
+    <summary type="html">使用微软提供的开发者工具进行exe程序的封装...</summary>
+    
+    
+    
+    <category term="运维" scheme="https://mirsery.github.io/categories/%E8%BF%90%E7%BB%B4/"/>
+    
+    
+    <category term="win" scheme="https://mirsery.github.io/tags/win/"/>
+    
+  </entry>
   
   <entry>
     <title>配置oh-my-posh</title>
@@ -409,23 +430,6 @@
     
     
     <summary type="html">使用 electron-builder 打包的时候会自动下载所需的依赖，但是下载过程可能因某些神秘力量而失败。因此需要手动下载，再将工具放于指定路径...</summary>
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>npm镜像源管理</title>
-    <link href="https://mirsery.github.io/2021/11/25/web/2021/npm%E9%95%9C%E5%83%8F%E6%BA%90%E7%AE%A1%E7%90%86/"/>
-    <id>https://mirsery.github.io/2021/11/25/web/2021/npm%E9%95%9C%E5%83%8F%E6%BA%90%E7%AE%A1%E7%90%86/</id>
-    <published>2021-11-25T05:42:58.000Z</published>
-    <updated>2021-11-25T05:42:58.000Z</updated>
-    
-    <content type="html"><![CDATA[<!-- toc --><ul><li><a href="#----nrm">全局安装nrm</a></li><li><a href="#--nrm">使用nrm</a></li></ul><!-- tocstop --><p>国内由于众所周知的原因，在我们使用npm工具构建前端项目时总会发生一些令人沮丧的事情，每次都需要手动更换镜像源。nrm(npm registry manager)是npm的镜像源管理工具，有时候国外资源太慢，使用这个就可以快速地在 npm 源间切换。</p><h2 id="全局安装nrm"><a href="#全局安装nrm" class="headerlink" title="全局安装nrm"></a>全局安装nrm</h2><pre><code class="highlight shell">npm i -g nrm</code></pre><h2 id="使用nrm"><a href="#使用nrm" class="headerlink" title="使用nrm"></a>使用nrm</h2><blockquote><p>查看可用镜像源</p></blockquote><pre><code class="highlight shell">nrm list</code></pre><blockquote><p>选择使用镜像源</p></blockquote><pre><code class="highlight shell">nrm use &lt;name&gt;</code></pre><blockquote><p>增加定制源</p></blockquote><pre><code class="highlight plaintext">nrm add &lt;registry&gt; &lt;url&gt;</code></pre><p>其中reigstry为源名，url为源的路径。</p><blockquote><p>删除镜像源</p></blockquote><pre><code class="highlight shell">nrm del &lt;registry&gt;</code></pre><blockquote><p>测试源速度</p></blockquote><pre><code class="highlight shell">nrm test npm</code></pre>]]></content>
-    
-    
-    <summary type="html">‘nrm npm镜像源管理工具’</summary>
     
     
     
