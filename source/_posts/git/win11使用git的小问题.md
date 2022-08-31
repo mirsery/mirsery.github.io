@@ -9,7 +9,7 @@ tags:
     - git
 categories:
     - 随笔
-excerpt:
+excerpt: 'mac电脑切换win11 git 遇到的一些奇怪的问题...'
 ---
 
 
@@ -38,4 +38,3 @@ scoop update git
 ```shell
 git global config core.protectNTFS false
 ```
-

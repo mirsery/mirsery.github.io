@@ -9,7 +9,7 @@ tags:
     - shell
 categories:
     - 装机必备
-excerpt:
+excerpt: '全平台通用神器oh-my-posh 美化终端..'
 ---
 
 
@@ -50,6 +50,8 @@ notepad $profile
 在文件中添加如下代码:
 ```
 oh-my-posh --init --shell pwsh --config 主题路径 | Invoke-Expression
+
+Set-PoshPrompt -Theme 主题名 
 ```
 
 - linux和mac os平台
