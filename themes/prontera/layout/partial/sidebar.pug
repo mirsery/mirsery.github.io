@@ -9,16 +9,12 @@ div#about-panel
 div#my-music
   iframe( frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=370 src="//music.163.com/outchain/player?type=0&id=7097325082&auto=1&height=430") 
 
-div#friend-links-panel
-  div.panel-title
-    p= __('friend_link')
-  - var friend_links = theme.friend_links;
-  each link in friend_links
-    a.link-item(href=link[2] target="_blank")
-        div.link-container
-          .site-name
-            = link[0] 
-          .site-desc= link[1]
+
+div
+  div.panel-title 
+    p 扫码领红包
+  - var lucky_png = theme.lucky_discount;
+  img(src=lucky_png style="width:330px")  
 
 div#pay
   div.panel-title 
@@ -29,3 +25,14 @@ div#pay
       img(src=pay_imgs[0] style="width:164px")
     div(style="float:right")
       img(src=pay_imgs[1] style="width:164px")  
+
+div#friend-links-panel
+  div.panel-title
+    p= __('friend_link')
+  - var friend_links = theme.friend_links;
+  each link in friend_links
+    a.link-item(href=link[2] target="_blank")
+        div.link-container
+          .site-name
+            = link[0] 
+          .site-desc= link[1]
