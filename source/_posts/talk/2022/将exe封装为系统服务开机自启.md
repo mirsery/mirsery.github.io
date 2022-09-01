@@ -2,7 +2,7 @@
 title: 将exe封装为系统服务开机自启
 toc: true
 author: mirsery
-comments: false
+comments: true
 date: 2022-08-31 15:10:57
 updated: 2022-08-31 15:10:57
 tags:

@@ -9,7 +9,6 @@ tags:
     - 电子书
 categories:
     - 电子书
-    - kindle
 excerpt: ‘移除亚马逊电子书DRM版权保护’
 ---
 
