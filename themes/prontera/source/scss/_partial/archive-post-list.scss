@@ -3,9 +3,9 @@
     margin: 5em auto;
     .post-item {
         padding: 2px 0 0 50px;
-    }
-    .post-time,
-    .post-title-link {
+        &:hover {
+            background: #44475a;
+        }
     }
     .post-title-link {
         margin-left: 125px;
@@ -19,12 +19,15 @@
     .post-info {
         float: left;
         width: 125px;
-        color: #ff79c6;;
+        color: #ff79c6;
     }
 
 
     .category-list-item {
         padding: 2px 0 0 50px;
+        &:hover {
+            background: #44475a;
+        }
     }
     .category-list-link {
         float: left;
@@ -44,6 +47,9 @@
 
     .tag-list-item {
         padding: 2px 0 0 50px;
+        &:hover {
+            background: #44475a;
+        }
     }
     .tag-list-link {
         float: left;
@@ -59,6 +65,8 @@
         width: 50px;
         color: #ff79c6;;
     }
+
+
 
 
 }
