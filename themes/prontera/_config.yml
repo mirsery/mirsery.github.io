@@ -22,7 +22,7 @@ pay_icons:
     - '/images/pay/wepay.jpg'
     - '/images/pay/alipay.jpg'
 
-lucky_discount: './images/pay/lucky.jpg'
+lucky_discount: '/images/pay/lucky.jpg'
 
 # About
 about_info:
