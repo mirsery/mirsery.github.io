@@ -6,7 +6,7 @@
   <link href="https://mirsery.github.io/atom.xml" rel="self"/>
   
   <link href="https://mirsery.github.io/"/>
-  <updated>2022-08-31T07:10:57.000Z</updated>
+  <updated>2022-09-05T08:33:21.000Z</updated>
   <id>https://mirsery.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>lottie动效的使用</title>
+    <link href="https://mirsery.github.io/2022/09/05/%E5%89%8D%E7%AB%AF/lottie%E5%8A%A8%E6%95%88%E7%9A%84%E4%BD%BF%E7%94%A8/"/>
+    <id>https://mirsery.github.io/2022/09/05/%E5%89%8D%E7%AB%AF/lottie%E5%8A%A8%E6%95%88%E7%9A%84%E4%BD%BF%E7%94%A8/</id>
+    <published>2022-09-05T08:33:21.000Z</published>
+    <updated>2022-09-05T08:33:21.000Z</updated>
+    
+    <content type="html"><![CDATA[<!-- toc --><ul><li><a href="#ae------">AE上插件的安装</a></li><li><a href="#web---">web端使用</a></li><li><a href="#------">简单功能介绍</a></li></ul><!-- tocstop --><h2 id="AE上插件的安装"><a href="#AE上插件的安装" class="headerlink" title="AE上插件的安装"></a>AE上插件的安装</h2><p>AE需要安装<strong>bodymovin插件</strong></p><p><strong>BodyMovin</strong>插件可以将AE源文件导出为json。</p><ul><li><p>下载 ZXP 安装程序<br><a href="http://aescripts.com/learn/zxp-installer/">点击下载ZXP</a></p></li><li><p>下载最新的bodymovin扩展</p></li></ul><p><a href="https://github.com/airbnb/lottie-web/tree/master/build/extension">下载最新的扩展文件</a></p><ul><li>打开ZXP安装程序并选择bodymovin扩展安装</li></ul><h2 id="web端使用"><a href="#web端使用" class="headerlink" title="web端使用"></a>web端使用</h2><p>安装<strong>lottie-web</strong></p><pre><code class="highlight json">npm install lottie-web</code></pre><p>下面是示例代码:</p><pre><code class="highlight html"><span class="tag">&lt;<span class="name">template</span>&gt;</span>  <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width:100%;height:100%;&quot;</span> <span class="attr">id</span>=<span class="string">&quot;bodymovin&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">template</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span><span class="javascript"><span class="keyword">import</span> lottie <span class="keyword">from</span> <span class="string">&#x27;lottie-web&#x27;</span></span><span class="javascript"></span><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><span class="javascript">  <span class="attr">name</span>: <span class="string">&quot;AnimationComponent&quot;</span>,</span><span class="javascript">  <span class="attr">methods</span>:&#123;</span><span class="javascript">    <span class="function"><span class="title">loadAnimation</span>(<span class="params"></span>)</span>&#123;</span><span class="javascript">      <span class="keyword">let</span> animData = &#123;</span><span class="javascript">        <span class="attr">wrapper</span>: <span class="built_in">document</span>.getElementById(<span class="string">&#x27;bodymovin&#x27;</span>),</span><span class="javascript">        <span class="attr">animType</span>: <span class="string">&#x27;html&#x27;</span>,</span><span class="javascript">        <span class="attr">loop</span>: <span class="literal">false</span>,</span><span class="javascript">        <span class="attr">prerender</span>: <span class="literal">true</span>,</span><span class="javascript">        <span class="attr">autoplay</span>: <span class="literal">true</span>,</span><span class="javascript">        <span class="attr">path</span>: <span class="string">&#x27;static/data.json&#x27;</span>,</span><span class="javascript">      &#125;;</span><span class="javascript">      <span class="keyword">let</span> lottiePlayer = lottie.loadAnimation(animData);</span><span class="javascript">      <span class="keyword">let</span> temp = <span class="number">1</span>;</span><span class="javascript">      lottiePlayer.addEventListener(<span class="string">&quot;complete&quot;</span>,<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span><span class="javascript">        <span class="built_in">console</span>.log(<span class="string">&quot;动画完成&quot;</span>)</span><span class="javascript">        <span class="comment">// lottiePlayer.playSegments([158,226], true)</span></span><span class="javascript">        <span class="keyword">if</span>(temp &gt; <span class="number">0</span>)&#123;</span><span class="javascript">          lottiePlayer.playSegments([<span class="number">158</span>,<span class="number">226</span>], <span class="literal">true</span>)</span><span class="javascript">        &#125;<span class="keyword">else</span>&#123;</span><span class="javascript">          lottiePlayer.playSegments([<span class="number">226</span>,<span class="number">158</span>], <span class="literal">true</span>)</span><span class="javascript">        &#125;</span><span class="javascript"></span><span class="javascript">        temp = -<span class="number">1</span> * temp;</span><span class="javascript">      &#125;)</span><span class="javascript">    &#125;</span><span class="javascript">  &#125;,</span><span class="javascript">  <span class="function"><span class="title">mounted</span>(<span class="params"></span>)</span> &#123;</span><span class="javascript">    <span class="built_in">this</span>.loadAnimation();</span><span class="javascript">  &#125;</span><span class="javascript">&#125;</span><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></code></pre><h2 id="简单功能介绍"><a href="#简单功能介绍" class="headerlink" title="简单功能介绍"></a>简单功能介绍</h2><ul><li><p>lottiePlayer.play()：播放，从当前帧开始播放</p></li><li><p>lottiePlayer.stop()：停止，并回到第0帧</p></li><li><p>lottiePlayer.pause()：暂停，并保持当前帧</p></li><li><p>lottiePlayer.goToAndStop(value, isFrame)：跳到某个时刻/帧并停止</p></li><li><p>isFrame（可省略，默认false：毫秒；true：帧）指明value的单位是毫秒还是帧</p></li><li><p>lottiePlayer.goToAndPlay(value, isFrame)：跳到某个时刻/帧并播放</p></li><li><p>lottiePlayer.goToAndPlay(value, isFrame)：跳到某个时刻/帧并播放</p></li><li><p>lottiePlayer.goToAndStop(30, true)     // 跳转到第30帧并停止</p></li><li><p>lottiePlayer.goToAndPlay(300)          // 跳转到第300毫秒并播放</p></li><li><p>lottiePlayer.playSegments(arr, forceFlag)：以帧为单位，播放指定片段</p><blockquote><p>arr可以包含两个数字或者两个数字组成的数组，forceFlag表示是否立即强制播放该片段</p></blockquote></li><li><p>lottiePlayer.playSegments([10,20], false)          // 播放完之前的片段，播放10-20帧</p></li><li><p>lottiePlayer.playSegments([[0,5],[10,18]], true)   // 直接播放0-5帧和10-18帧</p></li><li><p>lottiePlayer.setSpeed(speed)：设置播放速度，speed为1表示正常速度</p></li><li><p>lottiePlayer.setDirection(direction)： 设置播放方向，1表示正向播放，-1表示反向播放</p></li><li><p>lottiePlayer.destroy()： 删除该动画，移除相应的元素标签等。</p></li></ul>]]></content>
+    
+    
+    <summary type="html">Lottie 从UI动画场景出发解决矢量动画渲染的问题，使用 AE Script SDK 来导出 AE 工程。</summary>
+    
+    
+    
+    <category term="前端" scheme="https://mirsery.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+    <category term="动画" scheme="https://mirsery.github.io/tags/%E5%8A%A8%E7%94%BB/"/>
+    
+  </entry>
   
   <entry>
     <title>将exe封装为系统服务开机自启</title>
@@ -414,23 +435,6 @@
     <category term="前端" scheme="https://mirsery.github.io/tags/%E5%89%8D%E7%AB%AF/"/>
     
     <category term="js" scheme="https://mirsery.github.io/tags/js/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>electron-builder打包依赖存放位置</title>
-    <link href="https://mirsery.github.io/2021/11/25/web/2021/electron-builder%E6%89%93%E5%8C%85%E4%BE%9D%E8%B5%96%E5%AD%98%E6%94%BE%E4%BD%8D%E7%BD%AE/"/>
-    <id>https://mirsery.github.io/2021/11/25/web/2021/electron-builder%E6%89%93%E5%8C%85%E4%BE%9D%E8%B5%96%E5%AD%98%E6%94%BE%E4%BD%8D%E7%BD%AE/</id>
-    <published>2021-11-25T06:08:42.000Z</published>
-    <updated>2021-11-25T06:08:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<!-- toc --><ul><li><a href="#electron-builder-----">electron-builder 打包问题</a><ul><li><a href="#-----">缓存的位置</a></li></ul></li></ul><!-- tocstop --><h1 id="electron-builder-打包问题"><a href="#electron-builder-打包问题" class="headerlink" title="electron-builder 打包问题"></a>electron-builder 打包问题</h1><p>由于国内某些神秘力量会导致采用electron-builder打包app时，从GitHub等地下载依赖时导致文件的下载超时。为此，我们需要手动将依赖下载到指定的目录下面，才能进行下一步的打包工作。</p><h2 id="缓存的位置"><a href="#缓存的位置" class="headerlink" title="缓存的位置"></a>缓存的位置</h2><ul><li>macos</li></ul><pre><code class="highlight shell">~/Library/Caches/electron~/Library/Caches/electron-builder~/Library/Application Support/Caches</code></pre><ul><li><p>Linux </p><pre><code class="highlight shell">~/.cache/electron-builder</code></pre></li><li><p>windows</p><pre><code class="highlight shell"><span class="meta">%</span><span class="bash">LOCALAPPDATA%\\electron\\cache</span><span class="meta">%</span><span class="bash">LOCALAPPDATA%\\electron-builder\\cache</span></code></pre></li></ul>]]></content>
-    
-    
-    <summary type="html">使用 electron-builder 打包的时候会自动下载所需的依赖，但是下载过程可能因某些神秘力量而失败。因此需要手动下载，再将工具放于指定路径...</summary>
-    
-    
-    
     
   </entry>
   

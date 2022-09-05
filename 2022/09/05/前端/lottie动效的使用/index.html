@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> lottie动效的使用 · mirsery</title><meta name="description" content="lottie动效的使用 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">lottie动效的使用</h1><div class="post-info">作者: mirsery         创建日期: 2022年9月5日</div><div class="post-content"><!-- toc -->
+
+<ul>
+<li><a href="#ae------">AE上插件的安装</a></li>
+<li><a href="#web---">web端使用</a></li>
+<li><a href="#------">简单功能介绍</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2 id="AE上插件的安装"><a href="#AE上插件的安装" class="headerlink" title="AE上插件的安装"></a>AE上插件的安装</h2><p>AE需要安装<strong>bodymovin插件</strong></p>
+<p><strong>BodyMovin</strong>插件可以将AE源文件导出为json。</p>
+<ul>
+<li><p>下载 ZXP 安装程序<br><a target="_blank" rel="noopener" href="http://aescripts.com/learn/zxp-installer/">点击下载ZXP</a></p>
+</li>
+<li><p>下载最新的bodymovin扩展</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/airbnb/lottie-web/tree/master/build/extension">下载最新的扩展文件</a></p>
+<ul>
+<li>打开ZXP安装程序并选择bodymovin扩展安装</li>
+</ul>
+<h2 id="web端使用"><a href="#web端使用" class="headerlink" title="web端使用"></a>web端使用</h2><p>安装<strong>lottie-web</strong></p>
+<pre><code class="highlight json">npm install lottie-web</code></pre>
+
+<p>下面是示例代码:</p>
+<pre><code class="highlight html"><span class="tag">&lt;<span class="name">template</span>&gt;</span>
+  <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width:100%;height:100%;&quot;</span> <span class="attr">id</span>=<span class="string">&quot;bodymovin&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">template</span>&gt;</span>
+
+<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span>
+<span class="javascript"><span class="keyword">import</span> lottie <span class="keyword">from</span> <span class="string">&#x27;lottie-web&#x27;</span></span>
+<span class="javascript"></span>
+<span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span>
+<span class="javascript">  <span class="attr">name</span>: <span class="string">&quot;AnimationComponent&quot;</span>,</span>
+<span class="javascript">  <span class="attr">methods</span>:&#123;</span>
+<span class="javascript">    <span class="function"><span class="title">loadAnimation</span>(<span class="params"></span>)</span>&#123;</span>
+<span class="javascript">      <span class="keyword">let</span> animData = &#123;</span>
+<span class="javascript">        <span class="attr">wrapper</span>: <span class="built_in">document</span>.getElementById(<span class="string">&#x27;bodymovin&#x27;</span>),</span>
+<span class="javascript">        <span class="attr">animType</span>: <span class="string">&#x27;html&#x27;</span>,</span>
+<span class="javascript">        <span class="attr">loop</span>: <span class="literal">false</span>,</span>
+<span class="javascript">        <span class="attr">prerender</span>: <span class="literal">true</span>,</span>
+<span class="javascript">        <span class="attr">autoplay</span>: <span class="literal">true</span>,</span>
+<span class="javascript">        <span class="attr">path</span>: <span class="string">&#x27;static/data.json&#x27;</span>,</span>
+<span class="javascript">      &#125;;</span>
+<span class="javascript">      <span class="keyword">let</span> lottiePlayer = lottie.loadAnimation(animData);</span>
+<span class="javascript">      <span class="keyword">let</span> temp = <span class="number">1</span>;</span>
+<span class="javascript">      lottiePlayer.addEventListener(<span class="string">&quot;complete&quot;</span>,<span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;</span>
+<span class="javascript">        <span class="built_in">console</span>.log(<span class="string">&quot;动画完成&quot;</span>)</span>
+<span class="javascript">        <span class="comment">// lottiePlayer.playSegments([158,226], true)</span></span>
+<span class="javascript">        <span class="keyword">if</span>(temp &gt; <span class="number">0</span>)&#123;</span>
+<span class="javascript">          lottiePlayer.playSegments([<span class="number">158</span>,<span class="number">226</span>], <span class="literal">true</span>)</span>
+<span class="javascript">        &#125;<span class="keyword">else</span>&#123;</span>
+<span class="javascript">          lottiePlayer.playSegments([<span class="number">226</span>,<span class="number">158</span>], <span class="literal">true</span>)</span>
+<span class="javascript">        &#125;</span>
+<span class="javascript"></span>
+<span class="javascript">        temp = -<span class="number">1</span> * temp;</span>
+<span class="javascript">      &#125;)</span>
+<span class="javascript">    &#125;</span>
+<span class="javascript">  &#125;,</span>
+<span class="javascript">  <span class="function"><span class="title">mounted</span>(<span class="params"></span>)</span> &#123;</span>
+<span class="javascript">    <span class="built_in">this</span>.loadAnimation();</span>
+<span class="javascript">  &#125;</span>
+<span class="javascript">&#125;</span>
+<span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>
+
+<span class="tag">&lt;<span class="name">style</span> <span class="attr">scoped</span>&gt;</span>
+
+<span class="tag">&lt;/<span class="name">style</span>&gt;</span>
+</code></pre>
+
+<h2 id="简单功能介绍"><a href="#简单功能介绍" class="headerlink" title="简单功能介绍"></a>简单功能介绍</h2><ul>
+<li><p>lottiePlayer.play()：播放，从当前帧开始播放</p>
+</li>
+<li><p>lottiePlayer.stop()：停止，并回到第0帧</p>
+</li>
+<li><p>lottiePlayer.pause()：暂停，并保持当前帧</p>
+</li>
+<li><p>lottiePlayer.goToAndStop(value, isFrame)：跳到某个时刻/帧并停止</p>
+</li>
+<li><p>isFrame（可省略，默认false：毫秒；true：帧）指明value的单位是毫秒还是帧</p>
+</li>
+<li><p>lottiePlayer.goToAndPlay(value, isFrame)：跳到某个时刻/帧并播放</p>
+</li>
+<li><p>lottiePlayer.goToAndPlay(value, isFrame)：跳到某个时刻/帧并播放</p>
+</li>
+<li><p>lottiePlayer.goToAndStop(30, true)     // 跳转到第30帧并停止</p>
+</li>
+<li><p>lottiePlayer.goToAndPlay(300)          // 跳转到第300毫秒并播放</p>
+</li>
+<li><p>lottiePlayer.playSegments(arr, forceFlag)：以帧为单位，播放指定片段</p>
+<blockquote>
+<p>arr可以包含两个数字或者两个数字组成的数组，forceFlag表示是否立即强制播放该片段</p>
+</blockquote>
+</li>
+<li><p>lottiePlayer.playSegments([10,20], false)          // 播放完之前的片段，播放10-20帧</p>
+</li>
+<li><p>lottiePlayer.playSegments([[0,5],[10,18]], true)   // 直接播放0-5帧和10-18帧</p>
+</li>
+<li><p>lottiePlayer.setSpeed(speed)：设置播放速度，speed为1表示正常速度</p>
+</li>
+<li><p>lottiePlayer.setDirection(direction)： 设置播放方向，1表示正向播放，-1表示反向播放</p>
+</li>
+<li><p>lottiePlayer.destroy()： 删除该动画，移除相应的元素标签等。</p>
+</li>
+</ul>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="next" href="/2022/08/31/talk/2022/%E5%B0%86exe%E5%B0%81%E8%A3%85%E4%B8%BA%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
