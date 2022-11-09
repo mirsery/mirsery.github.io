@@ -6,7 +6,7 @@
   <link href="https://mirsery.github.io/atom.xml" rel="self"/>
   
   <link href="https://mirsery.github.io/"/>
-  <updated>2022-09-05T08:33:21.000Z</updated>
+  <updated>2022-11-09T05:40:58.000Z</updated>
   <id>https://mirsery.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ECAM22.110.SB咖啡机的除垢</title>
+    <link href="https://mirsery.github.io/2022/11/09/talk/2022/ECAM22-110-SB%E5%92%96%E5%95%A1%E6%9C%BA%E7%9A%84%E9%99%A4%E5%9E%A2/"/>
+    <id>https://mirsery.github.io/2022/11/09/talk/2022/ECAM22-110-SB%E5%92%96%E5%95%A1%E6%9C%BA%E7%9A%84%E9%99%A4%E5%9E%A2/</id>
+    <published>2022-11-09T05:40:58.000Z</published>
+    <updated>2022-11-09T05:40:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>家中的全自动咖啡机用了也有段时间了，最近中间的指示灯开始闪来闪去，如下图所示：<br><img src="/1.png"><br>这种情况就表示咖啡机需要进行除垢了。购买说明书中指定的除垢剂，按照说明书进行除垢操作。</p><p>接下来是比较坑的部分，除垢的过程中不能中途停止，除垢的水一定要多，一定要多一定要多。一旦中途被打断，操作不当则必须重新开始才能进行。说明书中有不正确的地方，就是第一次30min的除菌之后，再次用水冲洗时，需要冲洗2水箱水，第一次冲洗的是咖啡口；第二次是清洗的奶泡口。</p><p>三次加水均需超过max水位线。</p>]]></content>
+    
+    
+    <summary type="html">记录一次咖啡机的除垢过程....</summary>
+    
+    
+    
+    <category term="生活" scheme="https://mirsery.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+    <category term="杂谈" scheme="https://mirsery.github.io/tags/%E6%9D%82%E8%B0%88/"/>
+    
+  </entry>
   
   <entry>
     <title>lottie动效的使用</title>
@@ -412,29 +433,6 @@
     
     
     <category term="深度学习" scheme="https://mirsery.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>typescript笔记1</title>
-    <link href="https://mirsery.github.io/2021/12/10/web/2021/typescript%E7%AC%94%E8%AE%B01/"/>
-    <id>https://mirsery.github.io/2021/12/10/web/2021/typescript%E7%AC%94%E8%AE%B01/</id>
-    <published>2021-12-10T05:03:42.000Z</published>
-    <updated>2021-12-10T05:03:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="typescript-笔记-1"><a href="#typescript-笔记-1" class="headerlink" title="typescript 笔记 1"></a>typescript 笔记 1</h1><!-- toc --><ul><li><a href="#typescript---">typescript的安装</a></li><li><a href="#typescript-----">TypeScript的类型注解</a></li><li><a href="#--">接口</a></li><li><a href="#-">类</a></li><li><a href="#symbol--">symbol类型</a></li><li><a href="#-----symbols">众所周知的Symbols</a></li></ul><!-- tocstop --><h2 id="typescript的安装"><a href="#typescript的安装" class="headerlink" title="typescript的安装"></a>typescript的安装</h2><p>使用npm包的形式安装</p><pre><code class="highlight shell">npm install -g typescript</code></pre><h2 id="TypeScript的类型注解"><a href="#TypeScript的类型注解" class="headerlink" title="TypeScript的类型注解"></a>TypeScript的类型注解</h2><pre><code class="highlight typeScript"><span class="function"><span class="keyword">function</span> <span class="title">greeter</span>(<span class="params">person: <span class="built_in">string</span></span>)</span>&#123;    <span class="keyword">return</span> <span class="string">&quot;hello, &quot;</span>+person;&#125;<span class="keyword">let</span> user = <span class="string">&quot;Jane User&quot;</span>;<span class="built_in">document</span>.body.innerHtml = greeter(user)</code></pre><p>TypeScript里的类型注解是一种轻量级的为函数或变量添加约束的方式。如果传入的参数不符合类型，则会编译器会给出相应的警告内容.</p><h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>TypeScript里可以定义类似java中的接口，如下所示:</p><pre><code class="highlight typeScript"><span class="keyword">interface</span> Person &#123;    <span class="attr">firstName</span>: <span class="built_in">string</span>;    lastName: <span class="built_in">string</span>&#125;<span class="function"><span class="keyword">function</span> <span class="title">greeter</span>(<span class="params">person: Person</span>) </span>&#123;    <span class="keyword">return</span> <span class="string">&quot;Hello, &quot;</span> + person.firstName + <span class="string">&quot;&quot;</span> + person.lastName;&#125;<span class="keyword">let</span> user = &#123;<span class="attr">firstName</span>:<span class="string">&quot;Jane&quot;</span>,<span class="attr">lastName</span>:<span class="string">&quot;User&quot;</span>&#125;;<span class="built_in">document</span>.body.innerHTML = greeter(user)</code></pre><h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p>TypeScript支持JavaScript的新特性，比如支持基于类的面向对象编程。以下是官网的例子:</p><blockquote><p>在构造函数上使用public等同于创建了同名的成员变量</p></blockquote><pre><code class="highlight typeScript"><span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;    <span class="attr">fullName</span>: <span class="built_in">string</span>,    <span class="function"><span class="title">constructor</span>(<span class="params"><span class="keyword">public</span> firstName,<span class="keyword">public</span> middleInitial,<span class="keyword">public</span> lastName</span>)</span>&#123;        <span class="built_in">this</span>.fullName = firstName + <span class="string">&quot; &quot;</span> + middleInitial + <span class="string">&quot; &quot;</span> + lastName;    &#125;&#125;<span class="keyword">interface</span> Person&#123;    <span class="attr">firstName</span>: <span class="built_in">string</span>,    <span class="attr">lastName</span>: <span class="built_in">string</span>;&#125;<span class="function"><span class="keyword">function</span> <span class="title">greeter</span>(<span class="params">person: Person</span>)</span>&#123;    <span class="keyword">return</span> <span class="string">&quot;Hello, &quot;</span> + person.firstName + <span class="string">&quot; &quot;</span> + person.lastName;&#125;<span class="keyword">let</span> user = <span class="keyword">new</span> Student(<span class="string">&quot;Jane&quot;</span>,<span class="string">&quot;M.&quot;</span>,<span class="string">&quot;User&quot;</span>);<span class="built_in">document</span>.body.innerHTML = greeter(user);</code></pre><h2 id="symbol类型"><a href="#symbol类型" class="headerlink" title="symbol类型"></a>symbol类型</h2><blockquote><p>自ECMAScript 2015起，symbol成为了一种新的原生类型，就像number和string一样。</p></blockquote><p>symbol类型的值是通过Symbol构造函数创建的。</p><pre><code class="highlight typeScript"><span class="keyword">let</span> sym1 = <span class="built_in">Symbol</span>();<span class="keyword">let</span> sym2 = <span class="built_in">Symbol</span>(<span class="string">&quot;key&quot;</span>); <span class="comment">// 可选的字符串key</span></code></pre><p>Symbols是不可以改变且唯一的。</p><pre><code class="highlight typeScript"><span class="keyword">let</span> sym2 = <span class="built_in">Symbol</span>(<span class="string">&quot;key&quot;</span>);<span class="keyword">let</span> sym3 = <span class="built_in">Symbol</span>(<span class="string">&quot;key&quot;</span>);sym2 === sym3; <span class="comment">// false, symbols是唯一的</span></code></pre><p>像字符串一样，symbols也可以被用做对象属性的键。</p><pre><code class="highlight typeScript"><span class="keyword">let</span> sym = <span class="built_in">Symbol</span>();<span class="keyword">let</span> obj = &#123;    [sym]: <span class="string">&quot;value&quot;</span>&#125;;<span class="built_in">console</span>.log(obj[sym]); <span class="comment">// &quot;value&quot;</span></code></pre><p>Symbols也可以与计算出的属性名声明相结合来声明对象的属性和类成员.</p><pre><code class="highlight typeScript"><span class="keyword">const</span> getClassNameSymbol = <span class="built_in">Symbol</span>();<span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;    [getClassNameSymbol]()&#123;       <span class="keyword">return</span> <span class="string">&quot;C&quot;</span>;    &#125;&#125;<span class="keyword">let</span> c = <span class="keyword">new</span> C();<span class="keyword">let</span> className = c[getClassNameSymbol](); <span class="comment">// &quot;C&quot;</span></code></pre><h2 id="众所周知的Symbols"><a href="#众所周知的Symbols" class="headerlink" title="众所周知的Symbols"></a>众所周知的Symbols</h2><p>除了用户定义的symbols，还有一些已经众所周知的内置symbols。 内置symbols用来表示语言内部的行为。</p><p>以下为这些symbols的列表：</p><ul><li><p>Symbol.hasInstance</p><p>  方法，会被<strong>instanceof</strong>运算符调用。构造器对象用来识别一个对象是否是其实例。</p></li><li><p>Symbol.isConcatSpreadable</p><p>  布尔值，表示当在一个对象上调用<strong>Array.prototype.concat</strong>时，这个对象的数组元素是否可展开。</p></li><li><p>Symbol.iterator</p><p>  方法，被<strong>for-of</strong>语句调用。返回对象的默认迭代器。</p></li><li><p>Symbol.match</p><p>  方法，被<strong>String.prototype.match</strong>调用。正则表达式用来匹配字符串。</p></li><li><p>Symbol.replace</p><p>  方法，被<strong>String.prototype.replace</strong>调用。正则表达式用来替换字符串中匹配的子串。</p></li><li><p>Symbol.search</p><p>  方法，被<strong>String.prototype.search</strong>调用。正则表达式返回被匹配部分在字符串中的索引。</p></li><li><p>Symbol.species</p><p>  函数值，为一个构造函数。用来创建派生对象。</p></li><li><p>Symbol.split</p><p>  方法，被<strong>String.prototype.split</strong>调用。正则表达式来用分割字符串。</p></li><li><p>Symbol.toPrimitive</p><p>  方法，被<strong>ToPrimitive</strong>抽象操作调用。把对象转换为相应的原始值。</p></li><li><p>Symbol.toStringTag</p><p>  方法，被内置方法<strong>Object.prototype.toString</strong>调用。返回创建对象时默认的字符串描述。</p></li><li><p>Symbol.unscopables</p><p>  对象，它自己拥有的属性会被with作用域排除在外。</p></li></ul>]]></content>
-    
-    
-    <summary type="html">typescript是javaScript的超集，他可以编译成javaScript....</summary>
-    
-    
-    
-    <category term="js" scheme="https://mirsery.github.io/categories/js/"/>
-    
-    
-    <category term="前端" scheme="https://mirsery.github.io/tags/%E5%89%8D%E7%AB%AF/"/>
-    
-    <category term="js" scheme="https://mirsery.github.io/tags/js/"/>
     
   </entry>
   
