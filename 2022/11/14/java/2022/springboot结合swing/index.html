@@ -1,0 +1,177 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> springboot结合swing · mirsery</title><meta name="description" content="springboot结合swing - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">springboot结合swing</h1><div class="post-info">作者: mirsery         创建日期: 2022年11月14日</div><div class="post-content"><!-- toc -->
+
+<ul>
+<li><a href="#----">项目背景</a></li>
+<li><a href="#--pom--">项目pom文件</a></li>
+<li><a href="#-----">主窗口函数</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><p>公司项目中涉及到硬件的开发，需要做一个检测的工装软件。<br>该软件要求如下：</p>
+<ol>
+<li>界面简单</li>
+<li>业务全自动</li>
+<li>逻辑清晰简单易用</li>
+<li>同时容易部署<br>介于本人的技术栈以及项目的情况，在考虑再三之后决定采用java语言进行相应的开发工具，在图形化中选择了老古董swing，这玩意估计也就是学生时代接触过了。本文主要描述swing的应用。</li>
+</ol>
+<h2 id="项目pom文件"><a href="#项目pom文件" class="headerlink" title="项目pom文件"></a>项目pom文件</h2><p>项目采用maven进行架构搭建，去除一些业务相关的包之后pom文件如下所示：</p>
+<pre><code class="highlight xml:n">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.7.5&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+
+    &lt;groupId&gt;com.xxx&lt;/groupId&gt;
+    &lt;artifactId&gt;xxxxxxx&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+
+    &lt;name&gt;xxxxx/name&gt;
+    &lt;description&gt;xxxxxxx&lt;/description&gt;
+
+
+    &lt;properties&gt;
+        &lt;java.version&gt;8&lt;/java.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</code></pre>
+
+
+<p>项目采用spring容器管理各个类的创建生成。其中Application中的关键代码如下所示：</p>
+<pre><code class="highlight java:n">
+SpringApplicationBuilder builder = new SpringApplicationBuilder(XXXXXApplication.class);
+
+ApplicationContext context = builder.headless(false).web(WebApplicationType.NONE).run(args);//该项目不是web项目
+
+
+MainFrame mainFrame = context.getBean(MainFrame.class);     //MainFrame入口文件
+
+mainFrame.init(); //绘制窗口
+</code></pre>
+
+<h2 id="主窗口函数"><a href="#主窗口函数" class="headerlink" title="主窗口函数"></a>主窗口函数</h2><pre><code class="highlight java">
+<span class="meta">@Component</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainFrame</span> <span class="keyword">extends</span> <span class="title">JFrame</span> </span>&#123;
+
+    <span class="meta">@Resource</span>
+    <span class="keyword">private</span> TitleJPanel titleJPanel;    <span class="comment">//标题JPanel</span>
+
+
+    <span class="meta">@Resource</span>
+    <span class="keyword">private</span> BodyJPanel bodyJPanel;
+
+
+    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initChildComponent</span><span class="params">()</span> </span>&#123;
+        titleJPanel.init();
+        bodyJPanel.init();
+    &#125;
+
+
+    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;
+
+
+        <span class="keyword">this</span>.initChildComponent();
+
+        <span class="keyword">this</span>.setSize(<span class="number">1920</span>, <span class="number">1080</span>);
+        <span class="keyword">this</span>.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    <span class="comment">//关闭按钮</span>
+        <span class="keyword">this</span>.setLocation(<span class="number">800</span>, <span class="number">200</span>);
+        <span class="keyword">this</span>.setResizable(<span class="keyword">true</span>);
+        <span class="keyword">this</span>.setTitle(<span class="string">&quot;xxxxx&quot;</span>);
+
+        <span class="keyword">this</span>.setLayout(<span class="keyword">null</span>);
+
+        <span class="keyword">this</span>.setResizable(<span class="keyword">false</span>);
+
+        titleJPanel.setBorder(<span class="keyword">new</span> LineBorder(Color.DARK_GRAY,<span class="number">2</span>));
+        titleJPanel.setBounds(<span class="number">10</span>, <span class="number">10</span>, <span class="number">1890</span>, <span class="number">200</span>);
+
+        bodyJPanel.setBorder(<span class="keyword">new</span> LineBorder(Color.DARK_GRAY,<span class="number">2</span>));
+        bodyJPanel.setBounds(<span class="number">10</span>, <span class="number">250</span>, <span class="number">1890</span>, <span class="number">760</span>);
+
+        <span class="keyword">this</span>.getContentPane().add(titleJPanel);
+        <span class="keyword">this</span>.getContentPane().add(bodyJPanel);
+        <span class="keyword">this</span>.setVisible(<span class="keyword">true</span>);
+    &#125;
+
+
+&#125;
+</code></pre>
+
+
+<pre><code class="highlight java:n">
+@Component
+public class BodyJPanel extends JPanel &#123;
+
+    private JPanel left;
+
+    @Resource
+    private ComJPanel comJPanel;
+
+    @Resource
+    private QsNoCheckin qsNoCheckin;
+
+
+    @Resource
+    private RightJPanel rightJPanel;
+
+
+    public BodyJPanel() &#123;
+        //配置body画板上组件的字体
+        FontUIResource fontRes = new FontUIResource(new Font(&quot;alias&quot;, Font.PLAIN, 30));
+
+        for (Enumeration&lt;Object&gt; keys = UIManager.getDefaults().keys();
+             keys.hasMoreElements(); ) &#123;
+
+            Object key = keys.nextElement();
+
+            Object value = UIManager.get(key);
+
+            if (value instanceof FontUIResource) &#123;
+
+                UIManager.put(key, fontRes);
+
+            &#125;
+        &#125;
+    &#125;
+
+    public void init() &#123;
+        GridLayout gridLayout = new GridLayout(1,2);
+        this.setLayout(gridLayout);//设置布局方式
+
+        FlowLayout flowLayout = new FlowLayout(FlowLayout.LEFT,5,10);
+        left = new JPanel();
+        left.setLayout(flowLayout);
+        left.add(comJPanel);
+        left.add(qsNoCheckin);
+
+        this.add(left);
+        this.add(rightJPanel);
+
+
+    &#125;
+
+
+&#125;
+</code></pre></div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2022/11/14/talk/2022/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%90%AD%E5%BB%BA%E5%91%A8%E6%8A%A5%E6%9C%BA%E5%99%A8%E4%BA%BA/">上一篇</a><a class="next" href="/2022/11/09/talk/2022/ECAM22-110-SB%E5%92%96%E5%95%A1%E6%9C%BA%E7%9A%84%E9%99%A4%E5%9E%A2/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>
