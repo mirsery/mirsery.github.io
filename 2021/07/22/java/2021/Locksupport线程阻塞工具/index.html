@@ -5,14 +5,14 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#locksupport-----">LockSupport 静态方法</a></li>
-<li><a href="#locksupport------">LockSupport 的简易用法</a></li>
+<li><a href="#locksupport-%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95">LockSupport 静态方法</a></li>
+<li><a href="#locksupport-%E7%9A%84%E7%AE%80%E6%98%93%E7%94%A8%E6%B3%95">LockSupport 的简易用法</a></li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="LockSupport-静态方法"><a href="#LockSupport-静态方法" class="headerlink" title="LockSupport 静态方法"></a>LockSupport 静态方法</h2><p><strong>+ setCurrentBlocker( )</strong><br><strong>+ unpark( )</strong><br><strong>+ park( )</strong><br><strong>+ parkNanos( )</strong><br><strong>+ parkUntil( )</strong><br><strong>+ getBlocker( )</strong><br><strong>+ park( )</strong><br><strong>+ parkNanos( )</strong><br><strong>+ parkUntil( )</strong><br><strong>+ getThreadId( )</strong></p>
+<h2><span id="locksupport-静态方法">LockSupport 静态方法</span></h2><p><strong>+ setCurrentBlocker( )</strong><br><strong>+ unpark( )</strong><br><strong>+ park( )</strong><br><strong>+ parkNanos( )</strong><br><strong>+ parkUntil( )</strong><br><strong>+ getBlocker( )</strong><br><strong>+ park( )</strong><br><strong>+ parkNanos( )</strong><br><strong>+ parkUntil( )</strong><br><strong>+ getThreadId( )</strong></p>
 <p>LockSupport 的静态方法 <strong>park(  )</strong> 可以阻塞当前线程，类似的还有 <strong>parkNanos( )</strong> , <strong>parkUtil( )</strong> 等方法。</p>
-<h2 id="LockSupport-的简易用法"><a href="#LockSupport-的简易用法" class="headerlink" title="LockSupport 的简易用法"></a>LockSupport 的简易用法</h2><p>下面是JDK中的先进先出的非可重入锁的简易示例代码:</p>
+<h2><span id="locksupport-的简易用法">LockSupport 的简易用法</span></h2><p>下面是JDK中的先进先出的非可重入锁的简易示例代码:</p>
 <pre><code class="highlight java"><span class="class"><span class="keyword">class</span> <span class="title">FIFOMutex</span> </span>&#123;
    <span class="keyword">private</span> <span class="keyword">final</span> AtomicBoolean locked  = <span class="keyword">new</span> AtomicBoolean(<span class="keyword">false</span>);
    <span class="keyword">private</span> <span class="keyword">final</span> Queue&lt;Thread&gt; waiters = <span class="keyword">new</span> ConcurrentLinkedQueue&lt;&gt;();

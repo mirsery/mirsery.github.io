@@ -3,14 +3,14 @@
 <p><a target="_blank" rel="noopener" href="http://www.osedu.net/article/linux/2011-01-03/178.html">原文地址</a></p>
 </blockquote>
 <p>Linux下的sudo及其配置文件/etc/sudoers的详细配置说明</p>
-<h1 id="1-sudo介绍"><a href="#1-sudo介绍" class="headerlink" title="1.sudo介绍"></a>1.sudo介绍</h1><p>sudo是linux下常用的允许普通用户使用超级用户权限的工具，允许系统管理员让普通用户执行一些或者全部的root命令，如halt，reboot，su等等。这样不仅减少了root用户的登陆 和管理时间，同样也提高了安全性。Sudo不是对shell的一个代替，它是面向每个命令的。<br>它的特性主要有这样几点：</p>
+<h1><span id="1sudo介绍">1.sudo介绍</span></h1><p>sudo是linux下常用的允许普通用户使用超级用户权限的工具，允许系统管理员让普通用户执行一些或者全部的root命令，如halt，reboot，su等等。这样不仅减少了root用户的登陆 和管理时间，同样也提高了安全性。Sudo不是对shell的一个代替，它是面向每个命令的。<br>它的特性主要有这样几点：</p>
 <ul>
 <li>sudo能够限制用户只在某台主机上运行某些命令。</li>
 <li>sudo提供了丰富的日志，详细地记录了每个用户干了什么。它能够将日志传到中心主机或者日志服务器。</li>
 <li>sudo使用时间戳文件来执行类似的“检票”系统。当用户调用sudo并且输入它的密码时，用户获得了一张存活期为5分钟的票（这个值可以在编译的时候改变）。</li>
 <li>sudo的配置文件是sudoers文件，它允许系统管理员集中的管理用户的使用权限和使用的主机。它所存放的位置默认是在/etc/sudoers，属性必须为0411。</li>
 </ul>
-<h1 id="2-配置文件-etc-sudoers"><a href="#2-配置文件-etc-sudoers" class="headerlink" title="2.配置文件/etc/sudoers"></a>2.配置文件/etc/sudoers</h1><p>它的主要配置文件是sudoers,linux下通常在/etc目录下，如果是solaris，缺省不装sudo的，编译安装后通常在安装目录的 etc目录下，不过不管sudoers文件在哪儿，sudo都提供了一个编辑该文件的命令：visudo来对该文件进行修改。强烈推荐使用该命令修改 sudoers，因为它会帮你校验文件配置是否正确，如果不正确，在保存退出时就会提示你哪段配置出错的。 </p>
+<h1><span id="2配置文件etcsudoers">2.配置文件/etc/sudoers</span></h1><p>它的主要配置文件是sudoers,linux下通常在/etc目录下，如果是solaris，缺省不装sudo的，编译安装后通常在安装目录的 etc目录下，不过不管sudoers文件在哪儿，sudo都提供了一个编辑该文件的命令：visudo来对该文件进行修改。强烈推荐使用该命令修改 sudoers，因为它会帮你校验文件配置是否正确，如果不正确，在保存退出时就会提示你哪段配置出错的。 </p>
 <p>言归正传，下面介绍如何配置sudoers:<br>首先写sudoers的缺省配置： </p>
 <pre><code class="highlight plaintext">############################################################# 
 # sudoers file. 

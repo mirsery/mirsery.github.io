@@ -1,27 +1,27 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> ubuntu深度学习驱动安装 · mirsery</title><meta name="description" content="ubuntu深度学习驱动安装 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ubuntu深度学习驱动安装</h1><div class="post-info">作者: mirsery         创建日期: 2021年12月10日</div><div class="post-content"><h1 id="Ubuntu安装-Nvidia驱动"><a href="#Ubuntu安装-Nvidia驱动" class="headerlink" title="Ubuntu安装 Nvidia驱动"></a>Ubuntu安装 Nvidia驱动</h1><!-- toc -->
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ubuntu深度学习驱动安装</h1><div class="post-info">作者: mirsery         创建日期: 2021年12月10日</div><div class="post-content"><h1><span id="ubuntu安装-nvidia驱动">Ubuntu安装 Nvidia驱动</span></h1><!-- toc -->
 
 <ul>
-<li><a href="#--------------">首先查看本机所安装的显卡型号</a></li>
-<li><a href="#------">官网下载驱动</a></li>
-<li><a href="#---------------">删除原有的开源驱动程序(可选)</a></li>
-<li><a href="#--nouveau--">禁用nouveau驱动</a></li>
-<li><a href="#--">重启</a></li>
-<li><a href="#--nouveau------">验证nouveau是否已经禁用</a></li>
-<li><a href="#--nvidia--">安装nvidia驱动</a></li>
-<li><a href="#----------">查看驱动是否安装成功</a></li>
-<li><a href="#----">其他问题</a></li>
+<li><a href="#%E9%A6%96%E5%85%88%E6%9F%A5%E7%9C%8B%E6%9C%AC%E6%9C%BA%E6%89%80%E5%AE%89%E8%A3%85%E7%9A%84%E6%98%BE%E5%8D%A1%E5%9E%8B%E5%8F%B7">首先查看本机所安装的显卡型号</a></li>
+<li><a href="#%E5%AE%98%E7%BD%91%E4%B8%8B%E8%BD%BD%E9%A9%B1%E5%8A%A8">官网下载驱动</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E5%8E%9F%E6%9C%89%E7%9A%84%E5%BC%80%E6%BA%90%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F%E5%8F%AF%E9%80%89">删除原有的开源驱动程序(可选)</a></li>
+<li><a href="#%E7%A6%81%E7%94%A8nouveau%E9%A9%B1%E5%8A%A8">禁用nouveau驱动</a></li>
+<li><a href="#%E9%87%8D%E5%90%AF">重启</a></li>
+<li><a href="#%E9%AA%8C%E8%AF%81nouveau%E6%98%AF%E5%90%A6%E5%B7%B2%E7%BB%8F%E7%A6%81%E7%94%A8">验证nouveau是否已经禁用</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85nvidia%E9%A9%B1%E5%8A%A8">安装nvidia驱动</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E9%A9%B1%E5%8A%A8%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F">查看驱动是否安装成功</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98">其他问题</a></li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="首先查看本机所安装的显卡型号"><a href="#首先查看本机所安装的显卡型号" class="headerlink" title="首先查看本机所安装的显卡型号"></a>首先查看本机所安装的显卡型号</h2><pre><code class="highlight shell">lspci|grep VGA</code></pre>
+<h2><span id="首先查看本机所安装的显卡型号">首先查看本机所安装的显卡型号</span></h2><pre><code class="highlight shell">lspci|grep VGA</code></pre>
 <p><img src="/2021/12/10/web/2021/ubuntu%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/C5902CF2-5023-414E-9BBA-D7FE625ECA55.png"></p>
 <p>根据如上所述的显卡型号，去官网下载对应的系统和对应显卡的驱动。</p>
-<h2 id="官网下载驱动"><a href="#官网下载驱动" class="headerlink" title="官网下载驱动"></a>官网下载驱动</h2><p><a target="_blank" rel="noopener" href="https://www.nvidia.cn/Download/index.aspx">nvidia驱动下载地址</a></p>
+<h2><span id="官网下载驱动">官网下载驱动</span></h2><p><a target="_blank" rel="noopener" href="https://www.nvidia.cn/Download/index.aspx">nvidia驱动下载地址</a></p>
 <p>选择对应的产品类型，产品系列以及产品型号再根据操作系统系统下载对应的驱动程序。</p>
-<h2 id="删除原有的开源驱动程序-可选"><a href="#删除原有的开源驱动程序-可选" class="headerlink" title="删除原有的开源驱动程序(可选)"></a>删除原有的开源驱动程序(可选)</h2><pre><code class="highlight shell">sudo apt-get remove --pure nvidia*</code></pre>
+<h2><span id="删除原有的开源驱动程序可选">删除原有的开源驱动程序(可选)</span></h2><pre><code class="highlight shell">sudo apt-get remove --pure nvidia*</code></pre>
 
-<h2 id="禁用nouveau驱动"><a href="#禁用nouveau驱动" class="headerlink" title="禁用nouveau驱动"></a>禁用nouveau驱动</h2><p>编辑 <strong>/etc/modprobe.d/blacklist.conf</strong> ,添加以下内容:</p>
+<h2><span id="禁用nouveau驱动">禁用nouveau驱动</span></h2><p>编辑 <strong>/etc/modprobe.d/blacklist.conf</strong> ,添加以下内容:</p>
 <pre><code class="highlight plaintext">blacklist nouveau
 blacklist lbm-nouveau
 options nouveau modeset=0
@@ -31,12 +31,12 @@ alias lbm-nouveau off</code></pre>
 <p>关闭nouveau</p>
 <pre><code class="highlight shell">echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf</code></pre>
 
-<h2 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h2><pre><code class="highlight shell">update-initramfs -u 
+<h2><span id="重启">重启</span></h2><pre><code class="highlight shell">update-initramfs -u 
 reboot</code></pre>
 
-<h2 id="验证nouveau是否已经禁用"><a href="#验证nouveau是否已经禁用" class="headerlink" title="验证nouveau是否已经禁用"></a>验证nouveau是否已经禁用</h2><pre><code class="highlight shell">lsmod|grep nouveau</code></pre>
+<h2><span id="验证nouveau是否已经禁用">验证nouveau是否已经禁用</span></h2><pre><code class="highlight shell">lsmod|grep nouveau</code></pre>
 <p>没有信息显示，说明nouveau已被禁用，接下来可以安装nvdia的显卡驱动。</p>
-<h2 id="安装nvidia驱动"><a href="#安装nvidia驱动" class="headerlink" title="安装nvidia驱动"></a>安装nvidia驱动</h2><ul>
+<h2><span id="安装nvidia驱动">安装nvidia驱动</span></h2><ul>
 <li>给文件可执行权限</li>
 </ul>
 <pre><code class="highlight shell">sudo chmod +x NVIDIA-Linux-x86_64-470.86.run</code></pre>
@@ -66,9 +66,9 @@ reboot</code></pre>
 <td>只安装驱动文件，不安装OpenGL文件</td>
 </tr>
 </tbody></table>
-<h2 id="查看驱动是否安装成功"><a href="#查看驱动是否安装成功" class="headerlink" title="查看驱动是否安装成功"></a>查看驱动是否安装成功</h2><pre><code class="highlight shell">nvidia-smi</code></pre>
+<h2><span id="查看驱动是否安装成功">查看驱动是否安装成功</span></h2><pre><code class="highlight shell">nvidia-smi</code></pre>
 
-<h2 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a>其他问题</h2><p>如果出现以下类似的问题</p>
+<h2><span id="其他问题">其他问题</span></h2><p>如果出现以下类似的问题</p>
 <pre><code class="highlight plaintext">NVIDIA-SMI has failed because it couldn‘t communicate with NVIDIA driver. Make sure that the latest driver is installed and running.</code></pre>
 <p>解决方案:</p>
 <pre><code class="highlight shell">sudo apt-get install dkms

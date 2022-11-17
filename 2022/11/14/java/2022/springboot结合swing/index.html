@@ -2,20 +2,20 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">springboot结合swing</h1><div class="post-info">作者: mirsery         创建日期: 2022年11月14日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#----">项目背景</a></li>
-<li><a href="#--pom--">项目pom文件</a></li>
-<li><a href="#-----">主窗口函数</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF">项目背景</a></li>
+<li><a href="#%E9%A1%B9%E7%9B%AEpom%E6%96%87%E4%BB%B6">项目pom文件</a></li>
+<li><a href="#%E4%B8%BB%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0">主窗口函数</a></li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><p>公司项目中涉及到硬件的开发，需要做一个检测的工装软件。<br>该软件要求如下：</p>
+<h2><span id="项目背景">项目背景</span></h2><p>公司项目中涉及到硬件的开发，需要做一个检测的工装软件。<br>该软件要求如下：</p>
 <ol>
 <li>界面简单</li>
 <li>业务全自动</li>
 <li>逻辑清晰简单易用</li>
 <li>同时容易部署<br>介于本人的技术栈以及项目的情况，在考虑再三之后决定采用java语言进行相应的开发工具，在图形化中选择了老古董swing，这玩意估计也就是学生时代接触过了。本文主要描述swing的应用。</li>
 </ol>
-<h2 id="项目pom文件"><a href="#项目pom文件" class="headerlink" title="项目pom文件"></a>项目pom文件</h2><p>项目采用maven进行架构搭建，去除一些业务相关的包之后pom文件如下所示：</p>
+<h2><span id="项目pom文件">项目pom文件</span></h2><p>项目采用maven进行架构搭建，去除一些业务相关的包之后pom文件如下所示：</p>
 <pre><code class="highlight xml:n">
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
@@ -71,7 +71,7 @@ MainFrame mainFrame = context.getBean(MainFrame.class);     //MainFrame入口文
 mainFrame.init(); //绘制窗口
 </code></pre>
 
-<h2 id="主窗口函数"><a href="#主窗口函数" class="headerlink" title="主窗口函数"></a>主窗口函数</h2><pre><code class="highlight java">
+<h2><span id="主窗口函数">主窗口函数</span></h2><pre><code class="highlight java">
 <span class="meta">@Component</span>
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainFrame</span> <span class="keyword">extends</span> <span class="title">JFrame</span> </span>&#123;
 

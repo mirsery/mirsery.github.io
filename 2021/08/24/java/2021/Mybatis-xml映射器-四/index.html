@@ -2,9 +2,9 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Mybatis xml映射器(四)</h1><div class="post-info">作者: mirsery         创建日期: 2021年8月24日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#------select---">关联的嵌套 Select 查询</a><ul>
-<li><a href="#---------">关联的嵌套使用示例</a></li>
-<li><a href="#---------">关联的嵌套结果映射</a></li>
+<li><a href="#%E5%85%B3%E8%81%94%E7%9A%84%E5%B5%8C%E5%A5%97-select-%E6%9F%A5%E8%AF%A2">关联的嵌套 Select 查询</a><ul>
+<li><a href="#%E5%85%B3%E8%81%94%E7%9A%84%E5%B5%8C%E5%A5%97%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B">关联的嵌套使用示例</a></li>
+<li><a href="#%E5%85%B3%E8%81%94%E7%9A%84%E5%B5%8C%E5%A5%97%E7%BB%93%E6%9E%9C%E6%98%A0%E5%B0%84">关联的嵌套结果映射</a></li>
 </ul>
 </li>
 </ul>
@@ -13,7 +13,7 @@
 <blockquote>
 <p>该文档摘抄自<a target="_blank" rel="noopener" href="https://blog.mybatis.org./">https://blog.mybatis.org。</a></p>
 </blockquote>
-<h1 id="关联的嵌套-Select-查询"><a href="#关联的嵌套-Select-查询" class="headerlink" title="关联的嵌套 Select 查询"></a>关联的嵌套 Select 查询</h1><table>
+<h1><span id="关联的嵌套-select-查询">关联的嵌套 Select 查询</span></h1><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -33,7 +33,7 @@
 <td>可选的，有效值为<strong>lazy</strong>和<strong>eager</strong>.该属性设置会覆盖全局配置参数lazyLoadingEnabled</td>
 </tr>
 </tbody></table>
-<h2 id="关联的嵌套使用示例"><a href="#关联的嵌套使用示例" class="headerlink" title="关联的嵌套使用示例"></a>关联的嵌套使用示例</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;blogResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span>
+<h2><span id="关联的嵌套使用示例">关联的嵌套使用示例</span></h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;blogResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span>
   <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;author&quot;</span> <span class="attr">column</span>=<span class="string">&quot;author_id&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;Author&quot;</span> <span class="attr">select</span>=<span class="string">&quot;selectAuthor&quot;</span>/&gt;</span>
 <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span>
 
@@ -49,7 +49,7 @@
 <p>这种方式虽然很简单，但在大型数据集或大型数据表上表现不佳。这个问题被称为“N+1 查询问题”。 </p>
 </blockquote>
 <p>概括地讲，N+1 查询问题是这样子的：<br>你执行了一个单独的 SQL 语句来获取结果的一个列表（就是“+1”）。<br>对列表返回的每条记录，你执行一个 select 查询语句来为每条记录加载详细信息（就是“N”）。</p>
-<h2 id="关联的嵌套结果映射"><a href="#关联的嵌套结果映射" class="headerlink" title="关联的嵌套结果映射"></a>关联的嵌套结果映射</h2><table>
+<h2><span id="关联的嵌套结果映射">关联的嵌套结果映射</span></h2><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -157,7 +157,7 @@
 <span class="tag">    <span class="attr">columnPrefix</span>=<span class="string">&quot;co_&quot;</span> /&gt;</span>
 <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></code></pre>
 
-<h2 id="关联的多结果集（ResultSet）"><a href="#关联的多结果集（ResultSet）" class="headerlink" title="关联的多结果集（ResultSet）"></a>关联的多结果集（ResultSet）</h2><table>
+<h2><span id="关联的多结果集resultset">关联的多结果集（ResultSet）</span></h2><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -203,7 +203,7 @@
   <span class="tag">&lt;/<span class="name">association</span>&gt;</span>
 <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></code></pre>
 
-<h2 id="集合的嵌套-Select-查询"><a href="#集合的嵌套-Select-查询" class="headerlink" title="集合的嵌套 Select 查询"></a>集合的嵌套 Select 查询</h2><p>如何使用嵌套 Select 查询来为博客加载文章</p>
+<h2><span id="集合的嵌套-select-查询">集合的嵌套 Select 查询</span></h2><p>如何使用嵌套 Select 查询来为博客加载文章</p>
 <pre><code class="highlight xml"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;blogResult&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span>
   <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">&quot;posts&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;ArrayList&quot;</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">ofType</span>=<span class="string">&quot;Post&quot;</span> <span class="attr">select</span>=<span class="string">&quot;selectPostsForBlog&quot;</span>/&gt;</span>
 <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span>
@@ -216,7 +216,7 @@
   SELECT * FROM POST WHERE BLOG_ID = #&#123;id&#125;
 <span class="tag">&lt;/<span class="name">select</span>&gt;</span></code></pre>
 
-<h2 id="集合的嵌套结果映射"><a href="#集合的嵌套结果映射" class="headerlink" title="集合的嵌套结果映射"></a>集合的嵌套结果映射</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectBlog&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;blogResult&quot;</span>&gt;</span>
+<h2><span id="集合的嵌套结果映射">集合的嵌套结果映射</span></h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectBlog&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;blogResult&quot;</span>&gt;</span>
   select
   B.id as blog_id,
   B.title as blog_title,
@@ -252,5 +252,5 @@
   <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;body&quot;</span> <span class="attr">column</span>=<span class="string">&quot;body&quot;</span>/&gt;</span>
 <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></code></pre>
 
-<h2 id="集合的多结果集"><a href="#集合的多结果集" class="headerlink" title="集合的多结果集"></a>集合的多结果集</h2><p>集合的多结果集的映射类似关联的多结果集映射，都是采用存储过程来实现。</p>
+<h2><span id="集合的多结果集">集合的多结果集</span></h2><p>集合的多结果集的映射类似关联的多结果集映射，都是采用存储过程来实现。</p>
 </div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/08/24/java/2021/Mybatis-xml%E6%98%A0%E5%B0%84%E5%99%A8-%E4%BA%94/">上一篇</a><a class="next" href="/2021/08/24/java/2021/Mybatis-xml%E6%98%A0%E5%B0%84%E5%99%A8-%E4%B8%89/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

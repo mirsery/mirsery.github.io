@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> ES6学习笔记 3-数组的扩充 · mirsery</title><meta name="description" content="ES6学习笔记 3-数组的扩充 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ES6学习笔记 3-数组的扩充</h1><div class="post-info">作者: mirsery         创建日期: 2016年12月5日</div><div class="post-content"><h2 id="Array-from"><a href="#Array-from" class="headerlink" title="Array.from()"></a>Array.from()</h2><p>Array.from()方法用于将两类对象转为真正的数组：类似数组的对象(array-like object)和可遍历(iterable)对象。</p>
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ES6学习笔记 3-数组的扩充</h1><div class="post-info">作者: mirsery         创建日期: 2016年12月5日</div><div class="post-content"><h2><span id="arrayfrom">Array.from()</span></h2><p>Array.from()方法用于将两类对象转为真正的数组：类似数组的对象(array-like object)和可遍历(iterable)对象。</p>
 <pre><code class="highlight js"><span class="keyword">let</span> ps=<span class="built_in">document</span>.querySelectorAll(<span class="string">&#x27;p&#x27;</span>);
 <span class="built_in">Array</span>.from(ps).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">p</span>)</span>&#123;
     <span class="built_in">console</span>.log(p);
@@ -19,11 +19,11 @@
 <p>下面的例子将数组中布尔值为false的成员转为0.</p>
 <pre><code class="highlight js"><span class="built_in">Array</span>.from([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],<span class="function">(<span class="params">n</span>)=&gt;</span>n||<span class="number">0</span>)
 <span class="comment">//[1,0,2,0,3]</span></code></pre>
-<h2 id="Array-of"><a href="#Array-of" class="headerlink" title="Array.of()"></a>Array.of()</h2><p>将一组值转换为数组</p>
+<h2><span id="arrayof">Array.of()</span></h2><p>将一组值转换为数组</p>
 <pre><code class="highlight js"><span class="built_in">Array</span>.of(<span class="number">3</span>, <span class="number">11</span>, <span class="number">8</span>) <span class="comment">// [3,11,8]</span>
 <span class="built_in">Array</span>.of(<span class="number">3</span>) <span class="comment">// [3]</span>
 <span class="built_in">Array</span>.of(<span class="number">3</span>).length <span class="comment">// 1</span></code></pre>
-<h2 id="数组实例的find-和findIndex"><a href="#数组实例的find-和findIndex" class="headerlink" title="数组实例的find()和findIndex()"></a>数组实例的find()和findIndex()</h2><p>数组实例的find方法，用于找出第一个符合条件的数组成员。它的参数是一个回调函数，所有数组成员依次执行该回调函数，直到找出第一个返回值为true的成员，然后返回该成员。如果没有符合条件的成员，则返回undefined。</p>
+<h2><span id="数组实例的find和findindex">数组实例的find()和findIndex()</span></h2><p>数组实例的find方法，用于找出第一个符合条件的数组成员。它的参数是一个回调函数，所有数组成员依次执行该回调函数，直到找出第一个返回值为true的成员，然后返回该成员。如果没有符合条件的成员，则返回undefined。</p>
 <pre><code class="highlight js"><span class="keyword">var</span> found = [<span class="number">1</span>,<span class="number">4</span>,-<span class="number">5</span>,<span class="number">10</span>].find((n)-&gt;n&lt;<span class="number">0</span>);
 <span class="built_in">console</span>.log(<span class="string">&quot;found:&quot;</span>,found);</code></pre>
 <p>上面的代码找出数组中第一个小于0的成员。</p>
@@ -34,13 +34,13 @@
 <pre><code class="highlight js">[<span class="number">1</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>].findIndex(<span class="function"><span class="keyword">function</span>(<span class="params">value, index, arr</span>) </span>&#123;
   <span class="keyword">return</span> value &gt; <span class="number">9</span>;
 &#125;) <span class="comment">// 2</span></code></pre>
-<h2 id="数组实例的fill"><a href="#数组实例的fill" class="headerlink" title="数组实例的fill()"></a>数组实例的fill()</h2><p>fill()使用给定值，填充一个数组。</p>
+<h2><span id="数组实例的fill">数组实例的fill()</span></h2><p>fill()使用给定值，填充一个数组。</p>
 <pre><code class="highlight js">[<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>].fill(<span class="number">7</span>);<span class="comment">//[7,7,7]</span>
 <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">3</span>).fill(<span class="number">7</span>)<span class="comment">//[7,7,7]</span></code></pre>
 <p>fill()方法用于空数组的初始化很方便，数组中已经有的元素会被全部抹去。<br>fill()可以接受第二个和第三个参数用于指定填充的起始位置和结束位置 。</p>
 <pre><code class="highlight js">[<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>].fill(<span class="number">7</span>,<span class="number">1</span>,<span class="number">2</span>)
 <span class="comment">//[&#x27;a&#x27;,7,&#x27;c&#x27;]</span></code></pre>
-<h2 id="数组实例的entries-keys-和values"><a href="#数组实例的entries-keys-和values" class="headerlink" title="数组实例的entries(),keys()和values()"></a>数组实例的entries(),keys()和values()</h2><p>ES6提供三个新的方法–entries(),keys()和values()– 用于遍历数组。</p>
+<h2><span id="数组实例的entrieskeys和values">数组实例的entries(),keys()和values()</span></h2><p>ES6提供三个新的方法–entries(),keys()和values()– 用于遍历数组。</p>
 <ul>
 <li>entries()对键值对进行遍历</li>
 <li>keys() 对键名进行遍历</li>
@@ -58,7 +58,7 @@
     <span class="built_in">console</span>.log(index,elem);    
 &#125;</code></pre>
 
-<h2 id="数组实例的includes"><a href="#数组实例的includes" class="headerlink" title="数组实例的includes()"></a>数组实例的includes()</h2><p>Array.protypeto.includes方法返回一个布尔值，表示某个数组是否包含给定的值。</p>
+<h2><span id="数组实例的includes">数组实例的includes()</span></h2><p>Array.protypeto.includes方法返回一个布尔值，表示某个数组是否包含给定的值。</p>
 <pre><code class="highlight js">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].includes(<span class="number">2</span>);     <span class="comment">// true</span>
 [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>].includes(<span class="number">4</span>);     <span class="comment">// false</span>
 [<span class="number">1</span>, <span class="number">2</span>, <span class="literal">NaN</span>].includes(<span class="literal">NaN</span>); <span class="comment">// true</span></code></pre>

@@ -2,17 +2,17 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Future模式</h1><div class="post-info">作者: mirsery         创建日期: 2021年7月24日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#future------">future 模式的概述</a></li>
-<li><a href="#future--------">future 模式的简单实现</a></li>
-<li><a href="#jdk--future--">JDK中的Future模式</a></li>
+<li><a href="#future-%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%A6%82%E8%BF%B0">future 模式的概述</a></li>
+<li><a href="#future-%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0">future 模式的简单实现</a></li>
+<li><a href="#jdk%E4%B8%AD%E7%9A%84future%E6%A8%A1%E5%BC%8F">JDK中的Future模式</a></li>
 </ul>
 <!-- tocstop -->
 
 <blockquote>
 <p>future 模式是多线程开发中比较常见的一种模式，他的核心思想是利用多线程来实现耗时操作的异步调用。主要利用多线程去处理耗时的任务，并支持异步回调处理相关的信息。</p>
 </blockquote>
-<h2 id="future-模式的概述"><a href="#future-模式的概述" class="headerlink" title="future 模式的概述"></a>future 模式的概述</h2><p>future模式优点类似快递订餐，比如我们利用xx软件进行外卖下单。下完单之后我们可以继续我们上班的摸鱼动作，等待骑手的电话。其中下完单之后会立刻返回一个订单号，我们可以根据这个订单号去获取相应的订单信息。对于future模式来说，虽然他并不能立刻给予我们所需要的数据（外卖），但是他会返回订单给到我们，我们可以借由订单去获取相应的骑手以及派送状态信息。可以充分的节约我们的摸鱼时间。</p>
-<h2 id="future-模式的简单实现"><a href="#future-模式的简单实现" class="headerlink" title="future 模式的简单实现"></a>future 模式的简单实现</h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Data</span> </span>&#123;
+<h2><span id="future-模式的概述">future 模式的概述</span></h2><p>future模式优点类似快递订餐，比如我们利用xx软件进行外卖下单。下完单之后我们可以继续我们上班的摸鱼动作，等待骑手的电话。其中下完单之后会立刻返回一个订单号，我们可以根据这个订单号去获取相应的订单信息。对于future模式来说，虽然他并不能立刻给予我们所需要的数据（外卖），但是他会返回订单给到我们，我们可以借由订单去获取相应的骑手以及派送状态信息。可以充分的节约我们的摸鱼时间。</p>
+<h2><span id="future-模式的简单实现">future 模式的简单实现</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Data</span> </span>&#123;
 
     <span class="function"><span class="keyword">public</span> String <span class="title">getFood</span><span class="params">()</span></span>; <span class="comment">//取餐</span>
 &#125;
@@ -95,7 +95,7 @@
 &#125;
 </code></pre>
 
-<h2 id="JDK中的Future模式"><a href="#JDK中的Future模式" class="headerlink" title="JDK中的Future模式"></a>JDK中的Future模式</h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Food</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">String</span>&gt; </span>&#123;
+<h2><span id="jdk中的future模式">JDK中的Future模式</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Food</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">String</span>&gt; </span>&#123;
 
 
     <span class="keyword">private</span> String food;

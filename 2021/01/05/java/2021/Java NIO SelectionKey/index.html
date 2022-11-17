@@ -1,26 +1,26 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> NIO SelectionKey 类解析 · mirsery</title><meta name="description" content="NIO SelectionKey 类解析 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">NIO SelectionKey 类解析</h1><div class="post-info">作者: mirsery         创建日期: 2021年1月6日</div><div class="post-content"><h1 id="NIO-SelectionKey-类解析"><a href="#NIO-SelectionKey-类解析" class="headerlink" title="NIO SelectionKey 类解析"></a>NIO SelectionKey 类解析</h1><blockquote>
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">NIO SelectionKey 类解析</h1><div class="post-info">作者: mirsery         创建日期: 2021年1月6日</div><div class="post-content"><h1><span id="nio-selectionkey-类解析">NIO SelectionKey 类解析</span></h1><blockquote>
 <p> A token representing the registration of a SelectableChannel with a Selector.</p>
 </blockquote>
 <!-- toc -->
 
 <ul>
-<li><a href="#selectionkey-------">SelectionKey类解释以及用法</a></li>
-<li><a href="#--">变量</a><ul>
-<li><a href="#--op-accept----1----4"><strong>OP_ACCEPT</strong>  1 &lt;&lt; 4</a></li>
-<li><a href="#--op-connect---1----3"><strong>OP_CONNECT</strong> 1 &lt;&lt; 3</a></li>
-<li><a href="#--op-read---1----0"><strong>OP_READ</strong> 1 &lt;&lt; 0</a></li>
-<li><a href="#--op-write---1----2"><strong>OP_WRITE</strong> 1 &lt;&lt; 2</a></li>
+<li><a href="#selectionkey%E7%B1%BB%E8%A7%A3%E9%87%8A%E4%BB%A5%E5%8F%8A%E7%94%A8%E6%B3%95">SelectionKey类解释以及用法</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F">变量</a><ul>
+<li><a href="#op_accept-1-4"><strong>OP_ACCEPT</strong> 1 &lt;&lt; 4</a></li>
+<li><a href="#op_connect-1-3"><strong>OP_CONNECT</strong> 1 &lt;&lt; 3</a></li>
+<li><a href="#op_read-1-0"><strong>OP_READ</strong> 1 &lt;&lt; 0</a></li>
+<li><a href="#op_write-1-2"><strong>OP_WRITE</strong> 1 &lt;&lt; 2</a></li>
 </ul>
 </li>
-<li><a href="#--">方法</a><ul>
-<li><a href="#--public-abstract-selectablechannel-channel----"><strong>public abstract SelectableChannel channel()</strong></a></li>
+<li><a href="#%E6%96%B9%E6%B3%95">方法</a><ul>
+<li><a href="#public-abstract-selectablechannel-channel"><strong>public abstract SelectableChannel channel()</strong></a></li>
 </ul>
 </li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="SelectionKey类解释以及用法"><a href="#SelectionKey类解释以及用法" class="headerlink" title="SelectionKey类解释以及用法"></a>SelectionKey类解释以及用法</h2><p><img src="/./_image/2021/969959BD-AB3E-4F9B-9133-ACDF5C67AEF6.png"><br>以下是 <strong>javadoc</strong> 对 <strong>SelectionKey</strong> 的解释：<br>A token representing the registration of a SelectableChannel with a Selector.</p>
+<h2><span id="selectionkey类解释以及用法">SelectionKey类解释以及用法</span></h2><p><img src="/./_image/2021/969959BD-AB3E-4F9B-9133-ACDF5C67AEF6.png"><br>以下是 <strong>javadoc</strong> 对 <strong>SelectionKey</strong> 的解释：<br>A token representing the registration of a SelectableChannel with a Selector.</p>
 <p>A selection key is created each time a channel is registered with a selector. A key remains valid until it is cancelled by invoking its cancel method, by closing its channel, or by closing its selector. Cancelling a key does not immediately remove it from its selector; it is instead added to the selector’s cancelled-key set for removal during the next selection operation. The validity of a key may be tested by invoking its isValid method.</p>
 <p>A selection key contains two operation sets represented as integer values. Each bit of an operation set denotes a category of selectable operations that are supported by the key’s channel.</p>
 <p>The interest set determines which operation categories will be tested for readiness the next time one of the selector’s selection methods is invoked. The interest set is initialized with the value given when the key is created; it may later be changed via the interestOps(int) method.</p>
@@ -32,19 +32,19 @@
 <blockquote>
 <p>selector is thread safe but Selectionkeys’s set is not!</p>
 </blockquote>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="OP-ACCEPT-1-lt-lt-4"><a href="#OP-ACCEPT-1-lt-lt-4" class="headerlink" title="OP_ACCEPT  1 &lt;&lt; 4"></a><strong>OP_ACCEPT</strong>  1 &lt;&lt; 4</h3><blockquote>
+<h2><span id="变量">变量</span></h2><h3><span id="op_accept-1-ltlt-4"><strong>OP_ACCEPT</strong>  1 &lt;&lt; 4</span></h3><blockquote>
 <p> Operation-set bit for socket-accept operations<br>Suppose that a selection key’s interest set contains <strong>OP_ACCEPT</strong> at the start of a selection operation. If the selector detects that the corresponding server-socket channel is ready to accept another connection, or has an error pending, then it will add <strong>OP_ACCEPT</strong> to the key’s ready set and add the key to its <strong>selected-key set</strong>.</p>
 </blockquote>
-<h3 id="OP-CONNECT-1-lt-lt-3"><a href="#OP-CONNECT-1-lt-lt-3" class="headerlink" title="OP_CONNECT 1 &lt;&lt; 3"></a><strong>OP_CONNECT</strong> 1 &lt;&lt; 3</h3><blockquote>
+<h3><span id="op_connect-1-ltlt-3"><strong>OP_CONNECT</strong> 1 &lt;&lt; 3</span></h3><blockquote>
 <p>Operation-set bit for socket-connect operations.<br>Operation-set bit for socket-connect operations.<br>Suppose that a selection key’s interest set contains <strong>OP_CONNECT</strong> at the start of a selection operation. If the selector detects that the corresponding socket channel is ready to complete its connection sequence, or has an error pending, then it will add <strong>OP_CONNECT</strong> to the key’s ready set and add the key to its <strong>selected-key set</strong>.</p>
 </blockquote>
-<h3 id="OP-READ-1-lt-lt-0"><a href="#OP-READ-1-lt-lt-0" class="headerlink" title="OP_READ 1 &lt;&lt; 0"></a><strong>OP_READ</strong> 1 &lt;&lt; 0</h3><blockquote>
+<h3><span id="op_read-1-ltlt-0"><strong>OP_READ</strong> 1 &lt;&lt; 0</span></h3><blockquote>
 <p>Operation-set bit for read operations.<br>Operation-set bit for read operations.<br>Suppose that a selection key’s interest set contains <strong>OP_READ</strong> at the start of a selection operation. If the selector detects that the corresponding channel is ready for reading, has reached end-of-stream, has been remotely shut down for further reading, or has an error pending, then it will add <strong>OP_READ</strong> to the key’s ready-operation set and add the key to its <strong>selected-key set</strong>.</p>
 </blockquote>
-<h3 id="OP-WRITE-1-lt-lt-2"><a href="#OP-WRITE-1-lt-lt-2" class="headerlink" title="OP_WRITE 1 &lt;&lt; 2"></a><strong>OP_WRITE</strong> 1 &lt;&lt; 2</h3><blockquote>
+<h3><span id="op_write-1-ltlt-2"><strong>OP_WRITE</strong> 1 &lt;&lt; 2</span></h3><blockquote>
 <p> Operation-set bit for write operations.<br>Operation-set bit for write operations.<br>Suppose that a selection key’s interest set contains <strong>OP_WRITE</strong> at the start of a selection operation. If the selector detects that the corresponding channel is ready for writing, has been remotely shut down for further writing, or has an error pending, then it will add <strong>OP_WRITE</strong> to the key’s ready set and add the key to its <strong>selected-key set</strong>.</p>
 </blockquote>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="public-abstract-SelectableChannel-channel"><a href="#public-abstract-SelectableChannel-channel" class="headerlink" title="public abstract SelectableChannel channel()"></a><strong>public abstract SelectableChannel channel()</strong></h3><blockquote>
+<h2><span id="方法">方法</span></h2><h3><span id="public-abstract-selectablechannel-channel"><strong>public abstract SelectableChannel channel()</strong></span></h3><blockquote>
 <p> Returns the channel for which this key was created.<br> This method will continue to return the selector even after the key is cancelled.</p>
 </blockquote>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';

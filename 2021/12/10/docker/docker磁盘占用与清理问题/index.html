@@ -2,21 +2,21 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">docker磁盘占用与清理问题</h1><div class="post-info">作者: mirsery         创建日期: 2021年12月10日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#--docker----">查看docker占用分布</a></li>
-<li><a href="#----">清理方法</a><ul>
-<li><a href="#------">自动清理命令</a></li>
-<li><a href="#----">手动清除</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8Bdocker%E5%8D%A0%E7%94%A8%E5%88%86%E5%B8%83">查看docker占用分布</a></li>
+<li><a href="#%E6%B8%85%E7%90%86%E6%96%B9%E6%B3%95">清理方法</a><ul>
+<li><a href="#%E8%87%AA%E5%8A%A8%E6%B8%85%E7%90%86%E5%91%BD%E4%BB%A4">自动清理命令</a></li>
+<li><a href="#%E6%89%8B%E5%8A%A8%E6%B8%85%E9%99%A4">手动清除</a></li>
 </ul>
 </li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="查看docker占用分布"><a href="#查看docker占用分布" class="headerlink" title="查看docker占用分布"></a>查看docker占用分布</h2><pre><code class="highlight shell">docker system df</code></pre>
+<h2><span id="查看docker占用分布">查看docker占用分布</span></h2><pre><code class="highlight shell">docker system df</code></pre>
 
 <pre><code class="highlight shell">docker system df -v #可以进一步查看空间占用的细节以确定是哪个镜像，容器活着本地卷占用过高的空间</code></pre>
 
 
-<h2 id="清理方法"><a href="#清理方法" class="headerlink" title="清理方法"></a>清理方法</h2><h3 id="自动清理命令"><a href="#自动清理命令" class="headerlink" title="自动清理命令"></a>自动清理命令</h3><blockquote>
+<h2><span id="清理方法">清理方法</span></h2><h3><span id="自动清理命令">自动清理命令</span></h3><blockquote>
 <p>该命令自动清理的对象如下：</p>
 </blockquote>
 <ul>
@@ -38,7 +38,7 @@ docker container prune #删除无用的容器
 <span class="bash">docker volume prune <span class="comment"># 删除无用的卷</span></span>
 docker network prune # 删除无用的网络</code></pre>
 
-<h3 id="手动清除"><a href="#手动清除" class="headerlink" title="手动清除"></a>手动清除</h3><ul>
+<h3><span id="手动清除">手动清除</span></h3><ul>
 <li>清理卷<br>如果卷占用过高，可以清除一些不使用的卷，包括一些未被任何容器调用的卷（-v 详细信息中若显示LINKS=0，则未被调用)<pre><code class="highlight shell">docker volume rm $(docker volume ls -qf dangling=true)</code></pre></li>
 <li>容器清理<br>如果发现是容器占用过高的空间，可以手动删除一些:<br>删除所有已退出的容器:<pre><code class="highlight shell">docker rm -v $(docker ps -aq -f status=exited)</code></pre>
 删除所有状态为dead的容器<pre><code class="highlight shell">docker rm -v $(docker ps -aq -f status=dead)</code></pre></li>

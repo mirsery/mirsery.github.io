@@ -1,27 +1,27 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> fastjson的简单用法 · mirsery</title><meta name="description" content="fastjson的简单用法 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">fastjson的简单用法</h1><div class="post-info">作者: mirsery         创建日期: 2019年9月18日</div><div class="post-content"><h1 id="fastjson的简单用法"><a href="#fastjson的简单用法" class="headerlink" title="fastjson的简单用法"></a>fastjson的简单用法</h1><blockquote>
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">fastjson的简单用法</h1><div class="post-info">作者: mirsery         创建日期: 2019年9月18日</div><div class="post-content"><h1><span id="fastjson的简单用法">fastjson的简单用法</span></h1><blockquote>
 <p> 最近项目中接触到fastjson 随手记录下关于fastjson的使用</p>
 </blockquote>
 <!-- toc -->
 
 <ul>
-<li><a href="#----">导入依赖</a></li>
-<li><a href="#json----------">JSON字符串 -&gt; 类实例</a><ul>
-<li><a href="#--json-------java--">简单json字符串 -&gt; java对象</a></li>
-<li><a href="#--json-------json--">简单json字符串 -&gt; Json对象</a></li>
-<li><a href="#---json------json--">稍复杂json字符串 -&gt;Json对象</a></li>
-<li><a href="#---json------java--">稍复杂json字符串 -&gt;Java对象</a></li>
+<li><a href="#%E5%AF%BC%E5%85%A5%E4%BE%9D%E8%B5%96">导入依赖</a></li>
+<li><a href="#json%E5%AD%97%E7%AC%A6%E4%B8%B2-%E7%B1%BB%E5%AE%9E%E4%BE%8B">JSON字符串 -&gt; 类实例</a><ul>
+<li><a href="#%E7%AE%80%E5%8D%95json%E5%AD%97%E7%AC%A6%E4%B8%B2-java%E5%AF%B9%E8%B1%A1">简单json字符串 -&gt; java对象</a></li>
+<li><a href="#%E7%AE%80%E5%8D%95json%E5%AD%97%E7%AC%A6%E4%B8%B2-json%E5%AF%B9%E8%B1%A1">简单json字符串 -&gt; Json对象</a></li>
+<li><a href="#%E7%A8%8D%E5%A4%8D%E6%9D%82json%E5%AD%97%E7%AC%A6%E4%B8%B2-json%E5%AF%B9%E8%B1%A1">稍复杂json字符串 -&gt;Json对象</a></li>
+<li><a href="#%E7%A8%8D%E5%A4%8D%E6%9D%82json%E5%AD%97%E7%AC%A6%E4%B8%B2-java%E5%AF%B9%E8%B1%A1">稍复杂json字符串 -&gt;Java对象</a></li>
 </ul>
 </li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="导入依赖"><a href="#导入依赖" class="headerlink" title="导入依赖"></a>导入依赖</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+<h2><span id="导入依赖">导入依赖</span></h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
   <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.60<span class="tag">&lt;/<span class="name">version</span>&gt;</span>
 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></code></pre>
-<h2 id="JSON字符串-gt-类实例"><a href="#JSON字符串-gt-类实例" class="headerlink" title="JSON字符串 -&gt; 类实例"></a>JSON字符串 -&gt; 类实例</h2><h3 id="简单json字符串-gt-java对象"><a href="#简单json字符串-gt-java对象" class="headerlink" title="简单json字符串 -&gt; java对象"></a>简单json字符串 -&gt; java对象</h3><p>app.java</p>
+<h2><span id="json字符串-gt-类实例">JSON字符串 -&gt; 类实例</span></h2><h3><span id="简单json字符串-gt-java对象">简单json字符串 -&gt; java对象</span></h3><p>app.java</p>
 <pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>
 <span class="class"></span>&#123;
     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span>
@@ -66,14 +66,14 @@
                 <span class="string">&#x27;&#125;&#x27;</span>;
     &#125;
 &#125;</code></pre>
-<h3 id="简单json字符串-gt-Json对象"><a href="#简单json字符串-gt-Json对象" class="headerlink" title="简单json字符串 -&gt; Json对象"></a>简单json字符串 -&gt; Json对象</h3><pre><code class="highlight java">String msg = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24&#125;&quot;</span>;
+<h3><span id="简单json字符串-gt-json对象">简单json字符串 -&gt; Json对象</span></h3><pre><code class="highlight java">String msg = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24&#125;&quot;</span>;
 JSONObject jsonObject = JSON.parseObject(msg);
 System.out.println(jsonObject);</code></pre>
 
-<h3 id="稍复杂json字符串-gt-Json对象"><a href="#稍复杂json字符串-gt-Json对象" class="headerlink" title="稍复杂json字符串 -&gt;Json对象"></a>稍复杂json字符串 -&gt;Json对象</h3><pre><code class="highlight java">String msg = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24,\&quot;pets\&quot;:[&#123;\&quot;nick_name\&quot;:\&quot;coco\&quot;,\&quot;type\&quot;:\&quot;cat\&quot;&#125;,&#123;\&quot;nick_name\&quot;:\&quot;kimi\&quot;,\&quot;type\&quot;:\&quot;dog\&quot;&#125;]&#125;&quot;</span>;
+<h3><span id="稍复杂json字符串-gtjson对象">稍复杂json字符串 -&gt;Json对象</span></h3><pre><code class="highlight java">String msg = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24,\&quot;pets\&quot;:[&#123;\&quot;nick_name\&quot;:\&quot;coco\&quot;,\&quot;type\&quot;:\&quot;cat\&quot;&#125;,&#123;\&quot;nick_name\&quot;:\&quot;kimi\&quot;,\&quot;type\&quot;:\&quot;dog\&quot;&#125;]&#125;&quot;</span>;
   JSONObject jsonObject = JSON.parseObject(msg);</code></pre>
 
-<h3 id="稍复杂json字符串-gt-Java对象"><a href="#稍复杂json字符串-gt-Java对象" class="headerlink" title="稍复杂json字符串 -&gt;Java对象"></a>稍复杂json字符串 -&gt;Java对象</h3><pre><code class="highlight java"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span>
+<h3><span id="稍复杂json字符串-gtjava对象">稍复杂json字符串 -&gt;Java对象</span></h3><pre><code class="highlight java"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span>
 <span class="function">   </span>&#123;
        String msg = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;java\&quot;,\&quot;sex\&quot;:\&quot;unknown\&quot;,\&quot;age\&quot;:24,\&quot;pets\&quot;:[&#123;\&quot;nick_name\&quot;:\&quot;coco\&quot;,\&quot;type\&quot;:\&quot;cat\&quot;&#125;,&#123;\&quot;nick_name\&quot;:\&quot;kimi\&quot;,\&quot;type\&quot;:\&quot;dog\&quot;&#125;]&#125;&quot;</span>;
        User user = JSON.parseObject(msg, <span class="keyword">new</span> TypeReference&lt;User&lt;Pet&gt;&gt;()&#123;&#125;);

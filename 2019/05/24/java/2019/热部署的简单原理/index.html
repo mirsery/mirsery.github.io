@@ -1,14 +1,14 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> java热部署的简单介绍 · mirsery</title><meta name="description" content="java热部署的简单介绍 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">java热部署的简单介绍</h1><div class="post-info">作者: mirsery         创建日期: 2019年5月25日</div><div class="post-content"><h1 id="java热部署的简单介绍"><a href="#java热部署的简单介绍" class="headerlink" title="java热部署的简单介绍"></a>java热部署的简单介绍</h1><!-- toc -->
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">java热部署的简单介绍</h1><div class="post-info">作者: mirsery         创建日期: 2019年5月25日</div><div class="post-content"><h1><span id="java热部署的简单介绍">java热部署的简单介绍</span></h1><!-- toc -->
 
 <ul>
-<li><a href="#----">简单介绍</a></li>
-<li><a href="#----">源码部分</a></li>
+<li><a href="#%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D">简单介绍</a></li>
+<li><a href="#%E6%BA%90%E7%A0%81%E9%83%A8%E5%88%86">源码部分</a></li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="简单介绍"><a href="#简单介绍" class="headerlink" title="简单介绍"></a>简单介绍</h2><p>在类加载器中，类只可以加载一次并且不可卸载。java类只能被加载一次，并且无法卸载。想要实现热部署可以分以下三个步骤：<br>1、销毁该自定义ClassLoader<br>2、更新class类文件<br>3、创建新的ClassLoader去加载更新后的class类文件。</p>
-<h2 id="源码部分"><a href="#源码部分" class="headerlink" title="源码部分"></a>源码部分</h2><ol>
+<h2><span id="简单介绍">简单介绍</span></h2><p>在类加载器中，类只可以加载一次并且不可卸载。java类只能被加载一次，并且无法卸载。想要实现热部署可以分以下三个步骤：<br>1、销毁该自定义ClassLoader<br>2、更新class类文件<br>3、创建新的ClassLoader去加载更新后的class类文件。</p>
+<h2><span id="源码部分">源码部分</span></h2><ol>
 <li><p>自定义类加载器</p>
 <pre><code class="highlight java"><span class="keyword">import</span> java.io.InputStream;
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;

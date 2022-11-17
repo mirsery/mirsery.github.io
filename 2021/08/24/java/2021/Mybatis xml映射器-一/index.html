@@ -2,16 +2,16 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Mybatis xml映射器（一)</h1><div class="post-info">作者: mirsery         创建日期: 2021年8月24日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#select------">select 元素的属性</a><ul>
-<li><a href="#select-----">select 用法示例</a></li>
-<li><a href="#select-----">select 元素属性</a></li>
+<li><a href="#select-%E5%85%83%E7%B4%A0%E7%9A%84%E5%B1%9E%E6%80%A7">select 元素的属性</a><ul>
+<li><a href="#select-%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B">select 用法示例</a></li>
+<li><a href="#select-%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7">select 元素属性</a></li>
 </ul>
 </li>
-<li><a href="#resultset-----">ResultSet 结果映射</a><ul>
-<li><a href="#resultset-------">ResultSet 简易用法示例</a></li>
-<li><a href="#resultmap-------">ResultMap 简易用法示例</a></li>
-<li><a href="#resultmap---">ResultMap 属性</a></li>
-<li><a href="#------">高级结果映射</a></li>
+<li><a href="#resultset-%E7%BB%93%E6%9E%9C%E6%98%A0%E5%B0%84">ResultSet 结果映射</a><ul>
+<li><a href="#resultset-%E7%AE%80%E6%98%93%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B">ResultSet 简易用法示例</a></li>
+<li><a href="#resultmap-%E7%AE%80%E6%98%93%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B">ResultMap 简易用法示例</a></li>
+<li><a href="#resultmap-%E5%B1%9E%E6%80%A7">ResultMap 属性</a></li>
+<li><a href="#%E9%AB%98%E7%BA%A7%E7%BB%93%E6%9E%9C%E6%98%A0%E5%B0%84">高级结果映射</a></li>
 </ul>
 </li>
 </ul>
@@ -20,7 +20,7 @@
 <blockquote>
 <p>该文档摘抄自<a target="_blank" rel="noopener" href="https://blog.mybatis.org.mybatis/">https://blog.mybatis.org。MyBatis</a> 是一款优秀的持久层框架，它支持自定义 SQL、存储过程以及高级映射。MyBatis 免除了几乎所有的 JDBC 代码以及设置参数和获取结果集的工作。MyBatis 可以通过简单的 XML 或注解来配置和映射原始类型、接口和 Java POJO（Plain Old Java Objects，普通老式 Java 对象）为数据库中的记录。</p>
 </blockquote>
-<h1 id="select-元素的属性"><a href="#select-元素的属性" class="headerlink" title="select 元素的属性"></a>select 元素的属性</h1><h2 id="select-用法示例"><a href="#select-用法示例" class="headerlink" title="select 用法示例"></a>select 用法示例</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectPerson&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;int&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;hashmap&quot;</span>&gt;</span>
+<h1><span id="select-元素的属性">select 元素的属性</span></h1><h2><span id="select-用法示例">select 用法示例</span></h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectPerson&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;int&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;hashmap&quot;</span>&gt;</span>
   SELECT * FROM PERSON WHERE ID = #&#123;id&#125;
 <span class="tag">&lt;/<span class="name">select</span>&gt;</span></code></pre>
 <p>这个语句名为 selectPerson，接受一个 int（或 Integer）类型的参数，并返回一个 HashMap 类型的对象，其中的键是列名，值便是结果行中的对应值</p>
@@ -36,7 +36,7 @@
 <span class="tag">  <span class="attr">fetchSize</span>=<span class="string">&quot;256&quot;</span></span>
 <span class="tag">  <span class="attr">statementType</span>=<span class="string">&quot;PREPARED&quot;</span></span>
 <span class="tag">  <span class="attr">resultSetType</span>=<span class="string">&quot;FORWARD_ONLY&quot;</span>&gt;</span></code></pre>
-<h2 id="select-元素属性"><a href="#select-元素属性" class="headerlink" title="select 元素属性"></a>select 元素属性</h2><table>
+<h2><span id="select-元素属性">select 元素属性</span></h2><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -96,10 +96,10 @@
 <td>这个设置仅适用于多结果集的情况。它将列出语句执行后返回的结果集并赋予每个结果集一个名称，多个名称之间以逗号分隔。</td>
 </tr>
 </tbody></table>
-<h1 id="ResultSet-结果映射"><a href="#ResultSet-结果映射" class="headerlink" title="ResultSet 结果映射"></a>ResultSet 结果映射</h1><blockquote>
+<h1><span id="resultset-结果映射">ResultSet 结果映射</span></h1><blockquote>
 <p>ResultMap 的设计思想是，对简单的语句做到零配置，对于复杂一点的语句，只需要描述语句之间的关系</p>
 </blockquote>
-<h2 id="ResultSet-简易用法示例"><a href="#ResultSet-简易用法示例" class="headerlink" title="ResultSet 简易用法示例"></a>ResultSet 简易用法示例</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUsers&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;map&quot;</span>&gt;</span>
+<h2><span id="resultset-简易用法示例">ResultSet 简易用法示例</span></h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUsers&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;map&quot;</span>&gt;</span>
   select id, username, hashedPassword
   from some_table
   where id = #&#123;id&#125;
@@ -156,7 +156,7 @@
   where id = #&#123;id&#125;
 <span class="tag">&lt;/<span class="name">select</span>&gt;</span></code></pre>
 
-<h2 id="ResultMap-简易用法示例"><a href="#ResultMap-简易用法示例" class="headerlink" title="ResultMap 简易用法示例"></a>ResultMap 简易用法示例</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;userResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span>&gt;</span>
+<h2><span id="resultmap-简易用法示例">ResultMap 简易用法示例</span></h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;userResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;User&quot;</span>&gt;</span>
   <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_id&quot;</span> /&gt;</span>
   <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;username&quot;</span> <span class="attr">column</span>=<span class="string">&quot;user_name&quot;</span>/&gt;</span>
   <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;password&quot;</span> <span class="attr">column</span>=<span class="string">&quot;hashed_password&quot;</span>/&gt;</span>
@@ -168,7 +168,7 @@
   where id = #&#123;id&#125;
 <span class="tag">&lt;/<span class="name">select</span>&gt;</span></code></pre>
 
-<h2 id="ResultMap-属性"><a href="#ResultMap-属性" class="headerlink" title="ResultMap 属性"></a>ResultMap 属性</h2><table>
+<h2><span id="resultmap-属性">ResultMap 属性</span></h2><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -212,7 +212,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="高级结果映射"><a href="#高级结果映射" class="headerlink" title="高级结果映射"></a>高级结果映射</h2><blockquote>
+<h2><span id="高级结果映射">高级结果映射</span></h2><blockquote>
 <p>实际使用过程中，数据库并不一定具备良好的第三范式和BCNF范式。<br>下面是比较复杂的查询语句的映射示例</p>
 </blockquote>
 <pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectBlogDetails&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;detailedBlogResultMap&quot;</span>&gt;</span>

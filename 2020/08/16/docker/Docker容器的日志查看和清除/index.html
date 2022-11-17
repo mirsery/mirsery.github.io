@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Docker容器的日志查看和清除 · mirsery</title><meta name="description" content="Docker容器的日志查看和清除 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Docker容器的日志查看和清除</h1><div class="post-info">作者: mirsery         创建日期: 2020年8月16日</div><div class="post-content"><p>docker容器的地址一般存放在<code>/var/lib/docker/containers/&lt;container_id&gt;/</code>下</p>
-<h2 id="查看各个容器中日志的大小"><a href="#查看各个容器中日志的大小" class="headerlink" title="查看各个容器中日志的大小"></a>查看各个容器中日志的大小</h2><pre><code class="highlight shell"><span class="meta">#</span><span class="bash">!/bin/sh</span>
+<h2><span id="查看各个容器中日志的大小">查看各个容器中日志的大小</span></h2><pre><code class="highlight shell"><span class="meta">#</span><span class="bash">!/bin/sh</span>
 echo &quot;======== docker containers logs file size ========&quot;  
 logs=$(find /var/lib/docker/containers/ -name *-json.log)  
 for log in $logs  
@@ -8,7 +8,7 @@ for log in $logs
              ls -lh $log   
         done</code></pre>
 
-<h2 id="清理docker容器的日志"><a href="#清理docker容器的日志" class="headerlink" title="清理docker容器的日志"></a>清理docker容器的日志</h2><pre><code class="highlight shell"><span class="meta">#</span><span class="bash">!/bin/sh</span> 
+<h2><span id="清理docker容器的日志">清理docker容器的日志</span></h2><pre><code class="highlight shell"><span class="meta">#</span><span class="bash">!/bin/sh</span> 
 echo &quot;======== start clean docker containers logs ========&quot;  
 logs=$(find /var/lib/docker/containers/ -name *-json.log)  
 for log in $logs  
@@ -18,7 +18,7 @@ for log in $logs
         done  
 echo &quot;======== end clean docker containers logs ========&quot;</code></pre>
 
-<h2 id="设置docker容器的日志大小"><a href="#设置docker容器的日志大小" class="headerlink" title="设置docker容器的日志大小"></a>设置docker容器的日志大小</h2><h3 id="配置单个容器的日志大小上限"><a href="#配置单个容器的日志大小上限" class="headerlink" title="配置单个容器的日志大小上限"></a>配置单个容器的日志大小上限</h3><p>配置docker-compose 的max-size 来实现<br>nginx 服务示例:</p>
+<h2><span id="设置docker容器的日志大小">设置docker容器的日志大小</span></h2><h3><span id="配置单个容器的日志大小上限">配置单个容器的日志大小上限</span></h3><p>配置docker-compose 的max-size 来实现<br>nginx 服务示例:</p>
 <pre><code class="highlight yml"><span class="attr">nginx:</span> 
   <span class="attr">image:</span> <span class="string">nginx:1.12.1</span> 
   <span class="attr">restart:</span> <span class="string">always</span> 
@@ -27,7 +27,7 @@ echo &quot;======== end clean docker containers logs ========&quot;</code></pre>
     <span class="attr">options:</span> 
       <span class="attr">max-size:</span> <span class="string">“5g”</span></code></pre>
 <p>重启nginx容器之后，其日志文件的大小就被限制在5GB，再也不用担心了。</p>
-<h3 id="全局设置"><a href="#全局设置" class="headerlink" title="全局设置"></a>全局设置</h3><p>新建/etc/docker/daemon.json，若有就不用新建了。添加log-dirver和log-opts参数，样例如下：</p>
+<h3><span id="全局设置">全局设置</span></h3><p>新建/etc/docker/daemon.json，若有就不用新建了。添加log-dirver和log-opts参数，样例如下：</p>
 <pre><code class="highlight yml">&#123;
   <span class="attr">&quot;registry-mirrors&quot;:</span> [<span class="string">&quot;http://f613ce8f.m.daocloud.io&quot;</span>],
   <span class="string">&quot;log-driver&quot;</span><span class="string">:&quot;json-file&quot;</span>,

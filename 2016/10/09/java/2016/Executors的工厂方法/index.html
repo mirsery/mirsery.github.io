@@ -2,19 +2,19 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Executors的工厂方法</h1><div class="post-info">作者: mirsery         创建日期: 2016年10月9日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#1-newfixedthreadpool--">1、newFixedThreadPool()</a></li>
-<li><a href="#2-newcachedthreadpool--">2、newCachedThreadPool()</a></li>
-<li><a href="#3-newsinglethreadexecutor--">3、newSingleThreadExecutor()</a></li>
-<li><a href="#4-newscheduledthreadpool--">4、newScheduledThreadPool()</a></li>
-<li><a href="#5-newsinglethreadscheduledexecutor--">5、newSingleThreadScheduledExecutor()</a></li>
+<li><a href="#1-newfixedthreadpool">1、newFixedThreadPool()</a></li>
+<li><a href="#2-newcachedthreadpool">2、newCachedThreadPool()</a></li>
+<li><a href="#3-newsinglethreadexecutor">3、newSingleThreadExecutor()</a></li>
+<li><a href="#4-newscheduledthreadpool">4、newScheduledThreadPool()</a></li>
+<li><a href="#5-newsinglethreadscheduledexecutor">5、newSingleThreadScheduledExecutor()</a></li>
 </ul>
 <!-- tocstop -->
 
-<h1 id="1、newFixedThreadPool"><a href="#1、newFixedThreadPool" class="headerlink" title="1、newFixedThreadPool()"></a>1、newFixedThreadPool()</h1><p>作用：该方法返回一个固定线程数量的线程池，该线程池中的线程数量始终不变，即不会再创建新的线程，也不会销毁已经创建好的线程，自始自终都是那几个固定的线程在工作，所以该线程池可以控制线程的最大并发数。<br>栗子：假如有一个新任务提交时，线程池中如果有空闲的线程则立即使用空闲线程来处理任务，如果没有，则会把这个新任务存在一个任务队列中，一旦有线程空闲了，则按FIFO方式处理任务队列中的任务。</p>
-<h1 id="2、newCachedThreadPool"><a href="#2、newCachedThreadPool" class="headerlink" title="2、newCachedThreadPool()"></a>2、newCachedThreadPool()</h1><p>作用：该方法返回一个可以根据实际情况调整线程池中线程的数量的线程池。即该线程池中的线程数量不确定，是根据实际情况动态调整的。<br>栗子：假如该线程池中的所有线程都正在工作，而此时有新任务提交，那么将会创建新的线程去处理该任务，而此时假如之前有一些线程完成了任务，现在又有新任务提交，那么将不会创建新线程去处理，而是复用空闲的线程去处理新任务。那么此时有人有疑问了，那这样来说该线程池的线程岂不是会越集越多？其实并不会，因为线程池中的线程都有一个“保持活动时间”的参数，通过配置它，如果线程池中的空闲线程的空闲时间超过该“保存活动时间”则立刻停止该线程，而该线程池默认的“保持活动时间”为60s。</p>
-<h1 id="3、newSingleThreadExecutor"><a href="#3、newSingleThreadExecutor" class="headerlink" title="3、newSingleThreadExecutor()"></a>3、newSingleThreadExecutor()</h1><p>作用：该方法返回一个只有一个线程的线程池，即每次只能执行一个线程任务，多余的任务会保存到一个任务队列中，等待这一个线程空闲，当这个线程空闲了再按FIFO方式顺序执行任务队列中的任务。</p>
-<h1 id="4、newScheduledThreadPool"><a href="#4、newScheduledThreadPool" class="headerlink" title="4、newScheduledThreadPool()"></a>4、newScheduledThreadPool()</h1><p>作用：该方法返回一个可以控制线程池内线程定时或周期性执行某任务的线程池。</p>
-<h1 id="5、newSingleThreadScheduledExecutor"><a href="#5、newSingleThreadScheduledExecutor" class="headerlink" title="5、newSingleThreadScheduledExecutor()"></a>5、newSingleThreadScheduledExecutor()</h1><p>作用：该方法返回一个可以控制线程池内线程定时或周期性执行某任务的线程池。只不过和上面的区别是该线程池大小为1，而上面的可以指定线程池的大小。</p>
+<h1><span id="1-newfixedthreadpool">1、newFixedThreadPool()</span></h1><p>作用：该方法返回一个固定线程数量的线程池，该线程池中的线程数量始终不变，即不会再创建新的线程，也不会销毁已经创建好的线程，自始自终都是那几个固定的线程在工作，所以该线程池可以控制线程的最大并发数。<br>栗子：假如有一个新任务提交时，线程池中如果有空闲的线程则立即使用空闲线程来处理任务，如果没有，则会把这个新任务存在一个任务队列中，一旦有线程空闲了，则按FIFO方式处理任务队列中的任务。</p>
+<h1><span id="2-newcachedthreadpool">2、newCachedThreadPool()</span></h1><p>作用：该方法返回一个可以根据实际情况调整线程池中线程的数量的线程池。即该线程池中的线程数量不确定，是根据实际情况动态调整的。<br>栗子：假如该线程池中的所有线程都正在工作，而此时有新任务提交，那么将会创建新的线程去处理该任务，而此时假如之前有一些线程完成了任务，现在又有新任务提交，那么将不会创建新线程去处理，而是复用空闲的线程去处理新任务。那么此时有人有疑问了，那这样来说该线程池的线程岂不是会越集越多？其实并不会，因为线程池中的线程都有一个“保持活动时间”的参数，通过配置它，如果线程池中的空闲线程的空闲时间超过该“保存活动时间”则立刻停止该线程，而该线程池默认的“保持活动时间”为60s。</p>
+<h1><span id="3-newsinglethreadexecutor">3、newSingleThreadExecutor()</span></h1><p>作用：该方法返回一个只有一个线程的线程池，即每次只能执行一个线程任务，多余的任务会保存到一个任务队列中，等待这一个线程空闲，当这个线程空闲了再按FIFO方式顺序执行任务队列中的任务。</p>
+<h1><span id="4-newscheduledthreadpool">4、newScheduledThreadPool()</span></h1><p>作用：该方法返回一个可以控制线程池内线程定时或周期性执行某任务的线程池。</p>
+<h1><span id="5-newsinglethreadscheduledexecutor">5、newSingleThreadScheduledExecutor()</span></h1><p>作用：该方法返回一个可以控制线程池内线程定时或周期性执行某任务的线程池。只不过和上面的区别是该线程池大小为1，而上面的可以指定线程池的大小。</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2016/10/09/java/2016/Executors的工厂方法/';
 var disqus_title = 'Executors的工厂方法';

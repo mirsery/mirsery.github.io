@@ -2,18 +2,18 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ubuntu内核升级降级和切换</h1><div class="post-info">作者: mirsery         创建日期: 2021年7月27日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#------">内核下载地址</a></li>
-<li><a href="#------">手动升级内核</a></li>
-<li><a href="#------">切换内核版本</a></li>
+<li><a href="#%E5%86%85%E6%A0%B8%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80">内核下载地址</a></li>
+<li><a href="#%E6%89%8B%E5%8A%A8%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8">手动升级内核</a></li>
+<li><a href="#%E5%88%87%E6%8D%A2%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC">切换内核版本</a></li>
 </ul>
 <!-- tocstop -->
 
 <blockquote>
 <p>背景 笔者目前运行的系统是Ubuntu 20.04.2 LTS</p>
 </blockquote>
-<h2 id="内核下载地址"><a href="#内核下载地址" class="headerlink" title="内核下载地址"></a>内核下载地址</h2><p>下面是内核下载地址 <a target="_blank" rel="noopener" href="https://kernel.ubuntu.com/~kernel-ppa/mainline/">https://kernel.ubuntu.com/~kernel-ppa/mainline/</a></p>
+<h2><span id="内核下载地址">内核下载地址</span></h2><p>下面是内核下载地址 <a target="_blank" rel="noopener" href="https://kernel.ubuntu.com/~kernel-ppa/mainline/">https://kernel.ubuntu.com/~kernel-ppa/mainline/</a></p>
 <p><img src="/2021/07/27/linux/ubuntu%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7%E9%99%8D%E7%BA%A7%E5%92%8C%E5%88%87%E6%8D%A2/BC9FEFBF-AE3C-4C86-95DB-36A36D1824F1.png"></p>
-<h2 id="手动升级内核"><a href="#手动升级内核" class="headerlink" title="手动升级内核"></a>手动升级内核</h2><p>选择对应的内核版本点进去，根据系统硬件的架构选择相应的目录。</p>
+<h2><span id="手动升级内核">手动升级内核</span></h2><p>选择对应的内核版本点进去，根据系统硬件的架构选择相应的目录。</p>
 <p><img src="/2021/07/27/linux/ubuntu%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7%E9%99%8D%E7%BA%A7%E5%92%8C%E5%88%87%E6%8D%A2/4145D291-1B70-4C41-99B8-5C2E15B2CE25.png"></p>
 <blockquote>
 <p>一般情况下pc都是选择amd64，arm板选择arm版本。</p>
@@ -25,7 +25,7 @@
 <pre><code class="highlight bash"><span class="comment"># 查看当前计算机运行的内核版本号是否为你刚刚下载的版本号</span>
 uanme -a</code></pre>
 
-<h2 id="切换内核版本"><a href="#切换内核版本" class="headerlink" title="切换内核版本"></a>切换内核版本</h2><blockquote>
+<h2><span id="切换内核版本">切换内核版本</span></h2><blockquote>
 <p>首先需要下载和安装你想要切换的内核版本，操作方法和上述步骤一致。</p>
 </blockquote>
 <p>下载并安装对应的内核文件之后，你可以运行以下命令:</p>

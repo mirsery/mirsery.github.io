@@ -1,11 +1,11 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Grouping threads into a group · mirsery</title><meta name="description" content="Grouping threads into a group - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Grouping threads into a group</h1><div class="post-info">作者: mirsery         创建日期: 2016年7月18日</div><div class="post-content"><h1 id="Grouping-threads-into-a-group"><a href="#Grouping-threads-into-a-group" class="headerlink" title="Grouping threads into a group"></a>Grouping threads into a group</h1><!-- toc -->
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Grouping threads into a group</h1><div class="post-info">作者: mirsery         创建日期: 2016年7月18日</div><div class="post-content"><h1><span id="grouping-threads-into-a-group">Grouping threads into a group</span></h1><!-- toc -->
 
 <ul>
 <li><a href="#how-to-do">How to do</a></li>
 <li><a href="#code">code</a><ul>
 <li><a href="#the-code-about-the-thread-class">the code about the thread class</a></li>
-<li><a href="#the-code-about-main---methods">the code about Main() methods</a></li>
+<li><a href="#the-code-about-main-methods">the code about Main() methods</a></li>
 </ul>
 </li>
 <li><a href="#how-it-works">How it works</a></li>
@@ -13,7 +13,7 @@
 <!-- tocstop -->
 
 <p>An interesting functionality offered by the concurrency API of Java is the ability to group the threads. This allows us to treat the threads of a group as a single unit and provides access to the Thread objects that belong to a group to do an operation with them. For example, you have some threads doing the same task and you want to control them, irrespective of how many threads are still running, the status of each one will interrupt all of them with a single call.<br>Java provides the ThreadGroup class to work with groups of threads. A ThreadGroup object can be formed by Thread objects and by another ThreadGroup object, generating a tree structure of threads.<br>In this recipe, we will learn to work with ThreadGroup objects developing a simple example. We will have 10 threads sleeping during a random period of time (simulating a search, for example) and, when one of them finishes, we are going to interrupt the rest.</p>
-<h2 id="How-to-do"><a href="#How-to-do" class="headerlink" title="How to do"></a>How to do</h2><ul>
+<h2><span id="how-to-do">How to do</span></h2><ul>
 <li> First, create a class called Result. It will store the name of Thread that finishes first. Declare a privateString attribute called name and the methods to read and set the value.</li>
 <li>Create a class called SearchTask and specify that it implements the Runnable interface.</li>
 <li>Declare a private attribute of the Result class and implement the constructor of the class that initializes this attribute.</li>
@@ -29,7 +29,7 @@
 <li>Interrupt the rest of the threads of the group using the interrupt() method.</li>
 <li>Implement the waitFinish() method. It will use the activeCount() method to control the end of one of the threads.</li>
 </ul>
-<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><h3 id="the-code-about-the-thread-class"><a href="#the-code-about-the-thread-class" class="headerlink" title="the code about the thread class"></a>the code about the thread class</h3><pre><code class="highlight java"><span class="keyword">import</span> java.util.Date;
+<h2><span id="code">code</span></h2><h3><span id="the-code-about-the-thread-class">the code about the thread class</span></h3><pre><code class="highlight java"><span class="keyword">import</span> java.util.Date;
 <span class="keyword">import</span> java.util.Random;
 <span class="keyword">import</span> java.util.concurrent.TimeUnit;
 
@@ -67,7 +67,7 @@
 	
 &#125;</code></pre>
 
-<h3 id="the-code-about-Main-methods"><a href="#the-code-about-Main-methods" class="headerlink" title="the code about Main() methods"></a>the code about Main() methods</h3><pre><code class="highlight java">
+<h3><span id="the-code-about-main-methods">the code about Main() methods</span></h3><pre><code class="highlight java">
 <span class="keyword">import</span> java.util.concurrent.TimeUnit;
 
 <span class="keyword">import</span> javax.xml.transform.Result;
@@ -128,7 +128,7 @@
 
 &#125;
 </code></pre>
-<h2 id="How-it-works"><a href="#How-it-works" class="headerlink" title="How it works"></a>How it works</h2><p>In the following screenshot, you can see the output of the list() method and the output generated when we write the status of each Thread object, as shown in the following screenshot:</p>
+<h2><span id="how-it-works">How it works</span></h2><p>In the following screenshot, you can see the output of the list() method and the output generated when we write the status of each Thread object, as shown in the following screenshot:</p>
 <p>The ThreadGroup class stores the Thread objects and the other ThreadGroup objects associated with it, so it can access all of their information (status, for example) and perform operations over all its members (interrupt, for example).</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2016/07/18/java/2016/Grouping threads into a group/';

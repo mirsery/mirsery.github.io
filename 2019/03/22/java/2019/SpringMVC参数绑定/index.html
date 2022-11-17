@@ -1,14 +1,14 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SpringMVC参数绑定 · mirsery</title><meta name="description" content="SpringMVC参数绑定 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">SpringMVC参数绑定</h1><div class="post-info">作者: mirsery         创建日期: 2019年3月23日</div><div class="post-content"><h1 id="SpringMVC参数绑定"><a href="#SpringMVC参数绑定" class="headerlink" title="SpringMVC参数绑定"></a>SpringMVC参数绑定</h1><blockquote>
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">SpringMVC参数绑定</h1><div class="post-info">作者: mirsery         创建日期: 2019年3月23日</div><div class="post-content"><h1><span id="springmvc参数绑定">SpringMVC参数绑定</span></h1><blockquote>
 <p> 转载自<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ljCX88T8EZO2TIVs7NUvCg">一篇文章搞定SpringMVC参数绑定</a><br>SpringMVC参数绑定，简单来说就是将客户端请求的key/value数据绑定到controller方法的形参上，然后就可以在controller中使用该参数了。</p>
 </blockquote>
 <!-- toc -->
 
 <ul>
-<li><a href="#-requestheader---">@RequestHeader 注解</a></li>
-<li><a href="#-cookilevalue---">@CookileValue 注解</a></li>
-<li><a href="#-requestparam---">@RequestParam 注解</a></li>
-<li><a href="#requesrbody---">RequesrBody 注解</a></li>
+<li><a href="#requestheader-%E6%B3%A8%E8%A7%A3">@RequestHeader 注解</a></li>
+<li><a href="#cookilevalue-%E6%B3%A8%E8%A7%A3">@CookileValue 注解</a></li>
+<li><a href="#requestparam-%E6%B3%A8%E8%A7%A3">@RequestParam 注解</a></li>
+<li><a href="#requesrbody-%E6%B3%A8%E8%A7%A3">RequesrBody 注解</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -21,14 +21,14 @@
        System.out.println(<span class="string">&quot;通过PathVariable获取的参数param2=&quot;</span> + param2);
    &#125;</code></pre>
 
-<h2 id="RequestHeader-注解"><a href="#RequestHeader-注解" class="headerlink" title="@RequestHeader 注解"></a>@RequestHeader 注解</h2><p>@RequestHeader 注解，可以把Request请求header部分的值绑定到方法的参数上。</p>
+<h2><span id="requestheader-注解">@RequestHeader 注解</span></h2><p>@RequestHeader 注解，可以把Request请求header部分的值绑定到方法的参数上。</p>
 <pre><code class="highlight java"><span class="meta">@ResponseBody</span>
    <span class="meta">@RequestMapping(&quot;/testHeaderParam&quot;)</span>
    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHeaderParam</span><span class="params">(HttpServletRequest request, <span class="meta">@RequestHeader</span> String param1)</span> </span>&#123;
        System.out.println(<span class="string">&quot;通过RequestHeader获取的参数param1=&quot;</span> + param1);
    &#125;</code></pre>
 
-<h2 id="CookileValue-注解"><a href="#CookileValue-注解" class="headerlink" title="@CookileValue 注解"></a>@CookileValue 注解</h2><p>@CookileValue 注解可以把Resquest header中关于Cookie 的值绑定到方法的参数上。</p>
+<h2><span id="cookilevalue-注解">@CookileValue 注解</span></h2><p>@CookileValue 注解可以把Resquest header中关于Cookie 的值绑定到方法的参数上。</p>
 <pre><code class="highlight java"><span class="meta">@ResponseBody</span>
     <span class="meta">@RequestMapping(&quot;/testCookieParam&quot;)</span>
     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testCookieParam</span><span class="params">(HttpServletRequest request, HttpServletResponse response,</span></span>
@@ -36,7 +36,7 @@
         System.out.println(<span class="string">&quot;通过CookieValue获取的参数sessionid=&quot;</span> + sessionid);
     &#125;</code></pre>
 
-<h2 id="RequestParam-注解"><a href="#RequestParam-注解" class="headerlink" title="@RequestParam 注解"></a>@RequestParam 注解</h2><p>@RequestParam注解用来处理Content-Type: 为 application/x-www-form-urlencoded编码的内容。提交方式为get或post。（Http协议中，form的enctype属性为编码方式，常用有两种：application/x-www-form-urlencoded和multipart/form-data，默认为application/x-www-form-urlencoded）；<br>@RequestParam注解实质是将Request.getParameter() 中的Key-Value参数Map利用Spring的转化机制ConversionService配置，转化成参数接收对象或字段，<br>get方式中queryString的值，和post方式中body data的值都会被Servlet接受到并转化到Request.getParameter()参数集中，所以@RequestParam可以获取的到；<br>该注解有三个属性： value、required、defaultValue； value用来指定要传入值的id名称，required用来指示参数是否必录，defaultValue表示参数不传时候的默认值。</p>
+<h2><span id="requestparam-注解">@RequestParam 注解</span></h2><p>@RequestParam注解用来处理Content-Type: 为 application/x-www-form-urlencoded编码的内容。提交方式为get或post。（Http协议中，form的enctype属性为编码方式，常用有两种：application/x-www-form-urlencoded和multipart/form-data，默认为application/x-www-form-urlencoded）；<br>@RequestParam注解实质是将Request.getParameter() 中的Key-Value参数Map利用Spring的转化机制ConversionService配置，转化成参数接收对象或字段，<br>get方式中queryString的值，和post方式中body data的值都会被Servlet接受到并转化到Request.getParameter()参数集中，所以@RequestParam可以获取的到；<br>该注解有三个属性： value、required、defaultValue； value用来指定要传入值的id名称，required用来指示参数是否必录，defaultValue表示参数不传时候的默认值。</p>
 <pre><code class="highlight java"><span class="meta">@ResponseBody</span>
    <span class="meta">@RequestMapping(&quot;/testRequestParam&quot;)</span>
    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRequestParam</span><span class="params">(HttpServletRequest request,</span></span>
@@ -44,7 +44,7 @@
        System.out.println(<span class="string">&quot;通过RequestParam获取的参数num=&quot;</span> + num);
    &#125;</code></pre>
 
-<h2 id="RequesrBody-注解"><a href="#RequesrBody-注解" class="headerlink" title="RequesrBody 注解"></a>RequesrBody 注解</h2><p>@RequestBody注解用来处理HttpEntity（请求体）传递过来的数据，一般用来处理非Content-Type: application/x-www-form-urlencoded编码格式的数据；<br>GET请求中，因为没有HttpEntity，所以@RequestBody并不适用；<br>POST请求中，通过HttpEntity传递的参数，必须要在请求头中声明数据的类型Content-Type，SpringMVC通过使用HandlerAdapter配置的HttpMessageConverters来解析HttpEntity中的数据，然后绑定到相应的bean上。</p>
+<h2><span id="requesrbody-注解">RequesrBody 注解</span></h2><p>@RequestBody注解用来处理HttpEntity（请求体）传递过来的数据，一般用来处理非Content-Type: application/x-www-form-urlencoded编码格式的数据；<br>GET请求中，因为没有HttpEntity，所以@RequestBody并不适用；<br>POST请求中，通过HttpEntity传递的参数，必须要在请求头中声明数据的类型Content-Type，SpringMVC通过使用HandlerAdapter配置的HttpMessageConverters来解析HttpEntity中的数据，然后绑定到相应的bean上。</p>
 <pre><code class="highlight java"><span class="meta">@ResponseBody</span>
 <span class="meta">@RequestMapping(&quot;/testRequestBody&quot;)</span>
 <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRequestBody</span><span class="params">(HttpServletRequest request, <span class="meta">@RequestBody</span> String bodyStr)</span></span>&#123;

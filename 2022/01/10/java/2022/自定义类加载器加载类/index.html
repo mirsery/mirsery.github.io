@@ -2,12 +2,12 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">自定义类加载器加载类</h1><div class="post-info">作者: mirsery         创建日期: 2022年1月10日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#-----------">自定义加载器的编码实现</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E7%BC%96%E7%A0%81%E5%AE%9E%E7%8E%B0">自定义加载器的编码实现</a></li>
 </ul>
 <!-- tocstop -->
 
 <p>一般情况下在程序中开发人员使用自己编写的自定义加载器来与默认的加载器共同执行类加载任务的情况并不多见。实现一个自定义类加载器是非常简单的，只需要继承抽象类ClassLoader，并重写其findClass()方法即可。</p>
-<h2 id="自定义加载器的编码实现"><a href="#自定义加载器的编码实现" class="headerlink" title="自定义加载器的编码实现"></a>自定义加载器的编码实现</h2><pre><code class="highlight java">
+<h2><span id="自定义加载器的编码实现">自定义加载器的编码实现</span></h2><pre><code class="highlight java">
 <span class="comment">//自定义类加载器 myClassLoader</span>
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span></span>&#123;
 

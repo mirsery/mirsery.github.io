@@ -1,27 +1,27 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> typescript笔记1 · mirsery</title><meta name="description" content="typescript笔记1 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">typescript笔记1</h1><div class="post-info">作者: mirsery         创建日期: 2021年12月10日</div><div class="post-content"><h1 id="typescript-笔记-1"><a href="#typescript-笔记-1" class="headerlink" title="typescript 笔记 1"></a>typescript 笔记 1</h1><!-- toc -->
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">typescript笔记1</h1><div class="post-info">作者: mirsery         创建日期: 2021年12月10日</div><div class="post-content"><h1><span id="typescript-笔记-1">typescript 笔记 1</span></h1><!-- toc -->
 
 <ul>
-<li><a href="#typescript---">typescript的安装</a></li>
-<li><a href="#typescript-----">TypeScript的类型注解</a></li>
-<li><a href="#--">接口</a></li>
-<li><a href="#-">类</a></li>
-<li><a href="#symbol--">symbol类型</a></li>
-<li><a href="#-----symbols">众所周知的Symbols</a></li>
+<li><a href="#typescript%E7%9A%84%E5%AE%89%E8%A3%85">typescript的安装</a></li>
+<li><a href="#typescript%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%B3%A8%E8%A7%A3">TypeScript的类型注解</a></li>
+<li><a href="#%E6%8E%A5%E5%8F%A3">接口</a></li>
+<li><a href="#%E7%B1%BB">类</a></li>
+<li><a href="#symbol%E7%B1%BB%E5%9E%8B">symbol类型</a></li>
+<li><a href="#%E4%BC%97%E6%89%80%E5%91%A8%E7%9F%A5%E7%9A%84symbols">众所周知的Symbols</a></li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="typescript的安装"><a href="#typescript的安装" class="headerlink" title="typescript的安装"></a>typescript的安装</h2><p>使用npm包的形式安装</p>
+<h2><span id="typescript的安装">typescript的安装</span></h2><p>使用npm包的形式安装</p>
 <pre><code class="highlight shell">npm install -g typescript</code></pre>
 
-<h2 id="TypeScript的类型注解"><a href="#TypeScript的类型注解" class="headerlink" title="TypeScript的类型注解"></a>TypeScript的类型注解</h2><pre><code class="highlight typeScript"><span class="function"><span class="keyword">function</span> <span class="title">greeter</span>(<span class="params">person: <span class="built_in">string</span></span>)</span>&#123;
+<h2><span id="typescript的类型注解">TypeScript的类型注解</span></h2><pre><code class="highlight typeScript"><span class="function"><span class="keyword">function</span> <span class="title">greeter</span>(<span class="params">person: <span class="built_in">string</span></span>)</span>&#123;
     <span class="keyword">return</span> <span class="string">&quot;hello, &quot;</span>+person;
 &#125;
 <span class="keyword">let</span> user = <span class="string">&quot;Jane User&quot;</span>;
 <span class="built_in">document</span>.body.innerHtml = greeter(user)</code></pre>
 
 <p>TypeScript里的类型注解是一种轻量级的为函数或变量添加约束的方式。如果传入的参数不符合类型，则会编译器会给出相应的警告内容.</p>
-<h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><p>TypeScript里可以定义类似java中的接口，如下所示:</p>
+<h2><span id="接口">接口</span></h2><p>TypeScript里可以定义类似java中的接口，如下所示:</p>
 <pre><code class="highlight typeScript"><span class="keyword">interface</span> Person &#123;
     <span class="attr">firstName</span>: <span class="built_in">string</span>;
     lastName: <span class="built_in">string</span>
@@ -34,7 +34,7 @@
 <span class="keyword">let</span> user = &#123;<span class="attr">firstName</span>:<span class="string">&quot;Jane&quot;</span>,<span class="attr">lastName</span>:<span class="string">&quot;User&quot;</span>&#125;;
 <span class="built_in">document</span>.body.innerHTML = greeter(user)</code></pre>
 
-<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p>TypeScript支持JavaScript的新特性，比如支持基于类的面向对象编程。以下是官网的例子:</p>
+<h2><span id="类">类</span></h2><p>TypeScript支持JavaScript的新特性，比如支持基于类的面向对象编程。以下是官网的例子:</p>
 <blockquote>
 <p>在构造函数上使用public等同于创建了同名的成员变量</p>
 </blockquote>
@@ -61,7 +61,7 @@
 
 </code></pre>
 
-<h2 id="symbol类型"><a href="#symbol类型" class="headerlink" title="symbol类型"></a>symbol类型</h2><blockquote>
+<h2><span id="symbol类型">symbol类型</span></h2><blockquote>
 <p>自ECMAScript 2015起，symbol成为了一种新的原生类型，就像number和string一样。</p>
 </blockquote>
 <p>symbol类型的值是通过Symbol构造函数创建的。</p>
@@ -95,7 +95,7 @@ sym2 === sym3; <span class="comment">// false, symbols是唯一的</span></code>
 <span class="keyword">let</span> c = <span class="keyword">new</span> C();
 <span class="keyword">let</span> className = c[getClassNameSymbol](); <span class="comment">// &quot;C&quot;</span></code></pre>
 
-<h2 id="众所周知的Symbols"><a href="#众所周知的Symbols" class="headerlink" title="众所周知的Symbols"></a>众所周知的Symbols</h2><p>除了用户定义的symbols，还有一些已经众所周知的内置symbols。 内置symbols用来表示语言内部的行为。</p>
+<h2><span id="众所周知的symbols">众所周知的Symbols</span></h2><p>除了用户定义的symbols，还有一些已经众所周知的内置symbols。 内置symbols用来表示语言内部的行为。</p>
 <p>以下为这些symbols的列表：</p>
 <ul>
 <li><p>Symbol.hasInstance</p>

@@ -2,7 +2,7 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">java中创建对象的几种方法</h1><div class="post-info">作者: mirsery         创建日期: 2022年1月9日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#----------">测试代码，看运行结果</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81%E7%9C%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C">测试代码，看运行结果</a></li>
 <li><a href="#clone">Clone</a></li>
 </ul>
 <!-- tocstop -->
@@ -15,7 +15,7 @@
 <li>反序列化</li>
 </ol>
 <p>其中采用1，3新建对象时会调用构造函数，2和4并不会调用构造函数</p>
-<h2 id="测试代码，看运行结果"><a href="#测试代码，看运行结果" class="headerlink" title="测试代码，看运行结果"></a>测试代码，看运行结果</h2><ul>
+<h2><span id="测试代码看运行结果">测试代码，看运行结果</span></h2><ul>
 <li><p>简单的bean类 Car</p>
 <pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">implements</span> <span class="title">Cloneable</span>, <span class="title">Serializable</span> </span>&#123;
     <span class="keyword">private</span> String name;
@@ -90,6 +90,6 @@ mike3 is run !
 =================
 mike4 is run !</code></pre>
 <p>从结果中可以得出最直接的结论，Clone和反序列化都没有执行类的构造函数。</p>
-<h2 id="Clone"><a href="#Clone" class="headerlink" title="Clone"></a>Clone</h2><p>clone拷贝对象返回的是一个新的对象，而不是一个对象的引用地址；拷贝对象已经包含原来对象的信息，而不是对象的初始信息，即每次拷贝动作不是针对一个全新对象的创建。</p>
+<h2><span id="clone">Clone</span></h2><p>clone拷贝对象返回的是一个新的对象，而不是一个对象的引用地址；拷贝对象已经包含原来对象的信息，而不是对象的初始信息，即每次拷贝动作不是针对一个全新对象的创建。</p>
 <p>利用clone，在内存中进行数据块的拷贝，复制已有的对象，也是生成对象的一种方式。前提是类实现Cloneable接口，Cloneable接口没有任何方法，是一个空接口，也可以称这样的接口为标志接口，只有实现了该接口，才会支持clone操作。有的人也许会问了，java中的对象都有一个默认的父类Object。<br>Object中有一个clone方法，为什么还必须要实现Cloneable接口呢，这就是cloneable接口这个标志接口的意义，只有实现了这个接口才能实现复制操作，因为jvm在复制对象的时候，会检查对象的类是否实现了Cloneable这个接口，如果没有实现，则会报CloneNotSupportedException异常。类似这样的接口还有Serializable接口、RandomAccess接口等。<br>还有值得一提的是在执行clone操作的时候，不会调用构造函数。</p>
 </div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2022/01/09/java/2022/springBoot%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/">上一篇</a><a class="next" href="/2022/01/07/%E5%89%8D%E7%AB%AF/vue%E6%A8%A1%E6%9D%BF%E7%9A%84%E4%BD%BF%E7%94%A8/">下一篇</a></div><div class="copyright"><p>© 2015 - 2022 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script></body></html>

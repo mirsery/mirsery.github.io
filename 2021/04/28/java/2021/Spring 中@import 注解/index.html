@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Spring 框架中的@import注解 · mirsery</title><meta name="description" content="Spring 框架中的@import注解 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Spring 框架中的@import注解</h1><div class="post-info">作者: mirsery         创建日期: 2021年4月29日</div><div class="post-content"><h1 id="Spring-框架中的-import注解"><a href="#Spring-框架中的-import注解" class="headerlink" title="Spring 框架中的@import注解"></a>Spring 框架中的@import注解</h1><blockquote>
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Spring 框架中的@import注解</h1><div class="post-info">作者: mirsery         创建日期: 2021年4月29日</div><div class="post-content"><h1><span id="spring-框架中的import注解">Spring 框架中的@import注解</span></h1><blockquote>
 <p> @import注解是Spring基于java注解配置的主要组成部分，import注解提供了@Bean注解的功能，同时还有原来组织多个分散的@Configuration的功能。</p>
 </blockquote>
-<h2 id="import注解可以引入其他的configuration"><a href="#import注解可以引入其他的configuration" class="headerlink" title="import注解可以引入其他的configuration"></a>import注解可以引入其他的configuration</h2><p>example  code :</p>
+<h2><span id="import注解可以引入其他的configuration">import注解可以引入其他的configuration</span></h2><p>example  code :</p>
 <pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TestService</span> </span>&#123;
     <span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span></span>;
 &#125;
@@ -34,7 +34,7 @@
     <span class="comment">//generate TestServiceB</span>
 &#125;</code></pre>
 
-<h2 id="import-注解也可以直接初始化其他类的Bean"><a href="#import-注解也可以直接初始化其他类的Bean" class="headerlink" title="import 注解也可以直接初始化其他类的Bean"></a>import 注解也可以直接初始化其他类的Bean</h2><pre><code class="highlight java"><span class="meta">@Configuration</span>
+<h2><span id="import-注解也可以直接初始化其他类的bean">import 注解也可以直接初始化其他类的Bean</span></h2><pre><code class="highlight java"><span class="meta">@Configuration</span>
 <span class="meta">@Import(&#123;TestServiceC.class&#125;)</span>     <span class="comment">//@Import的优先于本身的的类定义加载</span>
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConfigA</span> </span>&#123;
     <span class="meta">@Bean</span>
@@ -44,7 +44,7 @@
     &#125;
 &#125;</code></pre>
 <p>场景类保持不变，此时TestService实例会变成TestServiceC 的实例。</p>
-<h2 id="个性化加载，指定实现ImportSelector"><a href="#个性化加载，指定实现ImportSelector" class="headerlink" title="个性化加载，指定实现ImportSelector"></a>个性化加载，指定实现ImportSelector</h2><p>实现importSelector接口可实现个性化加载，下面是示例代码</p>
+<h2><span id="个性化加载指定实现importselector">个性化加载，指定实现ImportSelector</span></h2><p>实现importSelector接口可实现个性化加载，下面是示例代码</p>
 <pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyimportSelector</span> <span class="keyword">implements</span> <span class="title">ImportSelector</span> </span>&#123;
     <span class="comment">/**</span>
 <span class="comment">     * Select and return the names of which class(es) should be imported based on the &#123;<span class="doctag">@link</span> AnnotationMetadata&#125; of the</span>
@@ -89,7 +89,7 @@
 场景类直接使用标注
 <span class="meta">@EnableTestService(name=&quot;B&quot;)</span></code></pre>
 
-<h2 id="实现ImportBeanDefinitionRegistrar-接口个性化加载"><a href="#实现ImportBeanDefinitionRegistrar-接口个性化加载" class="headerlink" title="实现ImportBeanDefinitionRegistrar 接口个性化加载"></a>实现ImportBeanDefinitionRegistrar 接口个性化加载</h2><p>和importSelector 类型，想要重新定义Bean，例如动态注入属性改变Bean的类型和Scope等等就需要通过实现ImportBeanDefinitionRegister的类实现,下面是示例代码:<br>//TODO</p>
+<h2><span id="实现importbeandefinitionregistrar-接口个性化加载">实现ImportBeanDefinitionRegistrar 接口个性化加载</span></h2><p>和importSelector 类型，想要重新定义Bean，例如动态注入属性改变Bean的类型和Scope等等就需要通过实现ImportBeanDefinitionRegister的类实现,下面是示例代码:<br>//TODO</p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2021/04/28/java/2021/Spring 中@import 注解/';
 var disqus_title = 'Spring 框架中的@import注解';

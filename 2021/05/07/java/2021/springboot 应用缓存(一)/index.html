@@ -1,14 +1,14 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> springboot 中应用缓存（一） · mirsery</title><meta name="description" content="springboot 中应用缓存（一） - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">springboot 中应用缓存（一）</h1><div class="post-info">作者: mirsery         创建日期: 2021年5月8日</div><div class="post-content"><h1 id="springboot-中应用缓存（一）"><a href="#springboot-中应用缓存（一）" class="headerlink" title="springboot 中应用缓存（一）"></a>springboot 中应用缓存（一）</h1><!-- toc -->
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">springboot 中应用缓存（一）</h1><div class="post-info">作者: mirsery         创建日期: 2021年5月8日</div><div class="post-content"><h1><span id="springboot-中应用缓存一">springboot 中应用缓存（一）</span></h1><!-- toc -->
 
 <ul>
-<li><a href="#springboot-----">springboot 缓存支持</a></li>
-<li><a href="#cachemanager----">CacheManager 的使用</a></li>
+<li><a href="#springboot-%E7%BC%93%E5%AD%98%E6%94%AF%E6%8C%81">springboot 缓存支持</a></li>
+<li><a href="#cachemanager-%E7%9A%84%E4%BD%BF%E7%94%A8">CacheManager 的使用</a></li>
 </ul>
 <!-- tocstop -->
 
 <p>一般情况的程序的压力瓶颈在数据库。当需要重复的获取相同的数据或者获取的数据更新周期很慢时，我们会进行如果一次又一次直接进行数据库的请求或远程服务的调用会导致IO的阻塞，从而导致程序性能的恶化。</p>
-<h2 id="springboot-缓存支持"><a href="#springboot-缓存支持" class="headerlink" title="springboot 缓存支持"></a>springboot 缓存支持</h2><p>springboot定义了org.springframework.cache.CacheManager和org.springframework.cache.Cache接口用来统一不通的缓存技术。其中CacheManager是Spring提供的各种缓存技术抽象接口，Cache接口包含缓存的各种操作（增加、删除、获得缓存）。</p>
+<h2><span id="springboot-缓存支持">springboot 缓存支持</span></h2><p>springboot定义了org.springframework.cache.CacheManager和org.springframework.cache.Cache接口用来统一不通的缓存技术。其中CacheManager是Spring提供的各种缓存技术抽象接口，Cache接口包含缓存的各种操作（增加、删除、获得缓存）。</p>
 <p>CacheManager 的实现</p>
 <table>
 <thead>
@@ -50,7 +50,7 @@
 <td>使用redis作为缓存技术</td>
 </tr>
 </tbody></table>
-<h2 id="CacheManager-的使用"><a href="#CacheManager-的使用" class="headerlink" title="CacheManager 的使用"></a>CacheManager 的使用</h2><blockquote>
+<h2><span id="cachemanager-的使用">CacheManager 的使用</span></h2><blockquote>
 <p>1、 <a href="#CacheManager_1">注册bean</a><br>2、<a href="#CacheManager_2">开启声明缓存支持</a><br>3、<a href="#CacheManager_3">声明缓存规则</a></p>
 </blockquote>
 <ol>

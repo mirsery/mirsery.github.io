@@ -1,22 +1,22 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Swagger-ui 使用 · mirsery</title><meta name="description" content="Swagger-ui 使用 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Swagger-ui 使用</h1><div class="post-info">作者: mirsery         创建日期: 2021年6月9日</div><div class="post-content"><h1 id="Swagger-ui-使用"><a href="#Swagger-ui-使用" class="headerlink" title="Swagger-ui 使用"></a>Swagger-ui 使用</h1><!-- toc -->
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Swagger-ui 使用</h1><div class="post-info">作者: mirsery         创建日期: 2021年6月9日</div><div class="post-content"><h1><span id="swagger-ui-使用">Swagger-ui 使用</span></h1><!-- toc -->
 
 <ul>
-<li><a href="#------jar-">引入相关依赖jar包</a></li>
-<li><a href="#---swagger">启用 swagger</a></li>
-<li><a href="#controller-------">Controller 添加描述信息</a></li>
-<li><a href="#--------">接口添加描述信息</a></li>
-<li><a href="#----------">给实体类添加描述信息</a></li>
+<li><a href="#%E5%BC%95%E5%85%A5%E7%9B%B8%E5%85%B3%E4%BE%9D%E8%B5%96jar%E5%8C%85">引入相关依赖jar包</a></li>
+<li><a href="#%E5%90%AF%E7%94%A8-swagger">启用 swagger</a></li>
+<li><a href="#controller-%E6%B7%BB%E5%8A%A0%E6%8F%8F%E8%BF%B0%E4%BF%A1%E6%81%AF">Controller 添加描述信息</a></li>
+<li><a href="#%E6%8E%A5%E5%8F%A3%E6%B7%BB%E5%8A%A0%E6%8F%8F%E8%BF%B0%E4%BF%A1%E6%81%AF">接口添加描述信息</a></li>
+<li><a href="#%E7%BB%99%E5%AE%9E%E4%BD%93%E7%B1%BB%E6%B7%BB%E5%8A%A0%E6%8F%8F%E8%BF%B0%E4%BF%A1%E6%81%AF">给实体类添加描述信息</a></li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="引入相关依赖jar包"><a href="#引入相关依赖jar包" class="headerlink" title="引入相关依赖jar包"></a>引入相关依赖jar包</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+<h2><span id="引入相关依赖jar包">引入相关依赖jar包</span></h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
     <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span>
 <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></code></pre>
 
-<h2 id="启用-swagger"><a href="#启用-swagger" class="headerlink" title="启用 swagger"></a>启用 swagger</h2><p>下面是swagger-ui 配置样例:</p>
+<h2><span id="启用-swagger">启用 swagger</span></h2><p>下面是swagger-ui 配置样例:</p>
 <pre><code class="highlight java"><span class="keyword">import</span> java.util.ArrayList;
 <span class="keyword">import</span> java.util.List;
 <span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;
@@ -111,13 +111,13 @@
 
 &#125;</code></pre>
 
-<h2 id="Controller-添加描述信息"><a href="#Controller-添加描述信息" class="headerlink" title="Controller 添加描述信息"></a>Controller 添加描述信息</h2><p>@Api 可以对Controller进行描述</p>
+<h2><span id="controller-添加描述信息">Controller 添加描述信息</span></h2><p>@Api 可以对Controller进行描述</p>
 <pre><code class="highlight java"><span class="meta">@Api(tags = &quot;xxx相关接口&quot;)</span>
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span></span>&#123;
     ...
 &#125;</code></pre>
 
-<h2 id="接口添加描述信息"><a href="#接口添加描述信息" class="headerlink" title="接口添加描述信息"></a>接口添加描述信息</h2><p>@ApiOperation 可以对接口进行描述</p>
+<h2><span id="接口添加描述信息">接口添加描述信息</span></h2><p>@ApiOperation 可以对接口进行描述</p>
 <pre><code class="highlight java"><span class="meta">@GETMapping(&quot;/hi&quot;)</span>
 <span class="meta">@ApiOperation(&quot;xxxxx接口&quot;)</span>
 <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span></span>&#123;
@@ -228,7 +228,7 @@
 
 </table>
 
-<h2 id="给实体类添加描述信息"><a href="#给实体类添加描述信息" class="headerlink" title="给实体类添加描述信息"></a>给实体类添加描述信息</h2><pre><code class="highlight java"><span class="meta">@ApiModel(&quot;用户实体&quot;)</span>
+<h2><span id="给实体类添加描述信息">给实体类添加描述信息</span></h2><pre><code class="highlight java"><span class="meta">@ApiModel(&quot;用户实体&quot;)</span>
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Entity</span> </span>&#123;
     <span class="meta">@ApiModelProperty(&quot;用户 id&quot;)</span>
     <span class="keyword">private</span> <span class="keyword">int</span> id;

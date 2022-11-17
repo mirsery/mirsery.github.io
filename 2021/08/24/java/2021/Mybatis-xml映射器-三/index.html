@@ -2,11 +2,11 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Mybatis xml映射器(三)</h1><div class="post-info">作者: mirsery         创建日期: 2021年8月24日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#mybatis-----">Mybatis 参数映射</a><ul>
-<li><a href="#-----">字符串替换</a></li>
+<li><a href="#mybatis-%E5%8F%82%E6%95%B0%E6%98%A0%E5%B0%84">Mybatis 参数映射</a><ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%9B%BF%E6%8D%A2">字符串替换</a></li>
 </ul>
 </li>
-<li><a href="#--sql">动态sql</a><ul>
+<li><a href="#%E5%8A%A8%E6%80%81sql">动态sql</a><ul>
 <li><a href="#if">if</a></li>
 <li><a href="#choose-when-otherwise">choose、when、otherwise</a></li>
 <li><a href="#trim-where-set">trim、where、set</a></li>
@@ -20,7 +20,7 @@
 <blockquote>
 <p>该文档摘抄自<a target="_blank" rel="noopener" href="https://blog.mybatis.org./">https://blog.mybatis.org。</a></p>
 </blockquote>
-<h1 id="Mybatis-参数映射"><a href="#Mybatis-参数映射" class="headerlink" title="Mybatis 参数映射"></a>Mybatis 参数映射</h1><h2 id="字符串替换"><a href="#字符串替换" class="headerlink" title="字符串替换"></a>字符串替换</h2><p>默认情况下，使用 <strong>#{}</strong> 参数语法时，MyBatis 会创建 <strong>PreparedStatement</strong> 参数占位符，并通过占位符安全地设置参数（就像使用 ? 一样）。 这样做更安全，更迅速，通常也是首选做法，不过有时你就是想直接在 SQL 语句中直接插入一个<strong>不转义的字符串</strong>。 比如 ORDER BY 子句，这时候你可以：</p>
+<h1><span id="mybatis-参数映射">Mybatis 参数映射</span></h1><h2><span id="字符串替换">字符串替换</span></h2><p>默认情况下，使用 <strong>#{}</strong> 参数语法时，MyBatis 会创建 <strong>PreparedStatement</strong> 参数占位符，并通过占位符安全地设置参数（就像使用 ? 一样）。 这样做更安全，更迅速，通常也是首选做法，不过有时你就是想直接在 SQL 语句中直接插入一个<strong>不转义的字符串</strong>。 比如 ORDER BY 子句，这时候你可以：</p>
 <pre><code class="highlight xml">ORDER BY $&#123;columnName&#125;</code></pre>
 <p>如果你想<strong>select</strong>一个表，任意一个列数据时，可以写成如下方式:</p>
 <pre><code class="highlight java"><span class="meta">@Select(&quot;select * from user where $&#123;column&#125; = #&#123;value&#125;&quot;)</span>
@@ -28,13 +28,13 @@
 <blockquote>
 <p> 用这种方式接受用户的输入，并用作语句参数是不安全的，会导致潜在的 SQL 注入攻击。因此，要么不允许用户输入这些字段，要么自行转义并检验这些参数。</p>
 </blockquote>
-<h1 id="动态sql"><a href="#动态sql" class="headerlink" title="动态sql"></a>动态sql</h1><ul>
+<h1><span id="动态sql">动态sql</span></h1><ul>
 <li>if</li>
 <li>choose (when, otherwise)</li>
 <li>trim (where, set)</li>
 <li>foreach</li>
 </ul>
-<h2 id="if"><a href="#if" class="headerlink" title="if"></a>if</h2><p>example:</p>
+<h2><span id="if">if</span></h2><p>example:</p>
 <pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findActiveBlogLike&quot;</span></span>
 <span class="tag">     <span class="attr">resultType</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span>
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
@@ -46,7 +46,7 @@
   <span class="tag">&lt;/<span class="name">if</span>&gt;</span>
 <span class="tag">&lt;/<span class="name">select</span>&gt;</span></code></pre>
 
-<h2 id="choose、when、otherwise"><a href="#choose、when、otherwise" class="headerlink" title="choose、when、otherwise"></a>choose、when、otherwise</h2><p>choose 元素有点类似Java中的switch语句，多个条件中选择一个使用.</p>
+<h2><span id="choose-when-otherwise">choose、when、otherwise</span></h2><p>choose 元素有点类似Java中的switch语句，多个条件中选择一个使用.</p>
 <pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findActiveBlogLike&quot;</span></span>
 <span class="tag">     <span class="attr">resultType</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span>
   SELECT * FROM BLOG WHERE state = &#x27;ACTIVE&#x27;
@@ -63,7 +63,7 @@
   <span class="tag">&lt;/<span class="name">choose</span>&gt;</span>
 <span class="tag">&lt;/<span class="name">select</span>&gt;</span></code></pre>
 
-<h2 id="trim、where、set"><a href="#trim、where、set" class="headerlink" title="trim、where、set"></a>trim、where、set</h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findActiveBlogLike&quot;</span></span>
+<h2><span id="trim-where-set">trim、where、set</span></h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findActiveBlogLike&quot;</span></span>
 <span class="tag">     <span class="attr">resultType</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span>
   SELECT * FROM BLOG
   <span class="tag">&lt;<span class="name">where</span>&gt;</span>
@@ -109,7 +109,7 @@
     <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;bio != null&quot;</span>&gt;</span>bio=#&#123;bio&#125;<span class="tag">&lt;/<span class="name">if</span>&gt;</span>
 <span class="tag">&lt;/<span class="name">trim</span>&gt;</span></code></pre>
 
-<h2 id="foreach"><a href="#foreach" class="headerlink" title="foreach"></a>foreach</h2><p>foreach 常见使用场景一般是批量插入和对集合进行遍历（构造IN条件语句时).</p>
+<h2><span id="foreach">foreach</span></h2><p>foreach 常见使用场景一般是批量插入和对集合进行遍历（构造IN条件语句时).</p>
 <pre><code class="highlight xml"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectPostIn&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;domain.blog.Post&quot;</span>&gt;</span>
   SELECT *
   FROM POST P
@@ -123,7 +123,7 @@
 <blockquote>
 <p>你可以将任何可迭代对象（如 List、Set 等）、Map 对象或者数组对象作为集合参数传递给 foreach。当使用可迭代对象或者数组时，index 是当前迭代的序号，item 的值是本次迭代获取到的元素。当使用 Map 对象（或者 Map.Entry 对象的集合）时，index 是键，item 是值。</p>
 </blockquote>
-<h1 id="script"><a href="#script" class="headerlink" title="script"></a>script</h1><p>要在带注解的映射器接口类中使用动态 SQL，可以使用 script 元素,比如:</p>
+<h1><span id="script">script</span></h1><p>要在带注解的映射器接口类中使用动态 SQL，可以使用 script 元素,比如:</p>
 <pre><code class="highlight java"><span class="meta">@Update(&#123;&quot;&lt;script&gt;&quot;,</span>
 <span class="meta">     &quot;update Author&quot;,</span>
 <span class="meta">     &quot;  &lt;set&gt;&quot;,</span>

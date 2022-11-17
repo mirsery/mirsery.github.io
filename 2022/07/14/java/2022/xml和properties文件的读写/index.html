@@ -2,18 +2,18 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">xml和properties的读写</h1><div class="post-info">作者: mirsery         创建日期: 2022年7月14日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#------">环境路径问题</a></li>
-<li><a href="#xml-----">xml文件的载入</a></li>
-<li><a href="#properties----">properties文件载入</a></li>
-<li><a href="#xml----">xml的序列化</a><ul>
-<li><a href="#properties---">properties序列化</a></li>
+<li><a href="#%E7%8E%AF%E5%A2%83%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98">环境路径问题</a></li>
+<li><a href="#xml%E6%96%87%E4%BB%B6%E7%9A%84%E8%BD%BD%E5%85%A5">xml文件的载入</a></li>
+<li><a href="#properties%E6%96%87%E4%BB%B6%E8%BD%BD%E5%85%A5">properties文件载入</a></li>
+<li><a href="#xml%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96">xml的序列化</a><ul>
+<li><a href="#properties%E5%BA%8F%E5%88%97%E5%8C%96">properties序列化</a></li>
 </ul>
 </li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="环境路径问题"><a href="#环境路径问题" class="headerlink" title="环境路径问题"></a>环境路径问题</h2><p>SpringBoot中我们可以利用<strong>ClassPathResource</strong>类，利用相对路径载入<strong>classPath</strong>路径下的文件配置。</p>
-<h2 id="xml文件的载入"><a href="#xml文件的载入" class="headerlink" title="xml文件的载入"></a>xml文件的载入</h2><pre><code class="highlight java"><span class="comment">/*</span>
+<h2><span id="环境路径问题">环境路径问题</span></h2><p>SpringBoot中我们可以利用<strong>ClassPathResource</strong>类，利用相对路径载入<strong>classPath</strong>路径下的文件配置。</p>
+<h2><span id="xml文件的载入">xml文件的载入</span></h2><pre><code class="highlight java"><span class="comment">/*</span>
 <span class="comment"> * 读入xml文件并序列化成javaBean</span>
 <span class="comment"> */</span>
     <span class="meta">@Bean</span>
@@ -134,7 +134,7 @@
     <span class="tag">&lt;/<span class="name">device</span>&gt;</span>
 <span class="tag">&lt;/<span class="name">devices</span>&gt;</span></code></pre>
 
-<h2 id="properties文件载入"><a href="#properties文件载入" class="headerlink" title="properties文件载入"></a>properties文件载入</h2><pre><code class="highlight java"><span class="meta">@Bean</span>
+<h2><span id="properties文件载入">properties文件载入</span></h2><pre><code class="highlight java"><span class="meta">@Bean</span>
 <span class="function"><span class="keyword">public</span> IccConfig <span class="title">getIccConfig</span><span class="params">()</span> </span>&#123;
     <span class="keyword">try</span> &#123;
         String fileName = <span class="string">&quot;icc.properties&quot;</span>;
@@ -226,7 +226,7 @@
     &#125;
 &#125;</code></pre>
 
-<h2 id="xml的序列化"><a href="#xml的序列化" class="headerlink" title="xml的序列化"></a>xml的序列化</h2><pre><code class="highlight java"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">saveDeviceXML</span><span class="params">(Collection&lt;Device&gt; devices)</span> </span>&#123;
+<h2><span id="xml的序列化">xml的序列化</span></h2><pre><code class="highlight java"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">saveDeviceXML</span><span class="params">(Collection&lt;Device&gt; devices)</span> </span>&#123;
         <span class="keyword">try</span> &#123;
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document document = builder.newDocument();
@@ -279,7 +279,7 @@
         &#125;
     &#125;</code></pre>
 
-<h3 id="properties序列化"><a href="#properties序列化" class="headerlink" title="properties序列化"></a>properties序列化</h3><pre><code class="highlight java"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">saveIccProperties</span><span class="params">(IccConfig iccConfig)</span> </span>&#123;
+<h3><span id="properties序列化">properties序列化</span></h3><pre><code class="highlight java"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">saveIccProperties</span><span class="params">(IccConfig iccConfig)</span> </span>&#123;
         <span class="keyword">try</span> &#123;
             Properties properties = <span class="keyword">new</span> Properties();
             properties.setProperty(<span class="string">&quot;host&quot;</span>, iccConfig.getClientId());

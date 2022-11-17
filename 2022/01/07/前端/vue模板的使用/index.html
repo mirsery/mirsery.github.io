@@ -2,13 +2,13 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">vue模板的使用</h1><div class="post-info">作者: mirsery         创建日期: 2022年1月7日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#vue--api--">vue社区api描述</a></li>
-<li><a href="#--------">组件的使用和创建</a></li>
+<li><a href="#vue%E7%A4%BE%E5%8C%BAapi%E6%8F%8F%E8%BF%B0">vue社区api描述</a></li>
+<li><a href="#%E7%BB%84%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8%E5%92%8C%E5%88%9B%E5%BB%BA">组件的使用和创建</a></li>
 </ul>
 <!-- tocstop -->
 
 <p>在前端项目中经常会遇到需要动态渲染页面的功能，一般情况下我们可以采用原生的js进行手动的插入和编写。在vue项目中可以借用vue提供的方法进行模版渲染。<br>在vue3中可以采用component组件进行动态渲染，vue2中则可以采用extend来实现。本文基于vue2来展示动态渲染示例。</p>
-<h2 id="vue社区api描述"><a href="#vue社区api描述" class="headerlink" title="vue社区api描述"></a>vue社区api描述</h2><p>Vue.extend( options )</p>
+<h2><span id="vue社区api描述">vue社区api描述</span></h2><p>Vue.extend( options )</p>
 <ul>
 <li>参数<ul>
 <li>{Object} options</li>
@@ -35,7 +35,7 @@
 <p>结果如下：</p>
 <pre><code class="highlight html"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Walter White aka Heisenberg<span class="tag">&lt;/<span class="name">p</span>&gt;</span></code></pre>
 
-<h2 id="组件的使用和创建"><a href="#组件的使用和创建" class="headerlink" title="组件的使用和创建"></a>组件的使用和创建</h2><ul>
+<h2><span id="组件的使用和创建">组件的使用和创建</span></h2><ul>
 <li>基本示例</li>
 </ul>
 <pre><code class="highlight js"><span class="comment">// 定义一个名为 button-counter 的新组件</span>
@@ -48,7 +48,7 @@ Vue.component(<span class="string">&#x27;button-counter&#x27;</span>, &#123;
   <span class="attr">template</span>: <span class="string">&#x27;&lt;button v-on:click=&quot;count++&quot;&gt;You clicked me &#123;&#123; count &#125;&#125; times.&lt;/button&gt;&#x27;</span>
 &#125;)</code></pre>
 
-<p>组件是可复用的 Vue 实例，且带有一个名字：在这个例子中是 **<button-counter>**。我们可以在一个通过 new Vue 创建的 Vue 根实例中，把这个组件作为自定义元素来使用：</p>
+<p>组件是可复用的 Vue 实例，且带有一个名字：在这个例子中是 **<button-counter>**。我们可以在一个通过 new Vue 创建的 Vue 根实例中，把这个组件作为自定义元素来使用：</button-counter></p>
 <pre><code class="highlight html"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;components-demo&quot;</span>&gt;</span>
   <span class="tag">&lt;<span class="name">button-counter</span>&gt;</span><span class="tag">&lt;/<span class="name">button-counter</span>&gt;</span>
 <span class="tag">&lt;/<span class="name">div</span>&gt;</span></code></pre>

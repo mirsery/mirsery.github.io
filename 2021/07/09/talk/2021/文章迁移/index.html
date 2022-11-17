@@ -2,20 +2,20 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">文章迁移</h1><div class="post-info">作者: mirsery         创建日期: 2021年7月9日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#----------">关于分类和标签的处理</a></li>
-<li><a href="#hexo----------">hexo框架中使用分类和标签</a><ul>
-<li><a href="#-------">安装相应的插件</a></li>
-<li><a href="#-------">新增对应的文件</a></li>
-<li><a href="#---------">修改对应的文件内容</a></li>
-<li><a href="#----------">添加相对应的前端链接</a></li>
-<li><a href="#----">重要内容</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E5%88%86%E7%B1%BB%E5%92%8C%E6%A0%87%E7%AD%BE%E7%9A%84%E5%A4%84%E7%90%86">关于分类和标签的处理</a></li>
+<li><a href="#hexo%E6%A1%86%E6%9E%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%88%86%E7%B1%BB%E5%92%8C%E6%A0%87%E7%AD%BE">hexo框架中使用分类和标签</a><ul>
+<li><a href="#%E5%AE%89%E8%A3%85%E7%9B%B8%E5%BA%94%E7%9A%84%E6%8F%92%E4%BB%B6">安装相应的插件</a></li>
+<li><a href="#%E6%96%B0%E5%A2%9E%E5%AF%B9%E5%BA%94%E7%9A%84%E6%96%87%E4%BB%B6">新增对应的文件</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E5%AF%B9%E5%BA%94%E7%9A%84%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9">修改对应的文件内容</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E7%9B%B8%E5%AF%B9%E5%BA%94%E7%9A%84%E5%89%8D%E7%AB%AF%E9%93%BE%E6%8E%A5">添加相对应的前端链接</a></li>
+<li><a href="#%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9">重要内容</a></li>
 </ul>
 </li>
 </ul>
 <!-- tocstop -->
 
 <p>从15年末开始，陆陆续续记录的一些文档因为某些不可抗力的原因，需要做一些迁移的工作。刚开始写博客的时候用的farbox，后来迁移到bitcron,现在要回归github pages。记录一次文档的迁移过程吧。</p>
-<h2 id="关于分类和标签的处理"><a href="#关于分类和标签的处理" class="headerlink" title="关于分类和标签的处理"></a>关于分类和标签的处理</h2><p>借用B乎上一个表格</p>
+<h2><span id="关于分类和标签的处理">关于分类和标签的处理</span></h2><p>借用B乎上一个表格</p>
 <table>
 <thead>
 <tr>
@@ -46,19 +46,19 @@
 </tr>
 </tbody></table>
 <p>满足排他性的归为分类，不满足排他性条件的归为标签。分类是固定的、严谨的；标签是自由的、有特色的、是可以修改和添加的。</p>
-<h2 id="hexo框架中使用分类和标签"><a href="#hexo框架中使用分类和标签" class="headerlink" title="hexo框架中使用分类和标签"></a>hexo框架中使用分类和标签</h2><h3 id="安装相应的插件"><a href="#安装相应的插件" class="headerlink" title="安装相应的插件"></a>安装相应的插件</h3><p>在项目根目录下执行：</p>
+<h2><span id="hexo框架中使用分类和标签">hexo框架中使用分类和标签</span></h2><h3><span id="安装相应的插件">安装相应的插件</span></h3><p>在项目根目录下执行：</p>
 <pre><code class="highlight bash">npm install hexo-generator-category --save
 
 npm install hexo-generator-tag --save
 </code></pre>
 
-<h3 id="新增对应的文件"><a href="#新增对应的文件" class="headerlink" title="新增对应的文件"></a>新增对应的文件</h3><p>在项目根目录下执行：</p>
+<h3><span id="新增对应的文件">新增对应的文件</span></h3><p>在项目根目录下执行：</p>
 <pre><code class="highlight bash">hexo new page tags
 
 hexo new page categories
 </code></pre>
 
-<h3 id="修改对应的文件内容"><a href="#修改对应的文件内容" class="headerlink" title="修改对应的文件内容"></a>修改对应的文件内容</h3><p>文件  <em><strong>./source/categories/index.md</strong></em> 修改后的内容：</p>
+<h3><span id="修改对应的文件内容">修改对应的文件内容</span></h3><p>文件  <em><strong>./source/categories/index.md</strong></em> 修改后的内容：</p>
 <pre><code class="highlight md">---
 title: categories
 date: 2021-07-14 16:11:57
@@ -79,7 +79,7 @@ type: tags
 <blockquote>
 <p>在写文章时需要在文章前标注相应的tag以及category。</p>
 </blockquote>
-<h3 id="添加相对应的前端链接"><a href="#添加相对应的前端链接" class="headerlink" title="添加相对应的前端链接"></a>添加相对应的前端链接</h3><p>一般情况下是在对应的主题的配置文件中，或者工程的配置文件中修改Menu值</p>
+<h3><span id="添加相对应的前端链接">添加相对应的前端链接</span></h3><p>一般情况下是在对应的主题的配置文件中，或者工程的配置文件中修改Menu值</p>
 <pre><code class="highlight yml"><span class="attr">menu:</span>
     <span class="attr">Home:</span> <span class="string">/</span>
     <span class="attr">Archives:</span> <span class="string">/archives</span>
@@ -87,7 +87,7 @@ type: tags
     <span class="attr">Tags:</span> <span class="string">/tags</span>
 </code></pre>
 <p>新增相应的分类和标签的地址，即可。</p>
-<h3 id="重要内容"><a href="#重要内容" class="headerlink" title="重要内容"></a>重要内容</h3><p>一般情况，如果按照上述操作即可实现分类和标签的归档。但是假如你当前使用的主题没有实现相应的模板则不能使用相应的功能。此时需要修改主题的模板文件来增强其分页和归档的功能。</p>
+<h3><span id="重要内容">重要内容</span></h3><p>一般情况，如果按照上述操作即可实现分类和标签的归档。但是假如你当前使用的主题没有实现相应的模板则不能使用相应的功能。此时需要修改主题的模板文件来增强其分页和归档的功能。</p>
 <p>查看***./themes/XXX-theme/layout/category.pug<em><strong>和</strong></em>./themes/XXX-theme/layout/tag.pug***是否存在，这两个文件是选择某个分类或某个标签时，文章列表的渲染模板，其文件后缀可以为pug/ejs等。</p>
 <p>如果这两个文件存在，但是访问<code>/categories</code>或 <code>/tags</code>页面返回404，则说明对应的<code>./themes/XXX-theme/layout/post.pug</code> 文件中没有处理当前页为分类或者标签页的情况。</p>
 <p>以下是简单的处理方式：</p>

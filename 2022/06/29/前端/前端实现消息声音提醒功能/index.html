@@ -2,18 +2,18 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">前端实现消息声音提醒功能</h1><div class="post-info">作者: mirsery         创建日期: 2022年6月29日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#-----">浏览器设置</a></li>
-<li><a href="#----">代码部分</a></li>
+<li><a href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BE%E7%BD%AE">浏览器设置</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E9%83%A8%E5%88%86">代码部分</a></li>
 </ul>
 <!-- tocstop -->
 
 <p>众所周知，由于浏览器的限制，页面并不能直接自动播放声音，需要开启权限。我们在B/S架构中为了实现声音的自动播放需要打开浏览器的限制。</p>
-<h2 id="浏览器设置"><a href="#浏览器设置" class="headerlink" title="浏览器设置"></a>浏览器设置</h2><p>打开<strong>chrome</strong>浏览器，在地址栏输入如下地址:</p>
+<h2><span id="浏览器设置">浏览器设置</span></h2><p>打开<strong>chrome</strong>浏览器，在地址栏输入如下地址:</p>
 <pre><code class="highlight plaintext">chrome://flags/#autoplay-policy</code></pre>
 <p>在下面选项中找到如下配置项:</p>
 <pre><code class="highlight plaintext">Global media controls control Cast start/stop</code></pre>
 <p>修改为<strong>Enable</strong></p>
-<h2 id="代码部分"><a href="#代码部分" class="headerlink" title="代码部分"></a>代码部分</h2><pre><code class="highlight html">
+<h2><span id="代码部分">代码部分</span></h2><pre><code class="highlight html">
 <span class="tag">&lt;<span class="name">audio</span> <span class="attr">preload</span>=<span class="string">&quot;auto|metadata|none&quot;</span> <span class="attr">hidden</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">controls</span>=<span class="string">&quot;controls&quot;</span> <span class="attr">id</span>=<span class="string">&#x27;messageAudio&#x27;</span>&gt;</span>
 
         <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;./audio.mp3&quot;</span>/&gt;</span>

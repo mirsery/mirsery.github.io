@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> ES6学习笔记 2-解构赋值 · mirsery</title><meta name="description" content="ES6学习笔记 2-解构赋值 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
-</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ES6学习笔记 2-解构赋值</h1><div class="post-info">作者: mirsery         创建日期: 2016年12月5日</div><div class="post-content"><h2 id="数组的解构赋值"><a href="#数组的解构赋值" class="headerlink" title="数组的解构赋值"></a>数组的解构赋值</h2><p>ES6中为变量赋值允许写成下面这样</p>
+</head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ES6学习笔记 2-解构赋值</h1><div class="post-info">作者: mirsery         创建日期: 2016年12月5日</div><div class="post-content"><h2><span id="数组的解构赋值">数组的解构赋值</span></h2><p>ES6中为变量赋值允许写成下面这样</p>
 <pre><code class="highlight js"><span class="keyword">var</span> [a,b,c] = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</code></pre>
 <p>上面代码表示，可以从数组中提取值，按照对应位置，对变量赋值。</p>
 <pre><code class="highlight js"><span class="comment">//本质上，这种写法属于“模式匹配”，只要等号两边的模式相同，左边的变量就会被赋予对应的值。下面是一些使用嵌套数组进行解构的例子。</span>
@@ -20,7 +20,7 @@ y <span class="comment">// 3</span>
 head <span class="comment">// 1</span>
 tail <span class="comment">// [2, 3, 4]</span>
 <span class="comment">//如果解构不成功，变量的值就等于undefined</span></code></pre>
-<h2 id="对象的解构赋值"><a href="#对象的解构赋值" class="headerlink" title="对象的解构赋值"></a>对象的解构赋值</h2><p>解构不仅可以用于数组还可以用于对象:</p>
+<h2><span id="对象的解构赋值">对象的解构赋值</span></h2><p>解构不仅可以用于数组还可以用于对象:</p>
 <pre><code class="highlight js"><span class="keyword">var</span> &#123; foo,bar &#125; = &#123;<span class="attr">foo</span>:<span class="string">&quot;aaa&quot;</span>,<span class="attr">bar</span>:<span class="string">&quot;bbb&quot;</span>&#125;;</code></pre>
 <p>如果变量名与属性名不一致，必须写成下面这样。</p>
 <pre><code class="highlight js"><span class="keyword">var</span> &#123; <span class="attr">foo</span>: baz &#125; = &#123; <span class="attr">foo</span>: <span class="string">&quot;aaa&quot;</span>, <span class="attr">bar</span>: <span class="string">&quot;bbb&quot;</span> &#125;;
@@ -60,13 +60,13 @@ x <span class="comment">// 3</span>
 <span class="keyword">var</span> &#123;x = <span class="number">3</span>&#125; = &#123;<span class="attr">x</span>: <span class="literal">null</span>&#125;;
 x <span class="comment">// null</span>
 <span class="comment">// 上面代码中，如果x属性等于null，就不严格相等于undefined，导致默认值不会生效。</span></code></pre>
-<h2 id="字符串的解构赋值"><a href="#字符串的解构赋值" class="headerlink" title="字符串的解构赋值"></a>字符串的解构赋值</h2><pre><code class="highlight js"><span class="keyword">const</span> [a,b,c,d,e] = <span class="string">&#x27;hello&#x27;</span>;
+<h2><span id="字符串的解构赋值">字符串的解构赋值</span></h2><pre><code class="highlight js"><span class="keyword">const</span> [a,b,c,d,e] = <span class="string">&#x27;hello&#x27;</span>;
 a <span class="comment">// &quot;h&quot;</span>
 ...</code></pre>
 <p>类似数组的对象都有一个length属性，因此还可以对这个属性解构赋值。</p>
 <pre><code class="highlight js"><span class="keyword">let</span> &#123;<span class="attr">length</span> : len&#125; = <span class="string">&quot;hello&quot;</span>;
 len <span class="comment">//5 </span></code></pre>
-<h2 id="函数参数的解构赋值"><a href="#函数参数的解构赋值" class="headerlink" title="函数参数的解构赋值"></a>函数参数的解构赋值</h2><p>函数的解构赋值可以使用解构。</p>
+<h2><span id="函数参数的解构赋值">函数参数的解构赋值</span></h2><p>函数的解构赋值可以使用解构。</p>
 <pre><code class="highlight js"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">[x,y]</span>)</span>&#123;
     <span class="keyword">return</span> x + y;
 &#125;
@@ -93,7 +93,7 @@ move(&#123;<span class="attr">x</span>: <span class="number">3</span>&#125;); <s
 move(&#123;&#125;); <span class="comment">// [undefined, undefined]</span>
 move(); <span class="comment">// [0, 0]</span>
 <span class="comment">// 上面代码是为函数move的参数指定默认值，而不是为变量x和y指定默认值，所以会得到与前一种写法不同的结果。</span></code></pre>
-<h2 id="遍利Map结构"><a href="#遍利Map结构" class="headerlink" title="遍利Map结构"></a>遍利Map结构</h2><p>任何部署了Iterator接口的对象，都可以用for…of循环遍历。Map结构原生支持Iterator接口，配合变量的解构赋值，获取键名和键值就非常方便。</p>
+<h2><span id="遍利map结构">遍利Map结构</span></h2><p>任何部署了Iterator接口的对象，都可以用for…of循环遍历。Map结构原生支持Iterator接口，配合变量的解构赋值，获取键名和键值就非常方便。</p>
 <pre><code class="highlight js"><span class="keyword">var</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();
 map.set(<span class="string">&#x27;first&#x27;</span>, <span class="string">&#x27;hello&#x27;</span>);
 map.set(<span class="string">&#x27;second&#x27;</span>, <span class="string">&#x27;world&#x27;</span>);

@@ -2,9 +2,9 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">将exe封装为系统服务开机自启</h1><div class="post-info">作者: mirsery         创建日期: 2022年8月31日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#--------">目录列表如下所示</a></li>
-<li><a href="#installbat------------">install.bat 安装程序为系统服务脚本</a></li>
-<li><a href="#uninstallbat-------">uninstall.bat 移除服务脚本</a></li>
+<li><a href="#%E7%9B%AE%E5%BD%95%E5%88%97%E8%A1%A8%E5%A6%82%E4%B8%8B%E6%89%80%E7%A4%BA">目录列表如下所示</a></li>
+<li><a href="#installbat-%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F%E4%B8%BA%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E8%84%9A%E6%9C%AC">install.bat 安装程序为系统服务脚本</a></li>
+<li><a href="#uninstallbat-%E7%A7%BB%E9%99%A4%E6%9C%8D%E5%8A%A1%E8%84%9A%E6%9C%AC">uninstall.bat 移除服务脚本</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -12,7 +12,7 @@
 <p>本文使用的资源地址</p>
 </blockquote>
 <p><a href="tools.zip">点击下载微软提供的开发者工具</a></p>
-<h2 id="目录列表如下所示"><a href="#目录列表如下所示" class="headerlink" title="目录列表如下所示"></a>目录列表如下所示</h2><p>将下载下的资源解压到根目录，目录结构如下所示:</p>
+<h2><span id="目录列表如下所示">目录列表如下所示</span></h2><p>将下载下的资源解压到根目录，目录结构如下所示:</p>
 <pre><code class="highlight plaintext">instsrv.exe
 srvany.exe
 [targetEXE].exe
@@ -22,7 +22,7 @@ uninstall.bat</code></pre>
 <blockquote>
 <p>其中 <strong>[targetEXE].exe</strong> 为所需要打包的exe程序，<strong>instsrv.exe 和 srvany.exe</strong>是开发工具内的文件</p>
 </blockquote>
-<h2 id="install-bat-安装程序为系统服务脚本"><a href="#install-bat-安装程序为系统服务脚本" class="headerlink" title="install.bat 安装程序为系统服务脚本"></a>install.bat 安装程序为系统服务脚本</h2><pre><code class="highlight bat">@<span class="built_in">echo</span> off
+<h2><span id="installbat-安装程序为系统服务脚本">install.bat 安装程序为系统服务脚本</span></h2><pre><code class="highlight bat">@<span class="built_in">echo</span> off
 <span class="built_in">cd</span> /d %~dp0
 <span class="comment"></span>
 <span class="comment">rem 定义需要运行的程序路径</span>
@@ -53,7 +53,7 @@ reg add <span class="variable">%regpath%</span> /v AppParameters /t REG_SZ /f
 <span class="built_in">pause</span>
 </code></pre>
 
-<h2 id="uninstall-bat-移除服务脚本"><a href="#uninstall-bat-移除服务脚本" class="headerlink" title="uninstall.bat 移除服务脚本"></a>uninstall.bat 移除服务脚本</h2><pre><code class="highlight bat">@<span class="built_in">echo</span> off
+<h2><span id="uninstallbat-移除服务脚本">uninstall.bat 移除服务脚本</span></h2><pre><code class="highlight bat">@<span class="built_in">echo</span> off
 <span class="comment">rem 进入当前目录</span>
 <span class="built_in">cd</span> /d %~dp0
 

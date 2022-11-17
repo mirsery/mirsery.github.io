@@ -5,13 +5,13 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#---------">采用尾回收自动释放</a></li>
-<li><a href="#----">手动释放</a></li>
+<li><a href="#%E9%87%87%E7%94%A8%E5%B0%BE%E5%9B%9E%E6%94%B6%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE">采用尾回收自动释放</a></li>
+<li><a href="#%E6%89%8B%E5%8A%A8%E9%87%8A%E6%94%BE">手动释放</a></li>
 </ul>
 <!-- tocstop -->
 
 <p>下面是使用<strong>EmbeddedChannel</strong>来演示ByteBuf引用计数回收的示例</p>
-<h2 id="采用尾回收自动释放"><a href="#采用尾回收自动释放" class="headerlink" title="采用尾回收自动释放"></a>采用尾回收自动释放</h2><pre><code class="highlight java">EmbeddedChannel embeddedChannel = <span class="keyword">new</span> EmbeddedChannel();
+<h2><span id="采用尾回收自动释放">采用尾回收自动释放</span></h2><pre><code class="highlight java">EmbeddedChannel embeddedChannel = <span class="keyword">new</span> EmbeddedChannel();
 embeddedChannel.pipeline().addLast(<span class="keyword">new</span> MyInBound());
 ByteBuf buf = Unpooled.buffer();
 buf.writeBytes(<span class="string">&quot;hello world!&quot;</span>.getBytes(StandardCharsets.UTF_8));
@@ -33,7 +33,7 @@ System.out.println(<span class="string">&quot;The buf refCnt is &quot;</span> + 
     &#125;
 &#125;</code></pre>
 
-<h2 id="手动释放"><a href="#手动释放" class="headerlink" title="手动释放"></a>手动释放</h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyInBound</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123;
+<h2><span id="手动释放">手动释放</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyInBound</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123;
     <span class="meta">@Override</span>
     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;
         System.out.println(<span class="string">&quot;my inbound===&quot;</span>);

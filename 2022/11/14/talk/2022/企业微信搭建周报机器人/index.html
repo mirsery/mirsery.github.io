@@ -2,23 +2,23 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">企业微信搭建周报机器人</h1><div class="post-info">作者: mirsery         创建日期: 2022年11月14日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#---------">申请企业微信机器人</a></li>
-<li><a href="#-----gitlab--">了解私服的gitlab接口</a></li>
-<li><a href="#private-token-">PRIVATE-TOKEN*</a></li>
-<li><a href="#----">开始编码</a></li>
+<li><a href="#%E7%94%B3%E8%AF%B7%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA">申请企业微信机器人</a></li>
+<li><a href="#%E4%BA%86%E8%A7%A3%E7%A7%81%E6%9C%8D%E7%9A%84gitlab%E6%8E%A5%E5%8F%A3">了解私服的gitlab接口</a></li>
+<li><a href="#private-token">PRIVATE-TOKEN</a></li>
+<li><a href="#%E5%BC%80%E5%A7%8B%E7%BC%96%E7%A0%81">开始编码</a></li>
 </ul>
 <!-- tocstop -->
 
 <p>最近实在是懒得写周报以及一个个去询问同事的工作进度做汇总，故就产生了本项目。本人的思路是希望可以收集最近一周所有项目开发上传代码的Commit记录生成一个周报并且将周报信息发送至企业微信群中。</p>
-<h2 id="申请企业微信机器人"><a href="#申请企业微信机器人" class="headerlink" title="申请企业微信机器人"></a>申请企业微信机器人</h2><p>此步骤省略，直接手机企业微信群里面添加企业微信机器人即可，对于我们项目来说只需要拿到机器人对应的webhook。<br>注意： 你需要安全妥善保存好你的webhook不能被第三方所知晓。</p>
-<h2 id="了解私服的gitlab接口"><a href="#了解私服的gitlab接口" class="headerlink" title="了解私服的gitlab接口"></a>了解私服的gitlab接口</h2><p>对应的Commits类型的接口地址如下：https://{私服host地址}/help/api/commits.md</p>
+<h2><span id="申请企业微信机器人">申请企业微信机器人</span></h2><p>此步骤省略，直接手机企业微信群里面添加企业微信机器人即可，对于我们项目来说只需要拿到机器人对应的webhook。<br>注意： 你需要安全妥善保存好你的webhook不能被第三方所知晓。</p>
+<h2><span id="了解私服的gitlab接口">了解私服的gitlab接口</span></h2><p>对应的Commits类型的接口地址如下：https://{私服host地址}/help/api/commits.md</p>
 <pre><code class="highlight plaintext">GET /projects/:id/repository/commits</code></pre>
 
-<h2 id="PRIVATE-TOKEN"><a href="#PRIVATE-TOKEN" class="headerlink" title="PRIVATE-TOKEN*"></a>PRIVATE-TOKEN*</h2><p><strong>PRIVATE-TOKEN</strong> 可以在gitlab私服 https://{私服host地址}/profile/personal_access_tokens 这个页面中生成并配置相应的权限。</p>
+<h2><span id="private-token">PRIVATE-TOKEN</span></h2><p><strong>PRIVATE-TOKEN</strong> 可以在gitlab私服 https://{私服host地址}/profile/personal_access_tokens 这个页面中生成并配置相应的权限。</p>
 <blockquote>
 <p>保存好你的PRIVATE-TOKEN 字符串</p>
 </blockquote>
-<h2 id="开始编码"><a href="#开始编码" class="headerlink" title="开始编码"></a>开始编码</h2><p>下面是git Commits收集代码</p>
+<h2><span id="开始编码">开始编码</span></h2><p>下面是git Commits收集代码</p>
 <pre><code class="highlight java:n">@Service
 public class GitlabService &#123;
 

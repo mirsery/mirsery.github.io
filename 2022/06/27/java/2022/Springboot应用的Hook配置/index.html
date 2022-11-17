@@ -4,11 +4,11 @@
 <ul>
 <li><a href="#applicationrunner">ApplicationRunner</a></li>
 <li><a href="#commandlinerunner">CommandLineRunner</a></li>
-<li><a href="#-predestroy">@PreDestroy</a></li>
+<li><a href="#predestroy">@PreDestroy</a></li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="ApplicationRunner"><a href="#ApplicationRunner" class="headerlink" title="ApplicationRunner"></a>ApplicationRunner</h2><p>实现<strong>ApplicationRunner</strong>接口，并重写run函数，可以实现<strong>springboot</strong>项目启动完成之后的回调</p>
+<h2><span id="applicationrunner">ApplicationRunner</span></h2><p>实现<strong>ApplicationRunner</strong>接口，并重写run函数，可以实现<strong>springboot</strong>项目启动完成之后的回调</p>
 <pre><code class="highlight java"><span class="meta">@Configuration</span>
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApplicationRunner</span> <span class="keyword">implements</span> <span class="title">ApplicationRunner</span> </span>&#123;
 
@@ -19,7 +19,7 @@
 &#125;
 </code></pre>
 
-<h2 id="CommandLineRunner"><a href="#CommandLineRunner" class="headerlink" title="CommandLineRunner"></a>CommandLineRunner</h2><p>实现<strong>CommandLineRunner</strong>接口，并重写run函数，可以实现<strong>springboot</strong>项目启动完成之后的回调</p>
+<h2><span id="commandlinerunner">CommandLineRunner</span></h2><p>实现<strong>CommandLineRunner</strong>接口，并重写run函数，可以实现<strong>springboot</strong>项目启动完成之后的回调</p>
 <pre><code class="highlight java"><span class="meta">@Configuration</span>
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyCommandLineRunner</span> <span class="keyword">implements</span> <span class="title">CommandLineRunner</span> </span>&#123;
 
@@ -31,7 +31,7 @@
 </code></pre>
 
 
-<h2 id="PreDestroy"><a href="#PreDestroy" class="headerlink" title="@PreDestroy"></a>@PreDestroy</h2><p>采用<code>@PreDestroy</code>注释可以实现springboot项目停止之后的钩子回调，运用实例如下所示:</p>
+<h2><span id="predestroy">@PreDestroy</span></h2><p>采用<code>@PreDestroy</code>注释可以实现springboot项目停止之后的钩子回调，运用实例如下所示:</p>
 <pre><code class="highlight java"><span class="meta">@Configuration</span>
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyPreDestroy</span> </span>&#123;
 

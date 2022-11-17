@@ -2,21 +2,21 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">java集合</h1><div class="post-info">作者: mirsery         创建日期: 2016年9月6日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#--java-------">一、java中集合的关系图</a></li>
-<li><a href="#--collection">二、Collection</a><ul>
-<li><a href="#collection----">Collection基本功能</a></li>
-<li><a href="#list--">List接口</a></li>
-<li><a href="#set---">Set 接口</a></li>
+<li><a href="#%E4%B8%80-java%E4%B8%AD%E9%9B%86%E5%90%88%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9B%BE">一、java中集合的关系图</a></li>
+<li><a href="#%E4%BA%8C-collection">二、Collection</a><ul>
+<li><a href="#collection%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD">Collection基本功能</a></li>
+<li><a href="#list%E6%8E%A5%E5%8F%A3">List接口</a></li>
+<li><a href="#set-%E6%8E%A5%E5%8F%A3">Set 接口</a></li>
 </ul>
 </li>
 </ul>
 <!-- tocstop -->
 
-<h1 id="一、java中集合的关系图"><a href="#一、java中集合的关系图" class="headerlink" title="一、java中集合的关系图"></a>一、java中集合的关系图</h1><p><img src="/~/20150501232236784.png"><br>集合体系盗图</p>
+<h1><span id="一-java中集合的关系图">一、java中集合的关系图</span></h1><p><img src="/~/20150501232236784.png"><br>集合体系盗图</p>
 <p><img src="/~/20150501232625059.png"></p>
-<h1 id="二、Collection"><a href="#二、Collection" class="headerlink" title="二、Collection"></a>二、Collection</h1><p>   Collection是最基本的集合接口，一个Collection代表一组Object，即Collection的元素（Elements）。一些Collection允许相同的元素而另一些不行。一些能排序而另一些不行，于是衍生出两个子类接口List和Set。</p>
+<h1><span id="二-collection">二、Collection</span></h1><p>   Collection是最基本的集合接口，一个Collection代表一组Object，即Collection的元素（Elements）。一些Collection允许相同的元素而另一些不行。一些能排序而另一些不行，于是衍生出两个子类接口List和Set。</p>
 <p><img src="/~/20150501233345854.png"></p>
-<h2 id="Collection基本功能"><a href="#Collection基本功能" class="headerlink" title="Collection基本功能"></a>Collection基本功能</h2><pre><code>      A:添加功能
+<h2><span id="collection基本功能">Collection基本功能</span></h2><pre><code>      A:添加功能
                       boolean add(Object obj):向集合中添加一个元素
                       boolean addAll(Collection c)：向集合中添加一个集合的元素。
       B:删除功能
@@ -36,7 +36,7 @@
       G:把集合转换成数组
                       Object[] toArray():把集合变成数组。
 </code></pre>
-<h2 id="List接口"><a href="#List接口" class="headerlink" title="List接口"></a>List接口</h2><pre><code>    List接口下的集合元素存储有序，可以重复。
+<h2><span id="list接口">List接口</span></h2><pre><code>    List接口下的集合元素存储有序，可以重复。
         List的特有功能
           A:添加功能
               void add(int index, Object obj):在指定位置添加元素
@@ -51,7 +51,7 @@
           E:截取功能
               List subList(int fromIndex, int toIndex)：截取集合。
 </code></pre>
-<h2 id="Set-接口"><a href="#Set-接口" class="headerlink" title="Set 接口"></a>Set 接口</h2><pre><code>           Set接口下的元素无序，不可以重复。其下面分为HashSet和TreeSet。
+<h2><span id="set-接口">Set 接口</span></h2><pre><code>           Set接口下的元素无序，不可以重复。其下面分为HashSet和TreeSet。
           HashSet
            底层数据结构是哈希表，线程不安全，效率高。
            保证唯一性依赖两个方法：hashCode()和equals()。

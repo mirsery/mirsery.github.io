@@ -2,14 +2,14 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Springboot常用注解</h1><div class="post-info">作者: mirsery         创建日期: 2022年1月9日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#1springboot-spring">1.SpringBoot/spring</a></li>
+<li><a href="#1springbootspring">1.SpringBoot/spring</a></li>
 <li><a href="#2jpa">2.Jpa</a></li>
-<li><a href="#3------">3.全局异常处理</a></li>
+<li><a href="#3%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86">3.全局异常处理</a></li>
 <li><a href="#4springcloud">4.springcloud</a></li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="1-SpringBoot-spring"><a href="#1-SpringBoot-spring" class="headerlink" title="1.SpringBoot/spring"></a>1.SpringBoot/spring</h2><ul>
+<h2><span id="1springbootspring">1.SpringBoot/spring</span></h2><ul>
 <li>@SpringBootApplication:</li>
 </ul>
 <p>包含@Configuration、@EnableAutoConfiguration、@ComponentScan通常用在主类上；</p>
@@ -93,7 +93,7 @@
 <p>路径变量。如 RequestMapping(“user/get/mac/{macAddress}”) ；</p>
 <p>public String getByMacAddress(<br>@PathVariable(“macAddress”) String macAddress){<br>//do something;<br>}</p>
 <p>参数与大括号里的名字相同的话，注解后括号里的内容可以不填。</p>
-<h2 id="2-Jpa"><a href="#2-Jpa" class="headerlink" title="2.Jpa"></a>2.Jpa</h2><ul>
+<h2><span id="2jpa">2.Jpa</span></h2><ul>
 <li>@Entity @Table(name=”“):</li>
 </ul>
 <p>表明这是一个实体类。一般用于jpa ，这两个注解一般一块使用，但是如果表名和实体类名相同的话，@Table可以省略；</p>
@@ -148,7 +148,7 @@
 </li>
 </ul>
 <p>对应Hibernate配置文件中的一对一，一对多，多对一。</p>
-<h2 id="3-全局异常处理"><a href="#3-全局异常处理" class="headerlink" title="3.全局异常处理"></a>3.全局异常处理</h2><ul>
+<h2><span id="3全局异常处理">3.全局异常处理</span></h2><ul>
 <li>@ControllerAdvice:</li>
 </ul>
 <p>包含@Component。可以被扫描到。统一处理异常；</p>
@@ -156,7 +156,7 @@
 <li>@ExceptionHandler(Exception.class):</li>
 </ul>
 <p>用在方法上面表示遇到这个异常就执行以下方法。</p>
-<h2 id="4-springcloud"><a href="#4-springcloud" class="headerlink" title="4.springcloud"></a>4.springcloud</h2><ul>
+<h2><span id="4springcloud">4.springcloud</span></h2><ul>
 <li>@EnableEurekaServer:</li>
 </ul>
 <p>用在springboot启动类上，表示这是一个eureka服务注册中心；</p>

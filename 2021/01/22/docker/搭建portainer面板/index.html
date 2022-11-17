@@ -2,22 +2,22 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Portainer的部署安装</h1><div class="post-info">作者: mirsery         创建日期: 2021年1月22日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#portainer--------">Portainer的部署安装和汉化</a><ul>
-<li><a href="#------">官方手册地址</a></li>
-<li><a href="#-----">汉化包下载</a></li>
-<li><a href="#--------portainer">独立容器形式运行Portainer</a></li>
-<li><a href="#stack-----">stack 方式启动</a></li>
+<li><a href="#portainer%E7%9A%84%E9%83%A8%E7%BD%B2%E5%AE%89%E8%A3%85%E5%92%8C%E6%B1%89%E5%8C%96">Portainer的部署安装和汉化</a><ul>
+<li><a href="#%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%E5%9C%B0%E5%9D%80">官方手册地址</a></li>
+<li><a href="#%E6%B1%89%E5%8C%96%E5%8C%85%E4%B8%8B%E8%BD%BD">汉化包下载</a></li>
+<li><a href="#%E7%8B%AC%E7%AB%8B%E5%AE%B9%E5%99%A8%E5%BD%A2%E5%BC%8F%E8%BF%90%E8%A1%8Cportainer">独立容器形式运行Portainer</a></li>
+<li><a href="#stack-%E6%96%B9%E5%BC%8F%E5%90%AF%E5%8A%A8">stack 方式启动</a></li>
 </ul>
 </li>
 </ul>
 <!-- tocstop -->
 
-<h1 id="Portainer的部署安装和汉化"><a href="#Portainer的部署安装和汉化" class="headerlink" title="Portainer的部署安装和汉化"></a>Portainer的部署安装和汉化</h1><blockquote>
+<h1><span id="portainer的部署安装和汉化">Portainer的部署安装和汉化</span></h1><blockquote>
 <p>Portainter是Docker图形化管理工具，提供状态显示面板，应用快速部署，容器镜像网络数据卷的基本操作（包含上传下载镜像、创建容器等操作）、事件日志显示、容器控制台操作，Swarm集群和服务等几种管理和操作，登录用户管理和控制等功能。</p>
 </blockquote>
-<h2 id="官方手册地址"><a href="#官方手册地址" class="headerlink" title="官方手册地址"></a>官方手册地址</h2><p><a target="_blank" rel="noopener" href="https://documentation.portainer.io/v2.0/deploy/linux/#deploy-portainer-in-docker">https://documentation.portainer.io/v2.0/deploy/linux/#deploy-portainer-in-docker</a></p>
-<h2 id="汉化包下载"><a href="#汉化包下载" class="headerlink" title="汉化包下载"></a>汉化包下载</h2><p><a href="/_attachments/2021-01-22/public.zip">下载汉化包public.zip</a></p>
-<h2 id="独立容器形式运行Portainer"><a href="#独立容器形式运行Portainer" class="headerlink" title="独立容器形式运行Portainer"></a>独立容器形式运行Portainer</h2><pre><code class="highlight bash">sudo docker run -d -p 9000:9000 \
+<h2><span id="官方手册地址">官方手册地址</span></h2><p><a target="_blank" rel="noopener" href="https://documentation.portainer.io/v2.0/deploy/linux/#deploy-portainer-in-docker">https://documentation.portainer.io/v2.0/deploy/linux/#deploy-portainer-in-docker</a></p>
+<h2><span id="汉化包下载">汉化包下载</span></h2><p><a href="/_attachments/2021-01-22/public.zip">下载汉化包public.zip</a></p>
+<h2><span id="独立容器形式运行portainer">独立容器形式运行Portainer</span></h2><pre><code class="highlight bash">sudo docker run -d -p 9000:9000 \
 --restart=always  \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v /mnt/prtainer/data:/data \
@@ -25,7 +25,7 @@
 --name prtainer  \
 portainer/portainer</code></pre>
 <p>其中*/mnt/prtainer/public* 为Portainer汉化包的路径<br>Portainer 的数据存放在内部/data 目录，这样容器重启的时候数据会丢失，所以要确保数据持久化。</p>
-<h2 id="stack-方式启动"><a href="#stack-方式启动" class="headerlink" title="stack 方式启动"></a>stack 方式启动</h2><ul>
+<h2><span id="stack-方式启动">stack 方式启动</span></h2><ul>
 <li>下载stack文件<pre><code class="highlight bash">curl -L https://downloads.portainer.io/portainer-agent-stack.yml -o portainer-agent-stack.yml</code></pre></li>
 <li>以stack方式启动 <pre><code class="highlight bash">docker stack deploy -c portainer-agent-stack.yml portainer</code></pre></li>
 </ul>

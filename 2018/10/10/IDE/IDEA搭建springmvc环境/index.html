@@ -5,27 +5,27 @@
 <!-- toc -->
 
 <ul>
-<li><a href="#--spring-mvc--">使用spring mvc插件</a><ul>
-<li><a href="#-----------">确认软件是否安装了插件</a></li>
-<li><a href="#----">新建项目</a></li>
-<li><a href="#--maven--">添加maven构建</a></li>
-<li><a href="#------">添加项目依赖</a></li>
-<li><a href="#------">配置配置文件</a></li>
-<li><a href="#--tomcat--">添加tomcat服务</a></li>
-<li><a href="#--------">编写控制器和页面</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8spring-mvc%E6%8F%92%E4%BB%B6">使用spring mvc插件</a><ul>
+<li><a href="#%E7%A1%AE%E8%AE%A4%E8%BD%AF%E4%BB%B6%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E4%BA%86%E6%8F%92%E4%BB%B6">确认软件是否安装了插件</a></li>
+<li><a href="#%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE">新建项目</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0maven%E6%9E%84%E5%BB%BA">添加maven构建</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E9%A1%B9%E7%9B%AE%E4%BE%9D%E8%B5%96">添加项目依赖</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">配置配置文件</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0tomcat%E6%9C%8D%E5%8A%A1">添加tomcat服务</a></li>
+<li><a href="#%E7%BC%96%E5%86%99%E6%8E%A7%E5%88%B6%E5%99%A8%E5%92%8C%E9%A1%B5%E9%9D%A2">编写控制器和页面</a></li>
 </ul>
 </li>
-<li><a href="#--maven--spring-mvc--">使用maven搭建spring mvc环境</a><ul>
-<li><a href="#------">配置配置文件</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8maven%E6%90%AD%E5%BB%BAspring-mvc%E7%8E%AF%E5%A2%83">使用maven搭建spring mvc环境</a><ul>
+<li><a href="#%E9%85%8D%E7%BD%AE%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-1">配置配置文件</a></li>
 </ul>
 </li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="使用spring-mvc插件"><a href="#使用spring-mvc插件" class="headerlink" title="使用spring mvc插件"></a>使用spring mvc插件</h2><h3 id="确认软件是否安装了插件"><a href="#确认软件是否安装了插件" class="headerlink" title="确认软件是否安装了插件"></a>确认软件是否安装了插件</h3><p>点击菜单栏 File -&gt; Setting<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143943060.png"><br>点击右侧的plugins 然后在输入框中输入springmvc，将搜索出来的结果☑️。<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143949552.png"></p>
-<h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>插件安装完成之后，点击File -&gt; New -&gt; Project<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143958150.png"><br>选择右侧的Spring 在选择中间的Spring MVC<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144006692.png"><br>点击下一步，填写项目名称<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144016971.png"></p>
-<h3 id="添加maven构建"><a href="#添加maven构建" class="headerlink" title="添加maven构建"></a>添加maven构建</h3><p>点击finish完成项目，完成项目之后右键项目添加maven框架<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144028351.png"><br>右侧选择maven 项目<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144035131.png"><br>完成之后的目录结构如下所示<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144044221.png"></p>
-<h3 id="添加项目依赖"><a href="#添加项目依赖" class="headerlink" title="添加项目依赖"></a>添加项目依赖</h3><p>添加项目依赖，在pom.xml文件中添加以下信息</p>
+<h2><span id="使用spring-mvc插件">使用spring mvc插件</span></h2><h3><span id="确认软件是否安装了插件">确认软件是否安装了插件</span></h3><p>点击菜单栏 File -&gt; Setting<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143943060.png"><br>点击右侧的plugins 然后在输入框中输入springmvc，将搜索出来的结果☑️。<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143949552.png"></p>
+<h3><span id="新建项目">新建项目</span></h3><p>插件安装完成之后，点击File -&gt; New -&gt; Project<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143958150.png"><br>选择右侧的Spring 在选择中间的Spring MVC<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144006692.png"><br>点击下一步，填写项目名称<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144016971.png"></p>
+<h3><span id="添加maven构建">添加maven构建</span></h3><p>点击finish完成项目，完成项目之后右键项目添加maven框架<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144028351.png"><br>右侧选择maven 项目<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144035131.png"><br>完成之后的目录结构如下所示<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144044221.png"></p>
+<h3><span id="添加项目依赖">添加项目依赖</span></h3><p>添加项目依赖，在pom.xml文件中添加以下信息</p>
 <pre><code class="highlight plaintext">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;;
 xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;;
@@ -82,7 +82,7 @@ xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0http://maven.apache.or
 &lt;/dependencies&gt;
 &lt;/project&gt;</code></pre>
 <p>右键pom.xml文件选择maven-&gt;reimport注入依赖<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144059094.png"></p>
-<h3 id="配置配置文件"><a href="#配置配置文件" class="headerlink" title="配置配置文件"></a>配置配置文件</h3><p>打开web/WEB-INF/目录下的web.xml文件配置web.xml文件</p>
+<h3><span id="配置配置文件">配置配置文件</span></h3><p>打开web/WEB-INF/目录下的web.xml文件配置web.xml文件</p>
 <pre><code class="highlight xml"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="tag">&lt;<span class="name">web-app</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span>;</span>
 <span class="tag"><span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>;</span>
@@ -149,8 +149,8 @@ xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0http://maven.apache.or
 <span class="tag">&lt;/<span class="name">bean</span>&gt;</span>
 <span class="tag">&lt;/<span class="name">beans</span>&gt;</span></code></pre>
 <p><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144109206.png"><br>再弹出框中勾选相应的xml文件添加到context<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144114057.png"></p>
-<h3 id="添加tomcat服务"><a href="#添加tomcat服务" class="headerlink" title="添加tomcat服务"></a>添加tomcat服务</h3><p>点击右上角的编辑<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144123355.png"><br>选择添加一个tomcat服务<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144128603.png"><br>配置服务<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144141102.png"><br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144148088.png"><br>点击ok，配置完成。</p>
-<h3 id="编写控制器和页面"><a href="#编写控制器和页面" class="headerlink" title="编写控制器和页面"></a>编写控制器和页面</h3><p>在scr/main/java 下面创建一个新包 com.controller ，然后在包里面新建一个IndexController类<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144157485.png"><br>IndexController类</p>
+<h3><span id="添加tomcat服务">添加tomcat服务</span></h3><p>点击右上角的编辑<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144123355.png"><br>选择添加一个tomcat服务<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144128603.png"><br>配置服务<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144141102.png"><br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144148088.png"><br>点击ok，配置完成。</p>
+<h3><span id="编写控制器和页面">编写控制器和页面</span></h3><p>在scr/main/java 下面创建一个新包 com.controller ，然后在包里面新建一个IndexController类<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144157485.png"><br>IndexController类</p>
 <pre><code class="highlight java"><span class="keyword">package</span> com.controller;
 
 <span class="keyword">import</span> org.springframework.stereotype.Controller;
@@ -188,8 +188,8 @@ $&#123;name&#125;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
 <p>启动项目<br> 点击运行启动项目。</p>
-<h2 id="使用maven搭建spring-mvc环境"><a href="#使用maven搭建spring-mvc环境" class="headerlink" title="使用maven搭建spring mvc环境"></a>使用maven搭建spring mvc环境</h2><p>###新建项目<br>首先，跟第一种方法一样点击菜单栏File-&gt;NEW-&gt;Project选择maven，然后勾选Create form archetype 选中webapp 如图:<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144335442.png"><br>填写GroupId和ArtifactId后点击next下一步:<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144344610.png"><br>在配置里面添加archetypeCatalog=internal (可以加快maven的生成速度，网上说的(⊙o⊙)…)<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144414964.png"><br>点击finish完成。<br>###创建项目目录结构<br>点击finish后完成的项目目录结构如下所示<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144434399.png"><br>这里我们需要在main目录下创建一个java目录，java下放置java 的源码，再在java项目创建一个包com.controller包。<br>最终项目的目录结构为<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144442903.png"><br>之后对项目的资源分类，选中项目按F4<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144450969.png"><br>在弹出界面中奖java文件夹设置为项目源码Sources<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144610012.png"><br>把resource设置为项目的资源库Resources<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144621818.png"><br>设置完后相应的文件夹颜色也会变化，且右侧也会有列表信息<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144629644.png"></p>
-<h3 id="配置配置文件-1"><a href="#配置配置文件-1" class="headerlink" title="配置配置文件"></a>配置配置文件</h3><p>之后同第一种方法一样配置web.xml，spring-mvc.xml文件，添加tomcat服务器，创建IndexController控制器，index.jsp视图文件之后就完成了springmvc环境搭建<br>启动项目就可以得到如上的结果。（注该方法无需修改iml文件里面的路径，而web.xml文件放在/webaap/WEB-INF/路径下）<br>最终项目路径<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144640312.png"></p>
+<h2><span id="使用maven搭建spring-mvc环境">使用maven搭建spring mvc环境</span></h2><p>###新建项目<br>首先，跟第一种方法一样点击菜单栏File-&gt;NEW-&gt;Project选择maven，然后勾选Create form archetype 选中webapp 如图:<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144335442.png"><br>填写GroupId和ArtifactId后点击next下一步:<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144344610.png"><br>在配置里面添加archetypeCatalog=internal (可以加快maven的生成速度，网上说的(⊙o⊙)…)<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144414964.png"><br>点击finish完成。<br>###创建项目目录结构<br>点击finish后完成的项目目录结构如下所示<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144434399.png"><br>这里我们需要在main目录下创建一个java目录，java下放置java 的源码，再在java项目创建一个包com.controller包。<br>最终项目的目录结构为<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144442903.png"><br>之后对项目的资源分类，选中项目按F4<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144450969.png"><br>在弹出界面中奖java文件夹设置为项目源码Sources<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144610012.png"><br>把resource设置为项目的资源库Resources<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144621818.png"><br>设置完后相应的文件夹颜色也会变化，且右侧也会有列表信息<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144629644.png"></p>
+<h3><span id="配置配置文件">配置配置文件</span></h3><p>之后同第一种方法一样配置web.xml，spring-mvc.xml文件，添加tomcat服务器，创建IndexController控制器，index.jsp视图文件之后就完成了springmvc环境搭建<br>启动项目就可以得到如上的结果。（注该方法无需修改iml文件里面的路径，而web.xml文件放在/webaap/WEB-INF/路径下）<br>最终项目路径<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144640312.png"></p>
 </div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
 var disqus_identifier = '2018/10/10/IDE/IDEA搭建springmvc环境/';
 var disqus_title = 'IDEA搭建springmvc环境';

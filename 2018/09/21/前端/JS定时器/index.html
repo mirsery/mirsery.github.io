@@ -34,7 +34,7 @@
 <blockquote>
 <p>注:JavaScript定时器的延时时间是不能保证的</p>
 </blockquote>
-<p>##执行线程中的定时器定时器执行<br>在<a href="">Web worker</a>可用之前，浏览器中所有的JS代码都是在单线程中执行的。<br><img src="/2018/09/21/%E5%89%8D%E7%AB%AF/JS%E5%AE%9A%E6%97%B6%E5%99%A8/2017-01-06-16-21-59.jpg"></p>
+<p>##执行线程中的定时器定时器执行<br>在<a href>Web worker</a>可用之前，浏览器中所有的JS代码都是在单线程中执行的。<br><img src="/2018/09/21/%E5%89%8D%E7%AB%AF/JS%E5%AE%9A%E6%97%B6%E5%99%A8/2017-01-06-16-21-59.jpg"></p>
 <p>##timeout和interval之间的区别</p>
 <p><img src="/2018/09/21/%E5%89%8D%E7%AB%AF/JS%E5%AE%9A%E6%97%B6%E5%99%A8/2017-01-06-16-23-18.jpg"></p>
 <p>这两段代码功能似乎是相同的，但是在setTimeout()代码中要在前一个callback回调执行结束并延时10s(可能更多但不会更少)以后才能再次执行setTimeout(),而setInterval()则是每隔10ms就尝试执行callback回调，而不关注上一个callback是什么时候执行的。</p>

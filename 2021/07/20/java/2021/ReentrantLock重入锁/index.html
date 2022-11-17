@@ -2,9 +2,9 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ReentrantLock重入锁</h1><div class="post-info">作者: mirsery         创建日期: 2021年7月20日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#----">中断响应</a></li>
-<li><a href="#-------">锁申请等待限时</a></li>
-<li><a href="#---">公平锁</a></li>
+<li><a href="#%E4%B8%AD%E6%96%AD%E5%93%8D%E5%BA%94">中断响应</a></li>
+<li><a href="#%E9%94%81%E7%94%B3%E8%AF%B7%E7%AD%89%E5%BE%85%E9%99%90%E6%97%B6">锁申请等待限时</a></li>
+<li><a href="#%E5%85%AC%E5%B9%B3%E9%94%81">公平锁</a></li>
 </ul>
 <!-- tocstop -->
 
@@ -37,7 +37,7 @@
    &#125;
 </code></pre>
 
-<h2 id="中断响应"><a href="#中断响应" class="headerlink" title="中断响应"></a>中断响应</h2><p>使用可重入锁的过程中，如果一个线程在等待锁，那么程序可以根据需求取消对锁的请求。下面是简单的例子：</p>
+<h2><span id="中断响应">中断响应</span></h2><p>使用可重入锁的过程中，如果一个线程在等待锁，那么程序可以根据需求取消对锁的请求。下面是简单的例子：</p>
 <pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">static</span> ReentrantLock lock1 = <span class="keyword">new</span> ReentrantLock();
    <span class="keyword">public</span> <span class="keyword">static</span> ReentrantLock lock2 = <span class="keyword">new</span> ReentrantLock();
    <span class="keyword">int</span> lock;
@@ -88,8 +88,8 @@
    &#125;</code></pre>
 
 <p>上述代码，很容易产生死锁。当t1线程申请lock1之后想申请lock2锁的时候，t2很容易提前申请到lock2，导致程序死锁。主程序触发t2的中断，使得t2线程释放资源，t1线程获得对应的lock2继续完成下面的代码任务。</p>
-<h2 id="锁申请等待限时"><a href="#锁申请等待限时" class="headerlink" title="锁申请等待限时"></a>锁申请等待限时</h2><p>除了采用中断的方式获取外部通知，避免死锁还有另一中方法就限时等待。使用 <em><strong>tryLock( )</strong></em> 方法获取锁，该方法接受2个参数，一个表示等待时长，另一个表示计时单位。如果成功获得锁就会返回true，反之返回false。  <em><strong>ReentrantLock.tryLock( )</strong></em> 方法也可以不带参数直接运行，在这种情况下，当前线程会尝试获得锁，如果锁未被其他线程占用则申请锁成功，立即返回true；反之如果被其他线程占用，则其他线程不会进行等待，而是立即返回false。这种模式不会引起线程等待，因此不会产生死锁。</p>
-<h2 id="公平锁"><a href="#公平锁" class="headerlink" title="公平锁"></a>公平锁</h2><p>一般情况下，锁的申请都是非公平的，重入锁允许我们对公平性进行设置，他的构造函数如下:</p>
+<h2><span id="锁申请等待限时">锁申请等待限时</span></h2><p>除了采用中断的方式获取外部通知，避免死锁还有另一中方法就限时等待。使用 <em><strong>tryLock( )</strong></em> 方法获取锁，该方法接受2个参数，一个表示等待时长，另一个表示计时单位。如果成功获得锁就会返回true，反之返回false。  <em><strong>ReentrantLock.tryLock( )</strong></em> 方法也可以不带参数直接运行，在这种情况下，当前线程会尝试获得锁，如果锁未被其他线程占用则申请锁成功，立即返回true；反之如果被其他线程占用，则其他线程不会进行等待，而是立即返回false。这种模式不会引起线程等待，因此不会产生死锁。</p>
+<h2><span id="公平锁">公平锁</span></h2><p>一般情况下，锁的申请都是非公平的，重入锁允许我们对公平性进行设置，他的构造函数如下:</p>
 <pre><code class="highlight java"><span class="function"><span class="keyword">public</span> <span class="title">ReentrantLock</span><span class="params">(<span class="keyword">boolean</span>  fair)</span></span></code></pre>
 
 <p>fair 为true表示当前的锁是公平的。默认情况下，锁是非公平的，实现公平锁必然要求系统维护一个有序队列，因此公平锁的实现成本比较高。如果没有特殊的需求则不需要使用公平锁。</p>

@@ -2,15 +2,15 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">electron-builder打包依赖存放位置</h1><div class="post-info">作者: mirsery         创建日期: 2021年11月25日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#electron-builder-----">electron-builder 打包问题</a><ul>
-<li><a href="#-----">缓存的位置</a></li>
+<li><a href="#electron-builder-%E6%89%93%E5%8C%85%E9%97%AE%E9%A2%98">electron-builder 打包问题</a><ul>
+<li><a href="#%E7%BC%93%E5%AD%98%E7%9A%84%E4%BD%8D%E7%BD%AE">缓存的位置</a></li>
 </ul>
 </li>
 </ul>
 <!-- tocstop -->
 
-<h1 id="electron-builder-打包问题"><a href="#electron-builder-打包问题" class="headerlink" title="electron-builder 打包问题"></a>electron-builder 打包问题</h1><p>由于国内某些神秘力量会导致采用electron-builder打包app时，从GitHub等地下载依赖时导致文件的下载超时。为此，我们需要手动将依赖下载到指定的目录下面，才能进行下一步的打包工作。</p>
-<h2 id="缓存的位置"><a href="#缓存的位置" class="headerlink" title="缓存的位置"></a>缓存的位置</h2><ul>
+<h1><span id="electron-builder-打包问题">electron-builder 打包问题</span></h1><p>由于国内某些神秘力量会导致采用electron-builder打包app时，从GitHub等地下载依赖时导致文件的下载超时。为此，我们需要手动将依赖下载到指定的目录下面，才能进行下一步的打包工作。</p>
+<h2><span id="缓存的位置">缓存的位置</span></h2><ul>
 <li>macos</li>
 </ul>
 <pre><code class="highlight shell">~/Library/Caches/electron

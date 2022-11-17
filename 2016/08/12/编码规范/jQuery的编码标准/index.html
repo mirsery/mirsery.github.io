@@ -2,14 +2,14 @@
 </head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">jQuery的编码标准</h1><div class="post-info">作者: mirsery         创建日期: 2016年8月12日</div><div class="post-content"><!-- toc -->
 
 <ul>
-<li><a href="#--jquery">加载jQuery</a></li>
-<li><a href="#----">关于变量</a></li>
-<li><a href="#-----">关于选择器</a></li>
-<li><a href="#dom----">DOM操作相关</a></li>
+<li><a href="#%E5%8A%A0%E8%BD%BDjquery">加载jQuery</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E5%8F%98%E9%87%8F">关于变量</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E9%80%89%E6%8B%A9%E5%99%A8">关于选择器</a></li>
+<li><a href="#dom%E6%93%8D%E4%BD%9C%E7%9B%B8%E5%85%B3">DOM操作相关</a></li>
 </ul>
 <!-- tocstop -->
 
-<h2 id="加载jQuery"><a href="#加载jQuery" class="headerlink" title="加载jQuery"></a>加载jQuery</h2><p>1.坚持使用CDN来加载jQuery，这种别人服务器免费帮你托管文件的便宜干嘛不占呢。点击查看使用CDN的好处，点此查看一些主流的jQuery CDN地址。</p>
+<h2><span id="加载jquery">加载jQuery</span></h2><p>1.坚持使用CDN来加载jQuery，这种别人服务器免费帮你托管文件的便宜干嘛不占呢。点击查看使用CDN的好处，点此查看一些主流的jQuery CDN地址。</p>
 <pre><code class="highlight javascript">&lt;script type=<span class="string">&quot;text/javascript&quot;</span> src=<span class="string">&quot;//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js&quot;</span>&gt;&lt;/script&gt;
 
 <span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="handlebars"><span class="xml">window.jQuery || document.write(&#x27;<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;js/jquery-1.11.0.min.js&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span>&lt;\/script&gt;&#x27;)</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></code></pre>
@@ -20,11 +20,11 @@
 <li>当从CDN服务器加载jQuery时，最好把版本写全（比如1.11.0而不是1.11或者直接写个1）<br>千万不要重复加载.</li>
 </ul>
 <p>6.如果你同时还使用了其他JS框架诸如Prototype, MooTools, Zepto云云，因为他们也使用了<code>$</code>符号，所以你就不能再用美刀符号来进行jQuery 编码了，而请用<code>jQuery</code>代替。并且调用保证<code>$.noConflict( )</code>不会有冲突出现。<br>7.要检测浏览器对一些新特性是否支持，请用Modernizr。</p>
-<h2 id="关于变量"><a href="#关于变量" class="headerlink" title="关于变量"></a>关于变量</h2><p>1.jQuery类型的变量最好加个$前缀。</p>
+<h2><span id="关于变量">关于变量</span></h2><p>1.jQuery类型的变量最好加个$前缀。</p>
 <p>2.时常将jQuery选择器返回的内容存进变量以便重用</p>
 <p>var $products = $(“div.products”); // 慢<br>var $products = $(“.products”); // 快</p>
 <p>3.使用驼峰命名</p>
-<h2 id="关于选择器"><a href="#关于选择器" class="headerlink" title="关于选择器"></a>关于选择器</h2><p>1.尽量ID选择器。其背后机理其实是调用原生的document.getElementById()，所以速度较其他选择器快。</p>
+<h2><span id="关于选择器">关于选择器</span></h2><p>1.尽量ID选择器。其背后机理其实是调用原生的document.getElementById()，所以速度较其他选择器快。</p>
 <p>2.使用类选择器时表指定元素的类型。不信你看这个性能比较</p>
 <pre><code class="highlight html">var $products = $(&quot;div.products&quot;); // 慢
 var $products = $(&quot;.products&quot;); // 快</code></pre>
@@ -56,7 +56,7 @@ $(&#x27;div.someclass input:radio&#x27;); // 棒</code></pre>
 $(&#x27;div#inner&#x27;); // 乱
 $(&#x27;.outer-container #inner&#x27;); // 差
 $(&#x27;#inner&#x27;); // 干净利落，后台只需调用document.getElementById()</code></pre>
-<h2 id="DOM操作相关"><a href="#DOM操作相关" class="headerlink" title="DOM操作相关"></a>DOM操作相关</h2><p>1.操作任何元素前先将其从文档卸载，完了再贴回去。这事儿还能说细点</p>
+<h2><span id="dom操作相关">DOM操作相关</span></h2><p>1.操作任何元素前先将其从文档卸载，完了再贴回去。这事儿还能说细点</p>
 <pre><code class="highlight plaintext">var $myList = $(&quot;#list-container &gt; ul&quot;).detach();
 //...一大堆对$myList的处理
 $myList.appendTo(&quot;#list-container&quot;);</code></pre>
