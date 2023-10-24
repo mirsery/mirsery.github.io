@@ -166,6 +166,13 @@ public class AVLTree<K extends Comparable<K>, V> {
     }
 
     // 右旋转 顺时针
+    /*
+     *              y                   x
+     *             / \                 / \
+     *            T1  x     ----->    y   T3
+     *               / \             / \
+     *              T2  T3          T1 T2
+     */
     private Node rightRotate(Node y) {
         Node x = y.left;
         Node T3 = x.right;
