@@ -66,7 +66,18 @@ InnoDB与MyISAM的最大不同有两点：
 
 可以通过检查InnoDB_row_lock状态变量来分析系统上的行锁的争夺情况：
 
+```sql
+show status like 'innodb_row_lock%';
+```
+
 ![](InnoDB_row_lock.png)
+
+|Innodb_row_lock_current_waits|当前正在等待锁定的数量|
+|:---:|:---:|
+|Innodb_row_lock_time|从系统启动到现在锁定总时间长度|
+|Innodb_row_lock_time_avg|每次等待所花平均时间|
+|Innodb_row_lock_time_max|从系统启动到现在等待最长的一次所花时间|
+|Innodb_row_lock_waits|系统启动后到现在总共等待的次数|
 
 如果发现争用比较严重，如Innodb_row_lock_waits和Innodb_row_lock_time_avg的值比较高。
 还可以通过设置InnoDB Monitors来进一步观察发生锁冲突的表、数据行等，并分析锁争用的原因。
@@ -76,6 +87,10 @@ InnoDB与MyISAM的最大不同有两点：
 InnoDB实现了以下两种类型的**行锁**。
 - 共享锁（s）：允许一个事务去读一行，阻止其他事务获得相同数据集的排他锁。
 - 排他锁（Ｘ）：允许获取排他锁的事务更新数据，阻止其他事务取得相同的数据集共享读锁和排他写锁。
+
+意向锁（Intention Lock）：又称I锁，针对表锁，主要是为了提高加表锁的效率，是mysql数据库自己加的。当有事务给表的数据行加了共享锁或排他锁，同时会给表设置一个标识，代表已经有行锁了，其他事务要想对表加表锁时，就不必逐行判断有没有行锁可能跟表锁冲突了，直接读这个标识就可以确定自己该不该加表锁。特别是表中的记录很多时，逐行判断加表锁的方式效率很低。而这个标识就是意向锁。
+意向共享锁，IS锁，对整个表加共享锁之前，需要先获取到意向共享锁。
+意向排他锁，IX锁，对整个表加排他锁之前，需要先获取到意向排他锁。
 
 另外，为了允许行锁和表锁共存，实现多粒度锁机制。InnoDB还有两种内部使用的意向锁（Intention Locks），这两种意向锁都是**表锁**。
 - 意向共享锁（IS）：事务打算给数据行共享锁，事务在给一个数据行加共享锁前必须先取得该表的IS锁。
@@ -163,6 +178,15 @@ UNLOCK TABLES;
 如果出现死锁，可以用SHOW INNODB STATUS命令来确定最后一个死锁产生的原因和改进措施。
 
 ## 总结
+
+InnoDB在执行查询语句SELECT时，因为有mvcc机制不会加锁。但是update、insert、delete操作会加行锁。
+简而言之，就是读锁会阻塞写，但是不会阻塞读。而写锁则会把读和写都阻塞。
+无索引行锁会升级为表锁(RR级别会升级为表锁，RC级别不会升级为表锁)。
+锁定某一行还可以用lock in share mode(共享锁) 和for update(排它锁)，例如：```select * from test_innodb_lock where a = 2 for update;```
+这样其他session只能读这行数据，修改则会被阻塞，直到锁定行的session提交
+
+Innodb存储引擎由于实现了行级锁定，虽然在锁定机制的实现方面所带来的性能损耗可能比表级锁定会要更高一下，但是在整体并发处理能力方面要远远优于MYISAM的表级锁定的。当系统并发量高的时候，Innodb的整体性能和MYISAM相比就会有比较明显的优势了。但是，Innodb的行级锁定同样也有其脆弱的一面，当我们使用不当的时候，可能会让Innodb的整体性能表现不仅不能比MYISAM高，甚至可能会更差。
+
 对于InnoDB表，主要有以下几点:
 （１） InnoDB的行锁是基于索引实现的，如果不通过索引访问数据，InnoDB会使用表锁。
 （２） InnoDB间隙锁机制，以及InnoDB使用间隙锁的原因。
