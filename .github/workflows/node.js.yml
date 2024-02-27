@@ -15,7 +15,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [16.3.0]
+        node-version: [18.12.1]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     
     steps:
@@ -24,6 +24,7 @@ jobs:
     
     - name: Setup Hexo Dependencies
       run: |
+        npm config set cafile ""
         npm install hexo-cli -g
         npm install
     
