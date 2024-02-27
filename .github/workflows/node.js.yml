@@ -24,6 +24,7 @@ jobs:
     
     - name: Setup Hexo Dependencies
       run: |
+        npm config set cafile ""
         npm install hexo-cli -g
         npm install
     
