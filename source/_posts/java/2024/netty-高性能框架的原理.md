@@ -5,12 +5,11 @@ author: mirsery
 comments: false
 date: 2024-02-03 13:47:52
 updated: 2024-02-03 13:47:52
-tags:
+tags: 
     - netty
-categories:
-    - java
-    - 零拷贝
     - nio
+categories: 
+    - java
 excerpt: ‘netty 是一个高性能、异步事件驱动的 nio 框架，所有的操作都是异步非阻塞的...’
 ---
 
