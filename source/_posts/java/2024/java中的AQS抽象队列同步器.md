@@ -22,10 +22,8 @@ AbstractQueuedSynchronizer抽象队列同步器——用于构建锁或其他同
 
 AQS支持两种模式——独占模式，共享模式。
 
-主要思想：FIFO（先进先出队列）
-实现算法：CLH队列算法
-底层数据结构：双项链表
-
+如果说java.util.concurrent的基础是CAS的话，那么AQS就是整个Java并发包的核心了， ReentrantLock、CountDownLatch、Semaphore等等都用到了它。AQS实际上以双向队列的形式 连接所有的Entry，比方说ReentrantLock，所有等待的线程都被放在一个Entry中并连成双向队 列，前面一个线程使用ReentrantLock好了，则双向队列实际上的第一个Entry开始运行。
+AQS定义了对双向队列所有的操作，而只开放了tryLock和tryRelease方法给开发者使用，开发者可 以根据自己的实现重写tryLock和tryRelease方法，以实现自己的并发功能。
 
 ## AbstractQueuedSynchronizer方法解析
 
@@ -118,3 +116,92 @@ public void release() {
 release方法内部调用了AQS的releaseShared方法，该方法实现了许可的释放和等待线程的唤醒。如果当前有等待线程，则会从同步队列中唤醒一个线程，让其获取许可并执行；如果当前没有等待线程，则将许可的数量加一。
 
 Semaphore是基于AQS实现的一个计数信号量，通过计数器实现了对许可的控制，并通过同步队列实现了线程之间的同步和互斥。Semaphore的实现为线程的访问资源提供了一个简单而可靠的机制。
+
+
+
+## 使用抽象同步队列 AQS 构建自定义锁
+
+```java:n
+
+public class CustomLock  {
+
+    private final Sync sync = new Sync();
+
+    private static int num = 0;
+
+    public void lock(){
+        sync.acquire(1);
+    }
+
+    public void unLock(){
+        sync.release(1);
+    }
+
+    public static class Sync extends AbstractQueuedSynchronizer{
+
+        @Override
+        protected boolean tryAcquire(int arg) {
+            if(compareAndSetState(0,1)){
+                setExclusiveOwnerThread(Thread.currentThread());
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected boolean tryRelease(int arg) {
+            if(getState()==0){
+                throw new IllegalMonitorStateException("lock not held");
+            }
+            setExclusiveOwnerThread(null);
+            setState(0);
+            return true;
+        }
+
+        @Override
+        protected boolean isHeldExclusively() {
+            return getState() == 1;
+        }
+    }
+
+    public static void main(String[] args) {
+        CustomLock lock = new CustomLock();
+
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                lock.lock();
+                for(int i=0;i<100;i++){
+                    num = num+1;
+                    System.out.println(Thread.currentThread().getName()+ " "+num);
+                }
+                lock.unLock();
+//            try {
+//                System.out.println(Thread.currentThread().getName()+ " hold the lock");
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }finally {
+//                lock.unLock();
+//                System.out.println(Thread.currentThread().getName()+ " release the lock");
+//            }
+            }
+        };
+
+        Thread t1 = new Thread(task);
+        Thread t2 = new Thread(task);
+        t1.setName("[T1]");
+        t2.setName("[T2]");
+        t2.start();
+        t1.start();
+
+        try {
+            Thread.sleep(5*1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(num);
+    }
+
+}
+```
