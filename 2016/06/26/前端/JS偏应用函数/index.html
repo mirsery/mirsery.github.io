@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 偏应用函数 · mirsery</title><meta name="description" content="偏应用函数 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.1.1"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">偏应用函数</h1><div class="post-info">作者: mirsery         创建日期: 2016年6月26日</div><div class="post-content"><p>##偏应用函数<br>“分布应用”一个函数是一项特别有趣的技术，在函数调用之前我们可以预先传入一些函数。实际上，偏应用函数返回了一个含有预处理参数的新函数，以便后期可以调用。<br>这种在一个函数中首先填充几个参数(然后在返回一个新函数)的技术称为柯里化。<br>🌰  我们希望将一个字符串分隔成CSV(逗号分隔)，并忽略多余的空格，我们可以很容易的通过一个正则表达式，使用String的split()方法做到这一点。</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><pre><code class="highlight `javaScript">var elements = &quot;val1,val2,val3&quot;.split(/,\s*/);</code></pre>
+<p>现在让我们编写一个CSV( )方法做这件事并假设使用柯里化。</p>
+<pre><code class="highlight javaScript"><span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">csv</span> = <span class="title class_">String</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">split</span>.<span class="title function_">partial</span>(<span class="regexp">/,\s*/</span>);
+<span class="keyword">var</span> result = (<span class="string">&quot;Mugan,Jin,Fuu&quot;</span>).<span class="title function_">csv</span>();</code></pre>
+<p>Prototype库中的分部&#x2F;柯里化方法的实现如下:</p>
+<pre><code class="highlight javaScript"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">curry</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;
+  <span class="keyword">var</span> fn = <span class="variable language_">this</span>,
+    args = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>);
+    <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;
+        <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>,args.<span class="title function_">concat</span>(
+         <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>)));
+    &#125;;
+&#125;;</code></pre>
+<p>一个分部函数事例:</p>
+<pre><code class="highlight javaScript"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">partial</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;
+    <span class="keyword">var</span> fn =  <span class="variable language_">this</span>,args = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>);
+    <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>)&#123;
+        <span class="keyword">var</span> arg = <span class="number">0</span>;
+        <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;args.<span class="property">length</span> &amp;&amp; args&lt;<span class="variable language_">arguments</span>.<span class="property">length</span>;i++)&#123;
+            <span class="keyword">if</span>(args[i]==<span class="literal">undefined</span>)&#123;
+                args[i]=<span class="variable language_">arguments</span>[arg++];
+            &#125;
+        &#125;
+        <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>,args);
+    &#125;
+&#125;;</code></pre>
+<p>实现一个10ms后进行调用的异步函数</p>
+<pre><code class="highlight javaScript"><span class="keyword">var</span> delay = <span class="built_in">setTimeout</span>.<span class="title function_">partial</span>(<span class="literal">undefined</span>,<span class="number">10</span>);
+<span class="title function_">delay</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;
+   .... .... 
+&#125;);</code></pre>
+<p>当然我们也可以创建一个简单的函数用于事件绑定</p>
+<pre><code class="highlight plaintext">var bindClick = document.body.addEventListener.partial(&quot;click&quot;,undefined,false);
+bindClick(function()&#123;
+ ... ...
+&#125;);</code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/06/26/前端/JS偏应用函数/';
+var disqus_title = '偏应用函数';
+var disqus_url = 'https://mirsery.github.io/2016/06/26/前端/JS偏应用函数/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/06/30/%E5%89%8D%E7%AB%AF/JSTips/">上一篇</a><a class="next" href="/2016/06/26/%E5%89%8D%E7%AB%AF/js%E4%B8%AD%E7%9A%84ForEach%E6%96%B9%E6%B3%95/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>
