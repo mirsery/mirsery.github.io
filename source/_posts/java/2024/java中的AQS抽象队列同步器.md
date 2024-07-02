@@ -4,7 +4,7 @@ toc: true
 author: mirsery
 comments: false
 date: 2024-02-27 10:57:53
-updated: 2024-02-27 10:57:53
+updated: 2024-07-02 23:09:53
 tags:
     - java
 categories:
@@ -119,28 +119,33 @@ Semaphore是基于AQS实现的一个计数信号量，通过计数器实现了�
 
 
 
-## 使用抽象同步队列 AQS 构建自定义锁
+## 使用抽象同步队列 AQS 构建一个不可重入的独占锁
 
 ```java:n
 
-public class CustomLock  {
+public class UnReentrantLock implements Lock {
 
-    private final Sync sync = new Sync();
+    private static class Sync extends AbstractQueuedSynchronizer{
 
-    private static int num = 0;
+        @Override
+        protected boolean isHeldExclusively() {
+           return getState() == 1;
+        }
 
-    public void lock(){
-        sync.acquire(1);
-    }
-
-    public void unLock(){
-        sync.release(1);
-    }
-
-    public static class Sync extends AbstractQueuedSynchronizer{
+        @Override
+        protected boolean tryRelease(int arg) {
+            if(getState()==0){
+                throw new IllegalMonitorStateException();
+            }else {
+                setState(0);
+                setExclusiveOwnerThread(null);
+                return true;
+            }
+        }
 
         @Override
         protected boolean tryAcquire(int arg) {
+            assert arg == 1;
             if(compareAndSetState(0,1)){
                 setExclusiveOwnerThread(Thread.currentThread());
                 return true;
@@ -148,60 +153,103 @@ public class CustomLock  {
             return false;
         }
 
-        @Override
-        protected boolean tryRelease(int arg) {
-            if(getState()==0){
-                throw new IllegalMonitorStateException("lock not held");
-            }
-            setExclusiveOwnerThread(null);
-            setState(0);
-            return true;
+        public ConditionObject newCondition(){
+            return new ConditionObject();
         }
 
-        @Override
-        protected boolean isHeldExclusively() {
-            return getState() == 1;
-        }
+
     }
+
+    private final Sync sync = new Sync();
+
+    @Override
+    public void lock() {
+        sync.acquire(1);
+    }
+
+    @Override
+    public void lockInterruptibly() throws InterruptedException {
+        sync.acquireInterruptibly(1);
+    }
+
+    @Override
+    public boolean tryLock() {
+        return sync.tryAcquire(1);
+    }
+
+    @Override
+    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+        return sync.tryAcquireNanos(1,unit.toNanos(time));
+    }
+
+    @Override
+    public void unlock() {
+        sync.release(1);
+    }
+
+    @Override
+    public Condition newCondition() {
+        return sync.newCondition();
+    }
+
+    public boolean isLocked(){
+        return sync.isHeldExclusively();
+    }
+}
+```
+
+利用自定义的锁实现一个消费者和生产者线程
+
+```java
+public class TestUnReentrantLock {
+
+    private static final UnReentrantLock lock = new UnReentrantLock();
+
+    private static final Condition prodCondition = lock.newCondition(); // 信号
+    private static final Condition customCondition = lock.newCondition();
+
+    private static final Queue<String> taskQueue = new LinkedBlockingQueue<>();
+
+    private static final int limitSize = 10;
 
     public static void main(String[] args) {
-        CustomLock lock = new CustomLock();
 
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                lock.lock();
-                for(int i=0;i<100;i++){
-                    num = num+1;
-                    System.out.println(Thread.currentThread().getName()+ " "+num);
+        Thread producer = new Thread(() -> {
+            lock.lock();
+            try {
+                while(taskQueue.size() >= limitSize) {
+                    prodCondition.await();
                 }
-                lock.unLock();
-//            try {
-//                System.out.println(Thread.currentThread().getName()+ " hold the lock");
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }finally {
-//                lock.unLock();
-//                System.out.println(Thread.currentThread().getName()+ " release the lock");
-//            }
+                taskQueue.add("Hello");
+                System.out.println("prod "+ "Hello");
+                customCondition.signalAll();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
             }
-        };
+        });
 
-        Thread t1 = new Thread(task);
-        Thread t2 = new Thread(task);
-        t1.setName("[T1]");
-        t2.setName("[T2]");
-        t2.start();
-        t1.start();
+        Thread customer = new Thread(() -> {
+            lock.lock();
+            try{
+                while(taskQueue.isEmpty()){
+                    customCondition.await();
+                }
+                String msg = taskQueue.poll();
+                System.out.println("customer "+ msg);
+                prodCondition.signalAll();
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                lock.unlock();
+            }
 
-        try {
-            Thread.sleep(5*1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(num);
+        });
+
+        producer.start();
+        customer.start();
     }
-
 }
+
 ```
