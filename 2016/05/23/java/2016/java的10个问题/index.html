@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> java的10个问题 · mirsery</title><meta name="description" content="java的10个问题 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">java的10个问题</h1><div class="post-info">作者: mirsery         创建日期: 2016年5月23日</div><div class="post-content"><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p>  作者： 奋斗在路上<br>  链接：<a target="_blank" rel="noopener" href="http://www.imooc.com/article/3501">http://www.imooc.com/article/3501</a><br>  来源：慕课网</p>
+</blockquote>
+<p>#1、 为什么两个（1927年）时间相减得到一个奇怪的结果？<br>如果执行下面的程序，程序解析两个间隔1秒的日期字符串并比较：</p>
+<pre><code class="highlight plaintext">public static void main(String[] args) throws ParseException &#123;
+ SimpleDateFormat sf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;); 
+ String str3 = &quot;1927-12-31 23:54:07&quot;; 
+ String str4 = &quot;1927-12-31 23:54:08&quot;;
+ Date sDt3 = sf.parse(str3);
+ Date sDt4 = sf.parse(str4); 
+ long ld3 = sDt3.getTime() /1000; 
+ long ld4 = sDt4.getTime() /1000; 
+ System.out.println(ld4-ld3); 
+ &#125;</code></pre>
+<p>输出的是：</p>
+<pre><code class="highlight plaintext">353</code></pre>
+<p>为什么ld4-ld3不是1，而是353？如果将日期字符串各加一秒：</p>
+<pre><code class="highlight plaintext">String str3 = &quot;1927-12-31 23:54:08&quot;;
+String str4 = &quot;1927-12-31 23:54:09&quot;;</code></pre>
+<p>ld4-ld3的结果是1.</p>
+<pre><code class="highlight plaintext">sun.util.calendar.ZoneInfo[id=&quot;Asia/Shanghai&quot;,
+offset=28800000,dstSavings=0,
+useDaylight = false,
+transitions = 19,
+lastRule = null]
+Locale(Locale.getDefault()):zh_CN</code></pre>
+<p>解决方案 这是上海时区，在12月31日有一个变化。 了解上海在1927年时区变化的细节。基本上在1927年年底的午夜，始终会回拨5分52秒。所以“1927-12-31 23:54:08”实际上发生了两次，看起来Java解析了后一次的时间作为当地的日期和时间导致了差异。<br>#2、Java是“引用传递”还是“值传递”？<br>    Java一直都是值传递<br>#3、一个关于Java +&#x3D; 操作符的问题<br>    i +&#x3D; j;<br>    等价于<br>    i &#x3D; (type of i)(i+j);<br>#4、HashMap 和 Hashtable之间的不同？<br>    java中HashMap和Hashtable的不同是什么？在非多线程应用中使用哪个更有效率？<br>    Java 中 HashMap 和 HashTable 有几个不同点：<br>    Hashtable 是同步的，然而 HashMap不是。这使得HashMap更适合非多线程应用，因为非同步对象通常执行效率优于同步对象。<br>    Hashtable 不允许 null 值和键。<br>    HashMap允许有一个 null 键和人一个 NULL 值。<br>    HashMap的一个子类是LinkedHashMap。所以，如果想预知迭代顺序（默认的插入顺序），只需将HashMap转换成一个LinkedHashMap。<br>    用Hashtable就不会这么简单。 因为同步对你来说不是个问题，我推荐使用HashMap。如果同步成为问题，你可能还要看看ConcurrentHashMap。<br>#5、（如何） 读取或者把一个 InputStream 转成一个 String<br>    如果你有一个 java.io.InputStream 对象，如处理这个对象并生成一个字符串？ 假定我有一个 InputStream 对象，它包含文本数据，我希望将它转化成一个字符串（例如，这样我可以将流的内容写到一个log文件中）。<br>    InputStream 转化成 String 最简单方法是什么？<br>    解决方案<br>    使用 Apache commons IOUtils库来拷贝InputStream到StringWriter是一种不错的方式，类似这样：</p>
+<pre><code class="highlight plaintext">StringWriter writer = new StringWriter(); 
+IOUtils.copy(inputStream, writer, encoding); 
+String theString = writer.toString(); 甚至 // NB: does not close inputStream, you can use IOUtils.closeQuietly for that // 注意：不关闭inputStream，你可以使用 IOUtils.closeQuietly String theString = IOUtils.toString(inputStream, encoding); 或者，如果不想混合Stream和Writer，可以使用 ByteArrayOutputStream。</code></pre>
+<p>#6、为什么Java中的密码优先使用 char[] 而不是String？<br>     在Swing中，密码字段有一个getPassword()（返回 char数组）方法而不是通常的getText()（返回String）方法。同样的，我遇到过一个建议，不要使用 String 来处理密码。 为什么String涉及到密码时，它就成了一个安全威胁？感觉使用char数组不太方便。 解决方案 String是不可变的。这意味着一旦创建了字符串，如果另一个进程可以进行内存转储，在GC发生前，（除了反射）没有方法可以清除字符串数据。 使用数组操作完之后，可以显式地清除数据：可以给数组赋任何值，密码也不会存在系统中，甚至垃圾回收之前也是如此。 所以，是的，这是一个安全问题 – 但是即使使用了char数组，仅仅缩小了了攻击者有机会获得密码的窗口，它值针对制定的攻击类型。<br>#7、遍历HashMap的最佳方法<br>    遍历HashMap中元素的最佳方法是什么？<br>    解决方案 这样遍历entrySet： </p>
+<pre><code class="highlight plaintext">public static void printMap(Map mp) &#123; 
+    Iterator it = mp.entrySet().iterator(); 
+    while (it.hasNext()) &#123; 
+        Map.Entry pair = (Map.Entry)it.next(); 
+        System.out.println(pair.getKey() + &quot; = &quot; + pair.getValue()); 
+        it.remove(); // avoids a ConcurrentModificationException &#125; 
+        &#125;</code></pre>
+<p>#8、（如何）从数组创建ArrayList<br>    我有一个数组，初始化如下：<br>    Element[] array &#x3D; {new Element(1), new Element(2), new Element(3)}; 我希望将这个数组转化成一个ArrayList类的对象。<br>    解决方案 new ArrayList(Arrays.asList(array))<br>#9、产生一个Java的内存泄露<br>    我有过一个面试，被问到如何产生一个Java内存泄露。不用说，我感到相当傻，甚至如何产生一个的线索都没有。 那么怎么才能产生一个内存泄露呢？<br>    解决方案 在纯Java中，有一个很好的方式可以产生真正的内存泄露（通过执行代码使对象不可访问但仍存在于内存中）： 应用产生一个长时间运行的线程（或者使用一个线程池加速泄露）。 线程通过一个（可选的自定义）类加载器加载一个类。 该类分配大内存（例如，new byte[1000000]），赋值给一个强引用存储在静态字段中，再将它自身的引用存储到ThreadLocal中。分配额外的内存是可选的（泄露类实例就够了），但是这样将加速泄露工作。 线程清除所有自定义类的或者类加载器载入的引用。 重复上面步骤。 这样是有效的，因为ThreadLocal持有对象的引用，对象持有类的引用，接着类持有类加载器的引用。反过来，类加载器持有所有已加载类的引用。这会使泄露变得更加严重，因为很多JVM实现的类和类加载都直接从持久带（permgen）分配内存，因而不会被GC回收。<br>#10、使用Java在一个区间内产生随机整数数<br>    我试着使用Java生成一个随机整数，但是随机被指定在一个范围里。例如，整数范围是5~10，就是说5是最小的随机值，10是最大的。5到10之间的书也可以是生成的随机数。 解决方案 标准的解决方式（Java1.7 之前）如下： </p>
+ <pre><code class="highlight plaintext">import java.util.Random; 
+public static int randInt(int min, int max) &#123;
+ Random rand; 
+ int randomNum = rand.nextInt((max - min) + 1) + min; 
+ return randomNum; 
+ &#125;</code></pre>
+<p>  请查看相关的JavaDoc。在实践中，java.util.Random 类总是优于 java.lang.Math.random()。 特别是当标准库里有一个直接的API来完成这个工作，就没有必要重复制造轮子了。</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/05/23/java/2016/java的10个问题/';
+var disqus_title = 'java的10个问题';
+var disqus_url = 'https://mirsery.github.io/2016/05/23/java/2016/java的10个问题/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/06/12/%E5%89%8D%E7%AB%AF/datatables/">上一篇</a><a class="next" href="/2016/05/23/IDE/eclipse%20for%20mac%E5%BF%AB%E6%8D%B7%E9%94%AE/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

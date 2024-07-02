@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 基于 LeNet5 的 MNIST 手写数字识别模型 · mirsery</title><meta name="description" content="基于 LeNet5 的 MNIST 手写数字识别模型 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">基于 LeNet5 的 MNIST 手写数字识别模型</h1><div class="post-info">作者: mirsery         创建日期: 2016年12月1日</div><div class="post-content"><p>源码如下:</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><pre><code class="highlight python"><span class="comment"># coding: utf-8</span>
+
+<span class="comment"># 基于 LeNet5 的 MNIST 手写数字识别模型</span>
+
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> random
+<span class="comment">#import tensorflow as tf</span>
+<span class="keyword">from</span> tensorflow.examples.tutorials.mnist <span class="keyword">import</span> input_data
+
+<span class="keyword">import</span> tensorflow.compat.v1 <span class="keyword">as</span> tf
+tf.disable_v2_behavior()
+
+<span class="comment"># 数据集路径</span>
+data_dir=<span class="string">&#x27;./data/mnist&#x27;</span>
+
+<span class="comment"># 自动下载 MNIST 数据集</span>
+mnist = input_data.read_data_sets(data_dir, one_hot=<span class="literal">True</span>)
+<span class="comment"># 如果自动下载失败，则手工从官网上下载 MNIST 数据集，然后进行加载</span>
+<span class="comment"># 下载地址  http://yann.lecun.com/exdb/mnist/</span>
+<span class="comment">#mnist=input_data.read_data_sets(data_dir,one_hot=True)</span>
+
+<span class="comment"># 提取训练集、测试集</span>
+train_xdata=mnist.train.images
+test_xdata=mnist.test.images
+
+<span class="comment"># 提取标签数据</span>
+train_labels=mnist.train.labels
+test_labels=mnist.test.labels
+
+<span class="comment"># 训练数据，占位符</span>
+x = tf.placeholder(<span class="string">&quot;float&quot;</span>, shape=[<span class="literal">None</span>, <span class="number">784</span>])
+<span class="comment"># 训练的标签数据，占位符</span>
+y_ = tf.placeholder(<span class="string">&quot;float&quot;</span>, shape=[<span class="literal">None</span>, <span class="number">10</span>])
+<span class="comment"># 将样本数据转为28x28</span>
+x_image = tf.reshape(x, [-<span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>])
+
+<span class="comment"># 保留概率，用于 dropout 层</span>
+keep_prob = tf.placeholder(tf.float32)
+
+<span class="comment"># 模型的相关参数</span>
+step_cnt=<span class="number">10000</span>          <span class="comment"># 训练模型的迭代次数</span>
+batch_size=<span class="number">100</span>          <span class="comment"># 每次迭代时，批量获取样本的数据量</span>
+learning_rate=<span class="number">0.001</span>     <span class="comment"># 学习率</span>
+
+<span class="comment"># 模型保存路径</span>
+model_dir=<span class="string">&#x27;./model/mnist&#x27;</span>
+
+<span class="comment"># LeNet5 网络模型</span>
+<span class="keyword">def</span> <span class="title function_">lenet_network</span>():
+		<span class="comment"># 第一层：卷积层</span>
+		<span class="comment"># 卷积核尺寸为5x5，通道数为1，深度为32，移动步长为1，采用ReLU激励函数</span>
+		conv1_weights = tf.get_variable(<span class="string">&quot;conv1_weights&quot;</span>, [<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">32</span>], initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.1</span>))
+		conv1_biases = tf.get_variable(<span class="string">&quot;conv1_biases&quot;</span>, [<span class="number">32</span>], initializer=tf.constant_initializer(<span class="number">0.0</span>))
+		conv1 = tf.nn.conv2d(x_image, conv1_weights, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding=<span class="string">&#x27;SAME&#x27;</span>)
+		relu1 = tf.nn.relu(tf.nn.bias_add(conv1, conv1_biases))
+
+		<span class="comment"># 第二层：最大池化层</span>
+		<span class="comment"># 池化核的尺寸为2x2，移动步长为2，使用全0填充</span>
+		pool1 = tf.nn.max_pool(relu1, ksize=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding=<span class="string">&#x27;SAME&#x27;</span>)
+
+		<span class="comment"># 第三层：卷积层</span>
+		<span class="comment"># 卷积核尺寸为5x5，通道数为32，深度为64，移动步长为1，采用ReLU激励函数</span>
+		conv2_weights = tf.get_variable(<span class="string">&quot;conv2_weights&quot;</span>, [<span class="number">5</span>, <span class="number">5</span>, <span class="number">32</span>, <span class="number">64</span>], initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.1</span>))
+		conv2_biases = tf.get_variable(<span class="string">&quot;conv2_biases&quot;</span>, [<span class="number">64</span>], initializer=tf.constant_initializer(<span class="number">0.0</span>))
+		conv2 = tf.nn.conv2d(pool1, conv2_weights, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding=<span class="string">&#x27;SAME&#x27;</span>)
+		relu2 = tf.nn.relu(tf.nn.bias_add(conv2, conv2_biases))
+
+		<span class="comment"># 第四层：最大池化层</span>
+		<span class="comment"># 池化核尺寸为2x2, 移动步长为2，使用全0填充</span>
+		pool2 = tf.nn.max_pool(relu2, ksize=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding=<span class="string">&#x27;SAME&#x27;</span>)
+
+		<span class="comment"># 第五层：全连接层</span>
+		fc1_weights = tf.get_variable(<span class="string">&quot;fc1_weights&quot;</span>, [<span class="number">7</span> * <span class="number">7</span> * <span class="number">64</span>, <span class="number">1024</span>],
+																	initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.1</span>))
+		fc1_baises = tf.get_variable(<span class="string">&quot;fc1_baises&quot;</span>, [<span class="number">1024</span>], initializer=tf.constant_initializer(<span class="number">0.1</span>))
+		pool2_vector = tf.reshape(pool2, [-<span class="number">1</span>, <span class="number">7</span> * <span class="number">7</span> * <span class="number">64</span>])
+		fc1 = tf.nn.relu(tf.matmul(pool2_vector, fc1_weights) + fc1_baises)
+
+		<span class="comment"># Dropout层（即按keep_prob的概率保留数据，其它丢弃），以防止过拟合</span>
+		fc1_dropout = tf.nn.dropout(fc1, keep_prob)
+
+		<span class="comment"># 第六层：全连接层</span>
+		fc2_weights = tf.get_variable(<span class="string">&quot;fc2_weights&quot;</span>, [<span class="number">1024</span>, <span class="number">10</span>],
+																	initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.1</span>))  <span class="comment"># 神经元节点数1024, 分类节点10</span>
+		fc2_biases = tf.get_variable(<span class="string">&quot;fc2_biases&quot;</span>, [<span class="number">10</span>], initializer=tf.constant_initializer(<span class="number">0.1</span>))
+		fc2 = tf.matmul(fc1_dropout, fc2_weights) + fc2_biases
+
+		<span class="comment"># 第七层：输出层</span>
+		y_conv = tf.nn.softmax(fc2)
+
+		<span class="keyword">return</span> y_conv
+
+<span class="comment"># 训练模型</span>
+<span class="keyword">def</span> <span class="title function_">train_model</span>():
+
+		<span class="comment"># 加载 LeNet5 网络结构</span>
+		y_conv=lenet_network()
+
+		<span class="comment"># 定义交叉熵损失函数</span>
+		<span class="comment"># y_ 为真实标签</span>
+		cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y_conv), reduction_indices=[<span class="number">1</span>]))
+
+		<span class="comment"># 选择优化器，使优化器最小化损失函数</span>
+		train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
+
+		<span class="comment"># 返回模型预测的最大概率的结果，并与真实值作比较</span>
+		correct_prediction = tf.equal(tf.argmax(y_conv, <span class="number">1</span>), tf.argmax(y_, <span class="number">1</span>))
+
+		<span class="comment"># 用平均值来统计测试准确率</span>
+		accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+		<span class="comment"># 训练模型</span>
+		saver=tf.train.Saver()
+		<span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:
+				tf.global_variables_initializer().run()
+
+				<span class="keyword">for</span> step <span class="keyword">in</span> <span class="built_in">range</span>(step_cnt):
+						batch = mnist.train.next_batch(batch_size)
+						<span class="keyword">if</span> step % <span class="number">100</span> == <span class="number">0</span>:
+			    <span class="comment"># 每迭代100步进行一次评估，输出结果，保存模型，便于及时了解模型训练进展</span>
+								train_accuracy = accuracy.<span class="built_in">eval</span>(feed_dict=&#123;x: batch[<span class="number">0</span>], y_: batch[<span class="number">1</span>], keep_prob: <span class="number">1.0</span>&#125;)
+								<span class="built_in">print</span>(<span class="string">&quot;step %d, training accuracy %g&quot;</span> % (step, train_accuracy))
+								saver.save(sess,model_dir+<span class="string">&#x27;/my_mnist_model.ctpk&#x27;</span>,global_step=step)
+						train_step.run(feed_dict=&#123;x: batch[<span class="number">0</span>], y_: batch[<span class="number">1</span>], keep_prob: <span class="number">0.8</span>&#125;)
+
+				<span class="comment"># 使用测试数据测试准确率</span>
+				test_acc=accuracy.<span class="built_in">eval</span>(feed_dict=&#123;x: test_xdata, y_: test_labels, keep_prob: <span class="number">1.0</span>&#125;)
+				<span class="built_in">print</span>(<span class="string">&quot;test accuracy %g&quot;</span> %test_acc)
+
+
+<span class="comment"># 模型测试应用</span>
+<span class="keyword">def</span> <span class="title function_">test_model</span>():
+
+				<span class="comment"># 加载 LeNet5 网络结构</span>
+				y_conv = lenet_network()
+
+				<span class="comment"># 加载 MNIST 模型</span>
+				saver = tf.train.Saver()
+				<span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:
+						saver.restore(sess, tf.train.latest_checkpoint(model_dir))
+
+						<span class="comment"># 随机提取 MNIST 测试集的一个样本数据和标签</span>
+						test_len=<span class="built_in">len</span>(mnist.test.images)
+						test_idx=random.randint(<span class="number">0</span>,test_len-<span class="number">1</span>)
+						x_image=mnist.test.images[test_idx]
+						y=np.argmax(mnist.test.labels[test_idx])
+
+						<span class="comment"># 跑模型进行识别</span>
+						y_conv = tf.argmax(y_conv,<span class="number">1</span>)
+						pred=sess.run(y_conv,feed_dict=&#123;x:[x_image], keep_prob: <span class="number">1.0</span>&#125;)
+
+						<span class="built_in">print</span>(<span class="string">&#x27;正确：&#x27;</span>,y,<span class="string">&#x27;，预测：&#x27;</span>,pred[<span class="number">0</span>])
+
+
+<span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:
+
+		<span class="comment"># 训练模型</span>
+		train_model()
+
+		<span class="comment"># 测试应用模型</span>
+		<span class="comment">#test_model()</span></code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/12/01/机器学习/基于LetNet5的手写数字识别模型/';
+var disqus_title = '基于 LeNet5 的 MNIST 手写数字识别模型';
+var disqus_url = 'https://mirsery.github.io/2016/12/01/机器学习/基于LetNet5的手写数字识别模型/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/12/01/%E5%89%8D%E7%AB%AF/ES6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%201-ES6%E7%AE%80%E4%BB%8Blet%E5%92%8Cconst/">上一篇</a><a class="next" href="/2016/11/24/java/2016/javad%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

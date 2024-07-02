@@ -1,0 +1,308 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> xml和properties的读写 · mirsery</title><meta name="description" content="xml和properties的读写 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">xml和properties的读写</h1><div class="post-info">作者: mirsery         创建日期: 2022年7月14日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E7%8E%AF%E5%A2%83%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98">环境路径问题</a></li>
+<li><a href="#xml%E6%96%87%E4%BB%B6%E7%9A%84%E8%BD%BD%E5%85%A5">xml文件的载入</a></li>
+<li><a href="#properties%E6%96%87%E4%BB%B6%E8%BD%BD%E5%85%A5">properties文件载入</a></li>
+<li><a href="#xml%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96">xml的序列化</a><ul>
+<li><a href="#properties%E5%BA%8F%E5%88%97%E5%8C%96">properties序列化</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="环境路径问题">环境路径问题</span></h2><p>SpringBoot中我们可以利用<strong>ClassPathResource</strong>类，利用相对路径载入<strong>classPath</strong>路径下的文件配置。</p>
+<h2><span id="xml文件的载入">xml文件的载入</span></h2><pre><code class="highlight java"><span class="comment">/*</span>
+<span class="comment"> * 读入xml文件并序列化成javaBean</span>
+<span class="comment"> */</span>
+    <span class="meta">@Bean</span>
+    <span class="keyword">public</span> DeviceList <span class="title function_">getDevice</span><span class="params">()</span> <span class="keyword">throws</span> IOException, JAXBException &#123;
+        <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> <span class="string">&quot;device.xml&quot;</span>;
+        <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(fileName);
+        <span class="type">InputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> <span class="literal">null</span>;
+        <span class="keyword">if</span> (!file.exists()) &#123;
+            inputStream = <span class="keyword">new</span> <span class="title class_">ClassPathResource</span>(<span class="string">&quot;device.xml&quot;</span>).getInputStream();
+        &#125; <span class="keyword">else</span> &#123;
+            inputStream = Files.newInputStream(file.toPath());
+        &#125;
+        <span class="type">BufferedReader</span> <span class="variable">br</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(
+                <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(inputStream, StandardCharsets.UTF_8));
+        <span class="type">StringBuilder</span> <span class="variable">buffer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();
+        <span class="type">String</span> <span class="variable">line</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;
+        <span class="keyword">while</span>((line = br.readLine())!=<span class="literal">null</span>) &#123;
+            buffer.append(line);
+        &#125;
+        br.close();
+
+        <span class="type">Object</span> <span class="variable">xmlObject</span> <span class="operator">=</span> <span class="literal">null</span>;
+        <span class="type">Reader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="literal">null</span>;
+        <span class="type">JAXBContext</span> <span class="variable">context</span> <span class="operator">=</span> JAXBContext.newInstance(DeviceList.class);
+        <span class="type">Unmarshaller</span> <span class="variable">unmarshaller</span> <span class="operator">=</span> context.createUnmarshaller();
+        reader = <span class="keyword">new</span> <span class="title class_">StringReader</span>(buffer.toString());
+        <span class="comment">//以文件流的方式传入这个string</span>
+        xmlObject = unmarshaller.unmarshal(reader);
+        reader.close();
+        <span class="type">DeviceList</span> <span class="variable">deviceList</span> <span class="operator">=</span> (DeviceList) xmlObject;
+        <span class="keyword">return</span> deviceList;
+    &#125;</code></pre>
+
+<pre><code class="highlight java"><span class="comment">//child节点类</span>
+<span class="meta">@XmlRootElement(name = &quot;device&quot;)</span>
+<span class="meta">@XmlAccessorType(XmlAccessType.FIELD)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Device</span> &#123;
+
+    <span class="meta">@XmlElement(name = &quot;name&quot;)</span>
+    <span class="keyword">private</span> String name; <span class="comment">//channelCode</span>
+
+    <span class="meta">@XmlElement(name = &quot;deviceNo&quot;)</span>
+    <span class="keyword">private</span> String deviceNo;
+
+    <span class="meta">@XmlElement(name = &quot;address&quot;)</span>
+    <span class="keyword">private</span> String address;
+
+    <span class="meta">@XmlElement(name = &quot;enter&quot;, defaultValue = &quot;0&quot;)</span>
+    <span class="keyword">private</span> <span class="type">int</span> enter;
+
+    <span class="meta">@XmlElement(name = &quot;type&quot;, defaultValue = &quot;0&quot;)</span>
+    <span class="keyword">private</span> <span class="type">int</span> type;
+
+    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> name;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;
+        <span class="built_in">this</span>.name = name;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getDeviceNo</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> deviceNo;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setDeviceNo</span><span class="params">(String deviceNo)</span> &#123;
+        <span class="built_in">this</span>.deviceNo = deviceNo;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getAddress</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> address;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setAddress</span><span class="params">(String address)</span> &#123;
+        <span class="built_in">this</span>.address = address;
+    &#125;
+
+    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getEnter</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> enter;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setEnter</span><span class="params">(<span class="type">int</span> enter)</span> &#123;
+        <span class="built_in">this</span>.enter = enter;
+    &#125;
+
+    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getType</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> type;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setType</span><span class="params">(<span class="type">int</span> type)</span> &#123;
+        <span class="built_in">this</span>.type = type;
+    &#125;
+&#125;</code></pre>
+
+<pre><code class="highlight java"><span class="meta">@XmlRootElement(name = &quot;devices&quot;)</span>
+<span class="meta">@XmlAccessorType(XmlAccessType.FIELD)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeviceList</span> &#123;
+
+    <span class="meta">@XmlElement(name = &quot;device&quot;)</span>
+    <span class="keyword">private</span> List&lt;Device&gt; deviceList;
+
+    <span class="keyword">public</span> List&lt;Device&gt; <span class="title function_">getDeviceList</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> deviceList;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setDeviceList</span><span class="params">(List&lt;Device&gt; deviceList)</span> &#123;
+        <span class="built_in">this</span>.deviceList = deviceList;
+    &#125;
+&#125;</code></pre>
+<p>载入的device.xml文件</p>
+<pre><code class="highlight xml"><span class="tag">&lt;<span class="name">devices</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">device</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">name</span>&gt;</span>hilee<span class="tag">&lt;/<span class="name">name</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">deviceNo</span>&gt;</span>xjxjxjx<span class="tag">&lt;/<span class="name">deviceNo</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">address</span>&gt;</span>xxx<span class="tag">&lt;/<span class="name">address</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">enter</span>&gt;</span>0<span class="tag">&lt;/<span class="name">enter</span>&gt;</span> 
+        <span class="tag">&lt;<span class="name">type</span>&gt;</span>0<span class="tag">&lt;/<span class="name">type</span>&gt;</span>
+    <span class="tag">&lt;/<span class="name">device</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">devices</span>&gt;</span></code></pre>
+
+<h2><span id="properties文件载入">properties文件载入</span></h2><pre><code class="highlight java"><span class="meta">@Bean</span>
+<span class="keyword">public</span> IccConfig <span class="title function_">getIccConfig</span><span class="params">()</span> &#123;
+    <span class="keyword">try</span> &#123;
+        <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> <span class="string">&quot;icc.properties&quot;</span>;
+        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();
+        <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(fileName);
+        <span class="keyword">if</span> (file.exists()) &#123;
+            properties.load(Files.newInputStream(file.toPath()));
+        &#125; <span class="keyword">else</span> &#123;
+            properties.load(<span class="keyword">new</span> <span class="title class_">ClassPathResource</span>(fileName).getInputStream());
+        &#125;
+        <span class="type">IccConfig</span> <span class="variable">icConfig</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">IccConfig</span>();
+        icConfig.setHost(properties.getProperty(<span class="string">&quot;host&quot;</span>));
+        icConfig.setUsername(properties.getProperty(<span class="string">&quot;username&quot;</span>));
+        icConfig.setPassword(properties.getProperty(<span class="string">&quot;password&quot;</span>));
+        icConfig.setClientId(properties.getProperty(<span class="string">&quot;clientId&quot;</span>));
+        icConfig.setClientSecret(properties.getProperty(<span class="string">&quot;clientSecret&quot;</span>));
+        icConfig.setPwdClientId(properties.getProperty(<span class="string">&quot;pwdClientId&quot;</span>));
+        icConfig.setPwdClientSecret(properties.getProperty(<span class="string">&quot;pwdClientSecret&quot;</span>));
+        <span class="keyword">return</span> icConfig;
+    &#125; <span class="keyword">catch</span> (IOException e) &#123;
+        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);
+    &#125;
+&#125;</code></pre>
+
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IccConfig</span> &#123;
+
+    <span class="keyword">private</span> String host;
+    <span class="keyword">private</span> String clientId;
+    <span class="keyword">private</span> String clientSecret;
+    <span class="keyword">private</span> String pwdClientId;
+    <span class="keyword">private</span> String username;
+    <span class="keyword">private</span> String pwdClientSecret;
+    <span class="keyword">private</span> String password;
+
+    <span class="keyword">public</span> String <span class="title function_">getHost</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> host;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setHost</span><span class="params">(String host)</span> &#123;
+        <span class="built_in">this</span>.host = host;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getClientId</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> clientId;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setClientId</span><span class="params">(String clientId)</span> &#123;
+        <span class="built_in">this</span>.clientId = clientId;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getClientSecret</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> clientSecret;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setClientSecret</span><span class="params">(String clientSecret)</span> &#123;
+        <span class="built_in">this</span>.clientSecret = clientSecret;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getPwdClientId</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> pwdClientId;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPwdClientId</span><span class="params">(String pwdClientId)</span> &#123;
+        <span class="built_in">this</span>.pwdClientId = pwdClientId;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getUsername</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> username;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setUsername</span><span class="params">(String username)</span> &#123;
+        <span class="built_in">this</span>.username = username;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getPwdClientSecret</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> pwdClientSecret;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPwdClientSecret</span><span class="params">(String pwdClientSecret)</span> &#123;
+        <span class="built_in">this</span>.pwdClientSecret = pwdClientSecret;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getPassword</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> password;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPassword</span><span class="params">(String password)</span> &#123;
+        <span class="built_in">this</span>.password = password;
+    &#125;
+&#125;</code></pre>
+
+<h2><span id="xml的序列化">xml的序列化</span></h2><pre><code class="highlight java"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">saveDeviceXML</span><span class="params">(Collection&lt;Device&gt; devices)</span> &#123;
+        <span class="keyword">try</span> &#123;
+            <span class="type">DocumentBuilder</span> <span class="variable">builder</span> <span class="operator">=</span> DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            <span class="type">Document</span> <span class="variable">document</span> <span class="operator">=</span> builder.newDocument();
+            <span class="type">Element</span> <span class="variable">element</span> <span class="operator">=</span> document.createElement(<span class="string">&quot;devices&quot;</span>);
+            devices.forEach(item -&gt; &#123;
+                <span class="keyword">if</span> (<span class="literal">null</span>!=item.getName() &amp;&amp; !<span class="string">&quot;&quot;</span>.equals(item.getName())) &#123;
+                    <span class="type">Element</span> <span class="variable">device</span> <span class="operator">=</span> document.createElement(<span class="string">&quot;device&quot;</span>);
+                    <span class="type">Element</span> <span class="variable">name</span> <span class="operator">=</span> document.createElement(<span class="string">&quot;name&quot;</span>);
+                    <span class="type">Element</span> <span class="variable">deviceNo</span> <span class="operator">=</span> document.createElement(<span class="string">&quot;deviceNo&quot;</span>);
+                    <span class="type">Element</span> <span class="variable">address</span> <span class="operator">=</span> document.createElement(<span class="string">&quot;address&quot;</span>);
+                    <span class="type">Element</span> <span class="variable">enter</span> <span class="operator">=</span> document.createElement(<span class="string">&quot;enter&quot;</span>);
+                    <span class="type">Element</span> <span class="variable">type</span> <span class="operator">=</span> document.createElement(<span class="string">&quot;type&quot;</span>);
+
+                    name.setTextContent(item.getName());
+                    deviceNo.setTextContent(item.getDeviceNo());
+                    address.setTextContent(item.getAddress());
+                    enter.setTextContent(String.valueOf(item.getEnter()));
+                    type.setTextContent(String.valueOf(item.getType()));
+
+                    device.appendChild(name);
+                    device.appendChild(deviceNo);
+                    device.appendChild(address);
+                    device.appendChild(enter);
+                    device.appendChild(type);
+
+                    element.appendChild(device);
+                &#125;
+            &#125;);
+            document.appendChild(element);
+
+            <span class="type">TransformerFactory</span> <span class="variable">factory</span> <span class="operator">=</span> TransformerFactory.newInstance();
+            <span class="type">Transformer</span> <span class="variable">transformer</span> <span class="operator">=</span> factory.newTransformer();
+            document.setXmlStandalone(<span class="literal">true</span>);
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, <span class="string">&quot;yes&quot;</span>);
+
+            <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> <span class="string">&quot;device.xml&quot;</span>;
+            <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(fileName);
+            <span class="type">FileOutputStream</span> <span class="variable">outputStream</span> <span class="operator">=</span> <span class="literal">null</span>;
+            <span class="keyword">if</span> (!file.exists()) &#123;
+                <span class="type">ClassPathResource</span> <span class="variable">pathResource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassPathResource</span>(fileName);
+                outputStream = <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(pathResource.getFile());
+            &#125; <span class="keyword">else</span> &#123;
+                outputStream = <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(file);
+            &#125;
+            transformer.transform(<span class="keyword">new</span> <span class="title class_">DOMSource</span>(document), <span class="keyword">new</span> <span class="title class_">StreamResult</span>(outputStream));
+            outputStream.close();
+
+        &#125; <span class="keyword">catch</span> (ParserConfigurationException | TransformerException | IOException e) &#123;
+            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);
+        &#125;
+    &#125;</code></pre>
+
+<h3><span id="properties序列化">properties序列化</span></h3><pre><code class="highlight java"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">saveIccProperties</span><span class="params">(IccConfig iccConfig)</span> &#123;
+        <span class="keyword">try</span> &#123;
+            <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();
+            properties.setProperty(<span class="string">&quot;host&quot;</span>, iccConfig.getClientId());
+            properties.setProperty(<span class="string">&quot;username&quot;</span>, iccConfig.getClientSecret());
+            properties.setProperty(<span class="string">&quot;password&quot;</span>, iccConfig.getHost());
+            properties.setProperty(<span class="string">&quot;clientId&quot;</span>, iccConfig.getUsername());
+            properties.setProperty(<span class="string">&quot;clientSecret&quot;</span>, iccConfig.getPassword());
+            properties.setProperty(<span class="string">&quot;pwdClientId&quot;</span>, iccConfig.getPwdClientId());
+            properties.setProperty(<span class="string">&quot;pwdClientSecret&quot;</span>, iccConfig.getPwdClientSecret());
+
+            <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> <span class="string">&quot;icc.properties&quot;</span>;
+            <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(fileName);
+            <span class="type">OutputStream</span> <span class="variable">outputStream</span> <span class="operator">=</span> <span class="literal">null</span>;
+            <span class="keyword">if</span> (!file.exists()) &#123;
+                <span class="type">ClassPathResource</span> <span class="variable">pathResource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassPathResource</span>(fileName);
+                outputStream = <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(pathResource.getFile());
+            &#125; <span class="keyword">else</span> &#123;
+                outputStream = Files.newOutputStream(file.toPath());
+            &#125;
+            properties.store(outputStream, <span class="literal">null</span>);
+
+        &#125; <span class="keyword">catch</span> (Exception e) &#123;
+            e.printStackTrace();
+        &#125;
+
+    &#125;</code></pre></div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2022/07/16/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%9F%A5%E7%9C%8B%E5%92%8C%E6%B8%85%E9%99%A4/">上一篇</a><a class="next" href="/2022/06/29/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E5%A3%B0%E9%9F%B3%E6%8F%90%E9%86%92%E5%8A%9F%E8%83%BD/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

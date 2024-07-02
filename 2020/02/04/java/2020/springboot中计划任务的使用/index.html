@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 在springboot中使用计划任务 · mirsery</title><meta name="description" content="在springboot中使用计划任务 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">在springboot中使用计划任务</h1><div class="post-info">作者: mirsery         创建日期: 2020年2月5日</div><div class="post-content"><h1><span id="在springboot中使用计划任务">在springboot中使用计划任务</span></h1><p>1、首先在配置类中新增***@EnableScheduing<em><strong>来开启对计划任务的支持<br>2、在需要执行计划任务的方法上注解</strong></em>@Scheduled***声明这是一个计划任务<br>3、Spring通过@Scheduled支持多种类型的计划任务，包含cron、fixDelay、fixRate等</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p>示例代码:<br>Application</p>
+<pre><code class="highlight java"><span class="meta">@SpringBootApplication</span>
+<span class="meta">@ComponentScan(basePackages = &quot;com.xxxx.xxSchedule&quot;)</span>
+<span class="meta">@EnableScheduling</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebTestApplication</span> &#123;
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;
+        SpringApplication.run(WebTestApplication.class, args);
+    &#125;
+
+&#125;</code></pre>
+<p>Service</p>
+<pre><code class="highlight java"><span class="meta">@Service</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ScheduleTaskService</span> &#123;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SimpleDateFormat</span> <span class="variable">dateFormat</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;YYYY-MM-dd HH:mm:ss&quot;</span>);
+    <span class="meta">@Scheduled(fixedRate = 5000)</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">task1</span><span class="params">()</span>&#123;
+        System.out.println(dateFormat.format(<span class="keyword">new</span> <span class="title class_">Date</span>()));
+    &#125;
+&#125;</code></pre>
+
+<hr>
+<p>@Scheduled注解可以控制方法定时执行，其中有三个参数可选择：</p>
+<ul>
+<li>1、fixedDelay控制方法执行的间隔时间，是以上一次方法执行完开始算起，如上一次方法执行阻塞住了，那么直到上一次执行完，并间隔给定的时间后，执行下一次。</li>
+<li>2、fixedRate是按照一定的速率执行，是从上一次方法执行开始的时间算起，如果上一次方法阻塞住了，下一次也是不会执行，但是在阻塞这段时间内累计应该执行的次数，当不再阻塞时，一下子把这些全部执行掉，而后再按照固定速率继续执行。</li>
+<li>3、cron表达式可以定制化执行任务，但是执行的方式是与fixedDelay相近的，也是会按照上一次方法结束时间开始算起。</li>
+<li>4、initialDelay 。如： @Scheduled(initialDelay &#x3D; 10000,fixedRate &#x3D; 15000) 这个定时器就是在上一个的基础上加了一个initialDelay &#x3D; 10000 意思就是在容器启动后,延迟10秒后再执行一次定时器,以后每15秒再执行一次该定时器。</li>
+</ul>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2020/02/04/java/2020/springboot中计划任务的使用/';
+var disqus_title = '在springboot中使用计划任务';
+var disqus_url = 'https://mirsery.github.io/2020/02/04/java/2020/springboot中计划任务的使用/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2020/02/13/java/2021/springboot%20%E7%BB%84%E5%90%88%E6%B3%A8%E8%A7%A3%E5%92%8C%E5%85%83%E6%B3%A8%E8%A7%A3/">上一篇</a><a class="next" href="/2020/01/19/java/2020/springboot%20%E4%B8%AD%E6%B7%BB%E5%8A%A0filter/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

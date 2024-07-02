@@ -1,0 +1,347 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 项目目录结构规范 · mirsery</title><meta name="description" content="项目目录结构规范 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">项目目录结构规范</h1><div class="post-info">作者: mirsery         创建日期: 2016年8月12日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E7%AE%80%E4%BB%8B">简介</a><ul>
+<li><a href="#%E7%BC%96%E6%92%B0">编撰</a></li>
+<li><a href="#%E8%A6%81%E6%B1%82">要求</a></li>
+<li><a href="#%E8%A7%84%E8%8C%83%E8%AF%B4%E6%98%8E%E7%BA%A6%E5%AE%9A">规范说明约定</a></li>
+</ul>
+</li>
+<li><a href="#%E8%B5%84%E6%BA%90%E5%88%86%E7%B1%BB">资源分类</a></li>
+<li><a href="#%E7%9B%AE%E5%BD%95%E5%91%BD%E5%90%8D%E5%8E%9F%E5%88%99">目录命名原则</a></li>
+<li><a href="#%E7%9B%AE%E5%BD%95%E5%88%92%E5%88%86">目录划分</a><ul>
+<li><a href="#root%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%88%92%E5%88%86">${root}目录结构划分</a></li>
+<li><a href="#%E4%B8%9A%E5%8A%A1%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%88%92%E5%88%86">业务项目目录结构划分</a><ul>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E4%BB%A3%E5%8F%B7">项目代号</a></li>
+<li><a href="#%E6%A0%B9%E6%8D%AE%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E5%88%92%E5%88%86src%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84">根据业务逻辑划分src目录结构</a></li>
+<li><a href="#%E4%B8%9A%E5%8A%A1%E7%9B%AE%E5%BD%95%E5%88%92%E5%88%86%E5%8E%9F%E5%88%99">业务目录划分原则</a></li>
+<li><a href="#%E4%B8%9A%E5%8A%A1%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E5%88%92%E5%88%86%E7%A4%BA%E4%BE%8B">业务项目目录划分示例</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8C%85%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%88%92%E5%88%86">包项目目录结构划分</a><ul>
+<li><a href="#%E5%8C%85%E9%A1%B9%E7%9B%AEsrc%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%88%92%E5%88%86">包项目src目录结构划分</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E7%9B%AE%E5%BD%95">常用目录</a><ul>
+<li><a href="#%E4%B8%80%E7%BA%A7%E7%9B%AE%E5%BD%95">一级目录</a><ul>
+<li><a href="#src">src</a></li>
+<li><a href="#dep">dep</a></li>
+<li><a href="#tool">tool</a></li>
+<li><a href="#test">test</a></li>
+<li><a href="#doc">doc</a></li>
+<li><a href="#entry">entry</a></li>
+<li><a href="#asset">asset</a></li>
+</ul>
+</li>
+<li><a href="#%E8%B5%84%E6%BA%90%E7%9B%AE%E5%BD%95">资源目录</a><ul>
+<li><a href="#js">js</a></li>
+<li><a href="#css">css</a></li>
+<li><a href="#img">img</a></li>
+<li><a href="#tpl">tpl</a></li>
+<li><a href="#font">font</a></li>
+<li><a href="#swf">swf</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%9A%E5%8A%A1%E7%9B%AE%E5%BD%95">业务目录</a><ul>
+<li><a href="#common">common</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#faq">FAQ</a><ul>
+<li><a href="#%E4%B8%BA%E5%95%A5biz%E4%B8%8B%E9%9D%A2%E6%B2%A1%E8%B5%84%E6%BA%90%E7%B1%BB%E5%9E%8B%E7%9B%AE%E5%BD%95%E4%BA%86">为啥biz下面没资源类型目录了？</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="简介">简介</span></h2><p>该文档主要的设计目标是项目开发的目录结构保持一致，使容易理解并方便构建与管理。</p>
+<h3><span id="编撰">编撰</span></h3><p>李玉北、erik、黄后锦、王杨、张立理、赵雷、陈新乐、刘恺华。</p>
+<p>本文档由<code>商业运营体系前端技术组</code>审校发布。</p>
+<h3><span id="要求">要求</span></h3><p>在本文档中，使用的关键字会以中文+括号包含的关键字英文表示：必须(MUST)。关键字”MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL”被定义在rfc2119中。</p>
+<h3><span id="规范说明约定">规范说明约定</span></h3><p>以下规范文档中：</p>
+<ol>
+<li><code>项目</code>包含但不限于<code>业务项目</code>和<code>包项目</code>。</li>
+<li><code>$&#123;root&#125;</code>表示<code>项目</code>的根目录。</li>
+</ol>
+<p><a name="restype"></a></p>
+<h2><span id="资源分类">资源分类</span></h2><p><code>资源</code>分成两大类：</p>
+<ol>
+<li><code>源代码资源</code>：指开发者编写的源代码，包括<code>js</code>、<code>html</code>、<code>css</code>、<code>template</code>等。</li>
+<li><code>内容资源</code>：指希望做为内容提供给访问者的资源，包括<code>图片</code>、<code>字体</code>、<code>flash</code>、<code>pdf</code>等。</li>
+</ol>
+<h2><span id="目录命名原则">目录命名原则</span></h2><ol>
+<li>简洁。有习惯性缩写的单词 <em>必须(MUST)</em> 采用容易理解的缩写。如：源代码目录使用<code>src</code>，不使用<code>source</code>。下面是更多例子：<ol>
+<li><code>img</code>: 图片。 <em>不允许(MUST NOT)</em> 使用<code>image</code>、<code>images</code>、<code>imgs</code>等。</li>
+<li><code>js</code>: javascript脚本。 <em>不允许(MUST NOT)</em> 使用<code>script</code>、<code>scripts</code>等。</li>
+<li><code>css</code>: 样式表。 <em>不允许(MUST NOT)</em> 使用<code>style</code>、<code>styles</code>等。</li>
+<li><code>swf</code>: flash。 <em>不允许(MUST NOT)</em> 使用<code>flash</code>等。</li>
+<li><code>src</code>: 源文件目录。 <em>不允许(MUST NOT)</em> 使用<code>source</code>等。</li>
+<li><code>dep</code>: 引入的第三方依赖包目录。 <em>不允许(MUST NOT)</em> 使用<code>lib</code>、<code>library</code>、<code>dependency</code>等。</li>
+</ol>
+</li>
+<li><em>不允许(MUST NOT)</em> 使用复数形式。如：<code>imgs</code>、<code>docs</code>是不被允许的。</li>
+</ol>
+<h2><span id="目录划分">目录划分</span></h2><p><a name="root"></a></p>
+<h3><span id="root目录结构划分">${root}目录结构划分</span></h3><p>在${root}下，目录结构 <em>必须(MUST)</em> 按照<code>职能</code>进行划分， <em>不允许(MUST NOT)</em> 将<code>资源类型</code>或<code>业务逻辑</code>划分的目录直接置于${root}下。</p>
+<p>常用的目录有<code>src</code>、<code>doc</code>、<code>dep</code>、<code>test</code>等。详细请参考<a href="#level1">一级目录详细说明</a></p>
+<pre><code class="highlight plaintext">$&#123;root&#125;/
+    src/
+    test/
+    doc/
+    dep/
+    ...</code></pre>
+<h3><span id="业务项目目录结构划分">业务项目目录结构划分</span></h3><p><code>业务项目</code>的${root}目录结构划分遵循<a href="#root">${root}目录结构划分</a>。</p>
+<h4><span id="项目代号">项目代号</span></h4><p>业务项目 <em>可以(SHOULD)</em> 为项目起一个代号名称。代号名称 <em>必须(MUST)</em> 为一个单词，不宜过长。例：北斗的项目代号为<code>triones</code>，哥伦布的项目代号为<code>clb</code>，百度锦囊的项目代号为<code>jn</code>。项目代号有利于区分不同项目，为未来项目之间的重用留下扩展的后路。</p>
+<p>在项目开发时，通常会使用如下<a href="module.md#config">加载器配置</a>，将项目代号指向<code>src</code>。</p>
+<pre><code class="highlight javascript">&#123;
+    <span class="attr">baseUrl</span>: <span class="string">&#x27;$&#123;docroot&#125;&#x27;</span>,
+    <span class="attr">paths</span>: &#123;
+        <span class="string">&#x27;triones&#x27;</span>: <span class="string">&#x27;src&#x27;</span>
+    &#125;
+&#125;</code></pre>
+
+
+<h4><span id="根据业务逻辑划分src目录结构">根据业务逻辑划分src目录结构</span></h4><p><code>业务项目</code>的<code>src</code>目录内，绝大多数情况 <em>应当(SHOULD)</em> 根据<code>业务逻辑</code>划分目录结构。划分出的子目录（比如<a href="#bizdirexample">例子</a>中的<code>biz1</code>）我们称为<code>业务目录</code>。</p>
+<p><code>src</code>下 <em>必须(MUST)</em> 只包含<code>业务目录</code>与<code>common</code>目录。<code>业务公共资源</code> <em>必须(MUST)</em> 命名为<code>common</code>。<code>common</code>目录做为<code>业务公共资源</code>的目录，也视如<code>业务目录</code>。</p>
+<pre><code>$&#123;root&#125;/
+    src/
+        common/
+        biz1/
+            subbiz1/
+            subbiz2/
+        biz2/
+</code></pre>
+<p>较小规模的<code>业务项目</code>（如投放端），<code>src</code>目录允许视如<code>业务目录</code>，直接按照<a href="#bizdirprinciple">业务目录划分原则</a>划分目录结构。</p>
+<pre><code>$&#123;root&#125;/
+    src/
+        foo.js
+</code></pre>
+<p><a name="bizdirprinciple"></a></p>
+<h4><span id="业务目录划分原则">业务目录划分原则</span></h4><ol>
+<li><code>JS资源</code> <em>不允许(MUST NOT)</em> 按<code>资源类型</code>划分目录， <em>必须(MUST)</em> 按<code>业务逻辑</code>划分目录。<code>JS资源</code>应直接置于<code>业务目录</code>下。即：<code>业务目录</code>下不允许出现<code>js</code>目录。</li>
+<li>除<code>JS资源</code>外的<code>源文件资源</code>，当资源数量较多时，为方便管理， <em>允许(SHOULD)</em> 按<code>资源类型</code>划分目录。即：<code>业务目录</code>下允许出现<code>css</code>、<code>tpl</code>目录。</li>
+<li><code>内容资源</code> <em>允许(SHOULD)</em> 按<code>资源类型</code>划分目录。即：<code>业务目录</code>下允许出现<code>img</code>、<code>swf</code>、<code>font</code>目录。</li>
+<li><code>业务目录</code>中，如果文件太多不好管理，需要划分子目录时，也 <em>必须(MUST)</em> 继续遵守根据<code>业务逻辑</code>划分的原则，划分子业务。如：下面例子中的<code>subbiz1</code>。</li>
+</ol>
+<p>通常，对于一个<code>业务目录</code>， <em>鼓励(SHOULD)</em> 将业务相关的<code>源文件资源</code>都直接置于<code>业务目录</code>下。</p>
+<pre><code>biz1/
+    img/
+        add_button.png
+    add.js
+    add.tpl.html
+    add.css
+</code></pre>
+<p><code>业务目录</code>下<code>源文件资源</code>数量较多时，我们第一直觉应该是：是否业务划分不够细？是否应该划分子业务，建立子业务目录？</p>
+<pre><code>biz2/
+    subbiz1/
+        list.js
+        list.tpl.html
+        list.css
+    subbiz2/
+</code></pre>
+<p>遇到确实是一个业务整体，无法划分子业务时， <em>允许(MAY)</em> 将非<code>JS资源</code>按<code>资源类型</code>划分目录进行管理。</p>
+<pre><code>biz1/
+    css/
+        add.css
+        edit.css
+        remove.css
+        img/
+            add_button.png
+    tpl/
+        add.html
+        edit.html
+        remove.html
+    add.js
+    edit.js
+    remove.js
+</code></pre>
+<p><code>源文件资源</code>和<code>内容资源</code>请参考<a href="#restype">资源分类</a>章节，常用<code>资源目录</code>请参考<a href="#resdir">资源目录</a>章节，常用<code>业务目录</code>请参考<a href="#bizdir">业务目录</a>章节。</p>
+<p><a name="bizdirexample"></a></p>
+<h4><span id="业务项目目录划分示例">业务项目目录划分示例</span></h4><pre><code>$&#123;root&#125;/
+    src/
+        common/
+            img/
+                sprites.png
+                logo.png
+            conf.js
+            layout.css
+        biz1/
+            img/
+                add_button.png
+            add.js
+            add.tpl.html
+            add.less
+        biz2/
+            subbiz1/
+                list.js
+                list.tpl.html
+                list.css
+            subbiz2/
+    dep/
+        er/
+            src/
+            test/
+        esui/
+            src/
+            test/
+    test/
+    doc/
+    index.html
+    main.html
+    ......
+</code></pre>
+<p><a name="packagedir"></a></p>
+<h3><span id="包项目目录结构划分">包项目目录结构划分</span></h3><p><code>包项目</code>的${root}目录结构划分遵循<a href="#root">${root}目录结构划分</a>。</p>
+<p><a name="packagesrc"></a></p>
+<h4><span id="包项目src目录结构划分">包项目src目录结构划分</span></h4><p><code>包</code>是实现某个独立功能，有复用价值的代码集。按照通常的理解，一个<code>包项目</code>不应该特别复杂。</p>
+<p>所以，<code>包</code>可视如一个不太复杂的<code>业务</code>，其<code>src</code>下的划分原则与<code>业务项目</code>的<a href="#bizdirprinciple">业务目录划分原则</a>保持一致。</p>
+<pre><code>$&#123;root&#125;/
+    src/
+        css/
+            img/
+                sprites.png
+            table.css
+            button.css
+            select.css
+        main.js
+        Control.js
+        InputControl.js
+        Button.js
+        Table.js
+        Select.js
+    test/
+    doc/
+    package.json
+    ...
+</code></pre>
+<h2><span id="常用目录">常用目录</span></h2><p><a name="level1"></a></p>
+<h3><span id="一级目录">一级目录</span></h3><p>直接置于<code>$&#123;root&#125;</code>下的目录称作<code>一级目录</code>。一级目录 <em>必须(MUST)</em> 具有某种<code>职能</code>属性。</p>
+<p>除了下面列举的一些常见目录之外，<code>$&#123;root&#125;</code>下面也可以放置一些跟项目发布相关的文件，例如<code>build.sh</code>，<code>build.xml</code>，<code>Makefile</code>，<code>Gruntfile</code>等等.</p>
+<h4><span id="src">src</span></h4><p><code>src</code>目录用于存放开发时源文件，发布时 <em>必须(MUST)</em> 被删除。</p>
+<h4><span id="dep">dep</span></h4><p><code>dep</code>目录用于存放<code>项目</code>引入依赖的第三方包。该目录下的内容通过平台工具管理，项目开发人员 <em>不允许(MUST NOT)</em> 更改<code>dep</code>目录下第三方包的任何内容。</p>
+<p>当项目需要修改引入的第三方代码时，第三方包应将源码直接置于<code>$&#123;root&#125;/src</code>目录下，规则见该目录下的规定。</p>
+<p>更多关于<code>包</code>的内容请参考 <a href="package.md">包结构规范</a></p>
+<h4><span id="tool">tool</span></h4><p><code>tool</code>目录用于存放开发时或构建阶段使用的工具。该目录在发布时 <em>必须(MUST)</em> 被删除。</p>
+<h4><span id="test">test</span></h4><p><code>test</code>目录用于存放测试用例以及开发阶段的模拟数据。该目录在发布时 <em>必须(MUST)</em> 被删除。</p>
+<h4><span id="doc">doc</span></h4><p><code>doc</code>目录用于存放项目文档。项目文档可能是开发者维护的文档，也可能是通过工具生成的文档。</p>
+<h4><span id="entry">entry</span></h4><p><code>entry</code>目录用于存放项目的<code>页面入口文件</code>，通常是上线后可被直接访问的静态页面。</p>
+<p><code>RIA项目</code>通常会包含较少的<code>页面入口文件</code>，常见的是<code>main.html</code>，这些文件 <em>可以(SHOULD)</em> 直接放在<code>$&#123;root&#125;</code>目录下。</p>
+<pre><code>$&#123;root&#125;/
+    src/
+        common/
+            conf.js
+        card/
+        gold/
+        message/
+    index.html
+    main.html
+    ......
+</code></pre>
+<p><code>多页面项目</code>通常<code>页面入口文件</code>较多， <em>可以(SHOULD)</em> 统一放在<code>entry</code>目录中，按<code>业务逻辑</code>命名。</p>
+<pre><code>$&#123;root&#125;/
+    src/
+        common/
+            conf.js
+        card/
+        gold/
+        message/
+    entry/
+        card.html
+        gold.html
+        message.html
+        ......
+</code></pre>
+<p>项目在发布的时候，构建工具可以<code>页面入口文件</code>为入口进行分析和编译。</p>
+<p><code>RIA项目</code>经过构建工具编译后，目录结构可能如下：</p>
+<pre><code>output/
+    asset/
+        js/
+        css/
+        tpl/
+        img/
+    index.html
+    main.html
+</code></pre>
+<p><code>多页面项目</code>经过构建工具编译后，目录结构可能如下：</p>
+<pre><code>output/
+    card/
+        asset/
+            js/
+            css/
+            img/
+        index.html
+    gold/
+        asset/
+            js/
+            css/
+            img/
+        index.html
+</code></pre>
+<h4><span id="asset">asset</span></h4><p><code>asset</code>目录用于存放用于<code>线上访问</code>的静态资源。</p>
+<p>通常构建工具会对<code>src</code>目录和<code>dep</code>目录下的资源进行分析、合并与压缩等，生成到<code>asset</code>目录下。所以该目录尽量避免手工管理。下面是一个构建工具生成后的<code>asset</code>目录示例：</p>
+<pre><code>$&#123;root&#125;/
+    asset/
+        js/
+            loader.js
+            build.js
+        css/
+            common.css
+            img/
+        tpl/
+            build.tpl.html
+        img/
+        ...
+</code></pre>
+<p><a name="resdir"></a></p>
+<h3><span id="资源目录">资源目录</span></h3><p>按<code>资源</code>类型命名的目录称作<code>资源目录</code>。<code>资源目录</code> <em>不允许(MUST NOT)</em> 直接置于${root}下。</p>
+<h4><span id="js">js</span></h4><p><code>js</code>目录可用于存放<code>js</code>资源文件（包含可编译成<code>js</code>的<code>coffeescript</code>等语言）。<code>js</code>文件后缀名 <em>必须(MUST)</em> 为.js，<code>coffeescript文件</code>后缀名 <em>必须(MUST)</em> 为.coffee。</p>
+<p><code>js</code>目录内 <em>必须(MUST)</em> 存放<code>js</code>资源文件，但<code>js</code>资源文件不一定（MAY NOT）存放于<code>js</code>目录下：</p>
+<ol>
+<li>对于<code>src</code>目录，<code>js</code>资源文件 <em>不允许(MUST NOT)</em> 存放于<code>js</code>目录下。</li>
+<li>对于<code>asset</code>目录，<code>js</code>资源文件 <em>可以(SHOULD)</em> 存放于<code>js</code>目录下，视构建行为决定。</li>
+<li>对于其他<code>一级目录</code>内，<code>js</code>资源文件 <em>可以(SHOULD)</em> 不存放于<code>js</code>目录下。</li>
+</ol>
+<h4><span id="css">css</span></h4><p><code>css</code>目录可用于存放<code>css资源文件</code>（包含<code>less</code>，<code>sass</code>等动态样式表语言）。<code>css</code>文件后缀名 <em>必须(MUST)</em> 为.css，<code>less</code>文件后缀名 <em>必须(MUST)</em> 为<code>.less</code>。</p>
+<p><code>css</code>目录内 <em>必须(MUST)</em> 存放<code>css</code>资源文件，但<code>css</code>资源文件不一定（MAY NOT）存放于<code>css</code>目录下：</p>
+<ol>
+<li>对于<code>src</code>目录，<code>css</code>资源文件 <em>可以(SHOULD)</em> 存放于<code>业务目录</code>下，也 <em>可以(SHOULD)</em> 存放于<code>css</code>目录下。</li>
+<li>对于<code>asset</code>目录，<code>css</code>资源文件 <em>可以(SHOULD)</em> 存放于<code>css</code>目录下，视构建行为决定。</li>
+<li>对于其他<code>一级目录</code>内，<code>css</code>资源文件 <em>可以(SHOULD)</em> 不存放于<code>css</code>目录下。</li>
+</ol>
+<p>关于css引用图片的位置说明，请参考<a href="#imgdir">img</a>章节。</p>
+<p><a name="imgdir"></a></p>
+<h4><span id="img">img</span></h4><p><code>img</code>目录可用于存放<code>图片资源文件</code>。包括<code>页面直接引用</code>的图片与<code>css引用</code>图片。常见的图片资源有<code>gif/jpg/png/svg/bmp</code>等。</p>
+<p>对于<code>css</code>引用的图片， <em>必须(MUST)</em> 放在<code>./img</code>目录下，<code>.</code>代表当前<code>css</code>资源所在的目录。</p>
+<p>对于<code>页面直接引用</code>的图片：</p>
+<ol>
+<li>被多页面引用的图片 <em>应该(SHOULD)</em> 放在<code>$&#123;root&#125;/src/common/img</code>目录下。</li>
+<li>单一页面引用的图片 <em>应该(SHOULD)</em> 放在<code>./img</code>目录下，<code>.</code>代表当前页面所在的目录。</li>
+</ol>
+<h4><span id="tpl">tpl</span></h4><p><code>tpl</code>目录可用于存放<code>template</code>资源文件。<code>template</code>资源文件后缀名 <em>可以(SHOULD)</em> 为<code>.html</code>或<code>.tpl</code>。</p>
+<p>通常，对于<code>RIA</code>系统，<code>template</code>资源文件采用<code>.html</code>后缀使其能够被<code>xhr</code>加载。</p>
+<h4><span id="font">font</span></h4><p><code>font</code>目录可用于存放字体资源文件。常见的字体资源有<code>tff/woff/svg</code>等。</p>
+<h4><span id="swf">swf</span></h4><p><code>swf</code>目录可用于存放<code>flash</code>资源文件。<code>flash</code>资源文件 <em>不允许(MUST NOT)</em> 置于<code>img</code>目录中。</p>
+<p><a name="bizdir"></a></p>
+<h3><span id="业务目录">业务目录</span></h3><p><a name="commondir"></a></p>
+<h4><span id="common">common</span></h4><p><code>common</code>目录为业务公共目录，用于存放业务项目的业务公共文件。所以，根据<code>业务逻辑</code>划分目录结构时，业务逻辑命名 <em>不允许(MUST NOT)</em> 为<code>common</code>。</p>
+<h2><span id="faq">FAQ</span></h2><h3><span id="为啥biz下面没资源类型目录了">为啥biz下面没资源类型目录了？</span></h3><p>如果在<code>biz</code>下继续划分<code>资源目录</code>，代码的结构可能就是这样子了：</p>
+<pre><code>$&#123;root&#125;/
+    src/
+        biz1/
+            js/
+                list.js
+</code></pre>
+<p>当我们需要使用<code>list.js</code>的时候，必须写如下的代码：<code>require(&quot;../biz1/js/list&quot;)</code>，但是从逻辑上说，更合理的写法应该是<code>require(&quot;../biz1/list&quot;)</code>。因此我们不推荐在<code>biz</code>下面对源代码资源划分目录。</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/08/12/编码规范/项目目录结构规范/';
+var disqus_title = '项目目录结构规范';
+var disqus_url = 'https://mirsery.github.io/2016/08/12/编码规范/项目目录结构规范/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/08/12/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/HTML%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/">上一篇</a><a class="next" href="/2016/08/12/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/jQuery%E7%9A%84%E7%BC%96%E7%A0%81%E6%A0%87%E5%87%86/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

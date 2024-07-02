@@ -1,0 +1,317 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> AVL树二 · mirsery</title><meta name="description" content="AVL树二 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">AVL树二</h1><div class="post-info">作者: mirsery         创建日期: 2023年10月24日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E8%8A%82%E7%82%B9node%E7%9A%84%E5%AE%9A%E4%B9%89">节点Node的定义</a></li>
+<li><a href="#avl-%E6%A0%91%E7%9A%84%E7%BB%93%E6%9E%84%E5%AE%9A%E4%B9%89">AVL 树的结构定义</a></li>
+<li><a href="#avl%E6%A0%91%E7%9A%84%E6%96%B9%E6%B3%95">AVL树的方法</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="节点node的定义">节点Node的定义</span></h2><pre><code class="highlight java"><span class="keyword">class</span> <span class="title class_">Node</span> &#123;
+    <span class="keyword">public</span> K key;       <span class="comment">// 节点key值</span>
+    <span class="keyword">public</span> V value;     <span class="comment">// 节点值</span>
+    <span class="keyword">public</span> Node left;   <span class="comment">// 左子树节点</span>
+    <span class="keyword">public</span> Node right;  <span class="comment">// 右子树节点</span>
+    <span class="keyword">public</span> <span class="type">int</span> height;  <span class="comment">// 高度</span>
+
+    <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(K key, V value)</span> &#123;
+        <span class="built_in">this</span>.key = key;
+        <span class="built_in">this</span>.value = value;
+        <span class="built_in">this</span>.height = <span class="number">1</span>;
+        left = <span class="literal">null</span>;
+        right = <span class="literal">null</span>;
+    &#125;
+&#125;</code></pre>
+
+<h2><span id="avl-树的结构定义">AVL 树的结构定义</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AVLTree</span>&lt;K <span class="keyword">extends</span> <span class="title class_">Comparable</span>&lt;K&gt;, V&gt; &#123;
+    
+    <span class="keyword">private</span> Node root;  <span class="comment">// 根节点 </span>
+
+    <span class="keyword">private</span> <span class="type">int</span> size;   <span class="comment">// 节点数</span>
+
+    <span class="keyword">public</span> <span class="title function_">AVLTree</span><span class="params">()</span> &#123;
+        root = <span class="literal">null</span>;
+        size = <span class="number">0</span>;
+    &#125;
+    ...
+&#125;</code></pre>
+<h2><span id="avl树的方法">AVL树的方法</span></h2><pre><code class="highlight java">
+<span class="comment">/**</span>
+<span class="comment"> * 获取节点高度</span>
+<span class="comment"> **/</span>
+<span class="keyword">private</span> <span class="type">int</span> <span class="title function_">getHeight</span><span class="params">(Node node)</span> &#123;
+    <span class="keyword">if</span> (node==<span class="literal">null</span>) &#123;
+        <span class="keyword">return</span> <span class="number">0</span>;
+    &#125;
+    <span class="keyword">return</span> node.height;
+&#125;
+
+
+<span class="comment">/**</span>
+<span class="comment"> * 计算平衡因子</span>
+<span class="comment"> **/</span>
+<span class="keyword">private</span> <span class="type">int</span> <span class="title function_">getBalanceFactor</span><span class="params">(Node node)</span> &#123;
+    <span class="keyword">if</span> (node==<span class="literal">null</span>) &#123;
+        <span class="keyword">return</span> <span class="number">0</span>;
+    &#125;
+    <span class="keyword">return</span> getHeight(node.left) - getHeight(node.right);
+&#125;
+
+<span class="comment">/* 二分搜索树</span>
+<span class="comment"> *</span>
+<span class="comment"> * 二分搜索树 所有节点满足，左节点小于根节点，右节点大于根节点</span>
+<span class="comment"> */</span>
+<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isBST</span><span class="params">()</span> &#123;
+    ArrayList&lt;K&gt; keys = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();
+    inOrder(root, keys);
+    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; keys.size(); i++) &#123;
+        <span class="keyword">if</span> (keys.get(i - <span class="number">1</span>).compareTo(keys.get(i)) &gt; <span class="number">0</span>) &#123;
+            <span class="keyword">return</span> <span class="literal">false</span>;
+        &#125;
+    &#125;
+    <span class="keyword">return</span> <span class="literal">true</span>;
+&#125;
+
+
+<span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">inOrder</span><span class="params">(Node node, ArrayList&lt;K&gt; keys)</span> &#123;
+    <span class="keyword">if</span> (node==<span class="literal">null</span>) &#123;
+        <span class="keyword">return</span>;
+    &#125;
+    inOrder(node.left, keys);
+    keys.add(node.key);
+    inOrder(node.right, keys);
+&#125;
+
+<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isBalanced</span><span class="params">()</span>&#123;
+    <span class="keyword">return</span> isBalanced(root);
+&#125;
+
+<span class="comment">/*</span>
+<span class="comment"> * 判断Node为根的二叉树是否平衡 即平衡因子绝对值小于2</span>
+<span class="comment"> */</span>
+<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isBalanced</span><span class="params">(Node node)</span> &#123;
+    <span class="keyword">if</span> (node==<span class="literal">null</span>) &#123;
+        <span class="keyword">return</span> <span class="literal">true</span>;
+    &#125;
+    <span class="type">int</span> <span class="variable">balanceFactor</span> <span class="operator">=</span> getBalanceFactor(node);
+    <span class="keyword">if</span> (Math.abs(balanceFactor) &gt; <span class="number">1</span>) &#123;
+        <span class="keyword">return</span> <span class="literal">false</span>;
+    &#125;
+    <span class="keyword">return</span> isBalanced(node.left) &amp;&amp; isBalanced(node.right);
+&#125;
+
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(K key, V value)</span> &#123;
+    root = add(root, key, value);
+&#125;
+
+<span class="keyword">private</span> Node <span class="title function_">add</span><span class="params">(Node node, K key, V value)</span> &#123;
+    <span class="keyword">if</span> (node==<span class="literal">null</span>) &#123;
+        size++;
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Node</span>(key, value);
+    &#125;
+    <span class="keyword">if</span> (key.compareTo(node.key) &lt; <span class="number">0</span>) &#123;
+        node.left = add(node.left, key, value);
+    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key.compareTo(node.key) &gt; <span class="number">0</span>) &#123;
+        node.right = add(node.right, key, value);
+    &#125; <span class="keyword">else</span> &#123;
+        node.value = value;
+    &#125;
+
+    node.height = <span class="number">1</span> + Math.max(getHeight(node.left), getHeight(node.right));
+
+    <span class="type">int</span> <span class="variable">balanceFactor</span> <span class="operator">=</span> getBalanceFactor(node);
+
+    <span class="comment">/* 判断所属情况是LL LR RL RR等情形 */</span>
+
+    <span class="comment">// LL 整体顺时针旋转</span>
+    <span class="keyword">if</span> (balanceFactor &gt; <span class="number">1</span> &amp;&amp; getBalanceFactor(node.left) &gt;= <span class="number">0</span>) &#123;
+        <span class="keyword">return</span> rightRotate(node);
+    &#125;
+
+    <span class="comment">//RR 整体逆时针旋转</span>
+    <span class="keyword">if</span> (balanceFactor &lt; -<span class="number">1</span> &amp;&amp; getBalanceFactor(node.right) &lt;= <span class="number">0</span>) &#123;
+        <span class="keyword">return</span> leftRotate(node);
+    &#125;
+
+    <span class="comment">//LR 左子树左旋转 转化成 LL，之后整体右旋转</span>
+    <span class="keyword">if</span> (balanceFactor &gt; <span class="number">1</span> &amp;&amp; getBalanceFactor(node.left) &lt; <span class="number">0</span>) &#123;
+        node.left = leftRotate(node.left);
+        <span class="keyword">return</span> rightRotate(node);
+    &#125;
+
+    <span class="comment">//RL 右子树右旋转转化成 RR ，之后整体左旋转</span>
+    <span class="keyword">if</span> (balanceFactor &lt; -<span class="number">1</span> &amp;&amp; getBalanceFactor(node.right) &gt; <span class="number">0</span>) &#123;
+        node.right = rightRotate(node.right);
+        <span class="keyword">return</span> leftRotate(node);
+    &#125;
+    <span class="keyword">return</span> node;
+&#125;
+
+<span class="comment">// 右旋转 顺时针</span>
+<span class="comment">/*</span>
+<span class="comment"> *              y                   x</span>
+<span class="comment"> *             / \                 / \</span>
+<span class="comment"> *            T1  x     -----&gt;    y   T3</span>
+<span class="comment"> *               / \             / \</span>
+<span class="comment"> *              T2  T3          T1 T2</span>
+<span class="comment"> */</span>
+<span class="keyword">private</span> Node <span class="title function_">rightRotate</span><span class="params">(Node y)</span> &#123;
+    <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> y.left;
+    <span class="type">Node</span> <span class="variable">T3</span> <span class="operator">=</span> x.right;
+    x.right = y;
+    y.left = T3;
+
+    y.height = Math.max(getHeight(y.left), getHeight(y.right)) + <span class="number">1</span>;
+    x.height = Math.max(getHeight(x.left), getHeight(x.right)) + <span class="number">1</span>;
+    <span class="keyword">return</span> x;
+&#125;
+
+<span class="comment">// 左旋转 逆时针</span>
+<span class="keyword">private</span> Node <span class="title function_">leftRotate</span><span class="params">(Node y)</span> &#123;
+    <span class="type">Node</span> <span class="variable">x</span> <span class="operator">=</span> y.right;
+    <span class="type">Node</span> <span class="variable">T2</span> <span class="operator">=</span> x.left;
+    y.right = T2;
+    x.left = y;
+
+    y.height = Math.max(getHeight(y.left), getHeight(y.right)) + <span class="number">1</span>;
+    x.height = Math.max(getHeight(x.left), getHeight(x.right)) + <span class="number">1</span>;
+    <span class="keyword">return</span> x;
+&#125;
+
+<span class="comment">/**</span>
+<span class="comment"> * <span class="doctag">@param</span> node 树根节点</span>
+<span class="comment"> * <span class="doctag">@param</span> key  节点属性</span>
+<span class="comment"> * <span class="doctag">@return</span> key 所在的节点</span>
+<span class="comment"> **/</span>
+<span class="keyword">private</span> Node <span class="title function_">getNode</span><span class="params">(Node node, K key)</span> &#123;
+    <span class="keyword">if</span> (node==<span class="literal">null</span>) &#123;
+        <span class="keyword">return</span> <span class="literal">null</span>;
+    &#125;
+    <span class="keyword">if</span> (key.equals(node.key)) &#123;
+        <span class="keyword">return</span> node;
+    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key.compareTo(node.key) &lt; <span class="number">0</span>) &#123;
+        <span class="keyword">return</span> getNode(node.left, key);
+    &#125; <span class="keyword">else</span> &#123;
+        <span class="keyword">return</span> getNode(node.right, key);
+    &#125;
+&#125;
+
+
+<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(K key)</span> &#123;
+    <span class="keyword">return</span> getNode(root, key)!=<span class="literal">null</span>;
+&#125;
+
+<span class="keyword">public</span> V <span class="title function_">get</span><span class="params">(K key)</span> &#123;
+    <span class="type">Node</span> <span class="variable">node</span> <span class="operator">=</span> getNode(root, key);
+    <span class="keyword">return</span> node==<span class="literal">null</span> ? <span class="literal">null</span> : node.value;
+&#125;
+
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(K key, V newVal)</span> &#123;
+    <span class="type">Node</span> <span class="variable">node</span> <span class="operator">=</span> getNode(root, key);
+    <span class="keyword">if</span> (node==<span class="literal">null</span>) &#123;
+        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(key + <span class="string">&quot; 不存在&quot;</span>);
+    &#125;
+    node.value = newVal;
+&#125;
+
+<span class="comment">/**</span>
+<span class="comment"> * 返回node为根的二分搜索树的最小值所在的节点</span>
+<span class="comment"> */</span>
+<span class="keyword">private</span> Node <span class="title function_">minimum</span><span class="params">(Node node)</span> &#123;
+    <span class="keyword">if</span> (node.left==<span class="literal">null</span>) &#123;
+        <span class="keyword">return</span> node;
+    &#125;
+    <span class="keyword">return</span> minimum(node.left);
+&#125;
+
+<span class="comment">/**</span>
+<span class="comment"> * 删除最小节点</span>
+<span class="comment"> *</span>
+<span class="comment"> * <span class="doctag">@return</span> Node 返回新树的根节点</span>
+<span class="comment"> **/</span>
+<span class="keyword">private</span> Node <span class="title function_">removeMin</span><span class="params">(Node node)</span> &#123;
+    <span class="keyword">if</span> (node.left==<span class="literal">null</span>) &#123;
+        <span class="type">Node</span> <span class="variable">rightNode</span> <span class="operator">=</span> node.right;
+        node.right = <span class="literal">null</span>;
+        size--;
+
+        <span class="keyword">return</span> rightNode;
+    &#125;
+    node.left = removeMin(node.left);
+    <span class="keyword">return</span> node;
+&#125;
+
+
+<span class="keyword">private</span> Node <span class="title function_">remove</span><span class="params">(Node node, K key)</span> &#123;
+    <span class="keyword">if</span> (node==<span class="literal">null</span>) &#123;
+        <span class="keyword">return</span> <span class="literal">null</span>;
+    &#125;
+    Node retNode;
+    <span class="keyword">if</span> (key.compareTo(node.key) &lt; <span class="number">0</span>) &#123;
+        node.left = remove(node.left, key);
+        retNode = node;
+    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key.compareTo(node.key) &gt; <span class="number">0</span>) &#123;
+        node.right = remove(node.right, key);
+        retNode = node;
+    &#125; <span class="keyword">else</span> &#123;
+        <span class="comment">//  1.左子树为空</span>
+        <span class="keyword">if</span> (node.left==<span class="literal">null</span>) &#123;
+            <span class="type">Node</span> <span class="variable">rightNode</span> <span class="operator">=</span> node.right;
+            node.right = <span class="literal">null</span>;
+            size--;
+            retNode = rightNode;
+        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node.right==<span class="literal">null</span>) &#123;
+            <span class="type">Node</span> <span class="variable">leftNode</span> <span class="operator">=</span> node.left;
+            node.left = <span class="literal">null</span>;
+            size--;
+            retNode = leftNode;
+        &#125; <span class="keyword">else</span> &#123;
+
+            <span class="type">Node</span> <span class="variable">successor</span> <span class="operator">=</span> minimum(node.right);
+            successor.right = remove(node.right, successor.key);
+            successor.left = node.left;
+            node.left = node.right = <span class="literal">null</span>;
+            retNode = successor;
+        &#125;
+
+        <span class="keyword">if</span> (retNode==<span class="literal">null</span>) &#123;
+            <span class="keyword">return</span> <span class="literal">null</span>;
+        &#125;
+        retNode.height = <span class="number">1</span> + Math.max(getHeight(retNode.left), getHeight(retNode.right));
+
+        <span class="type">int</span> <span class="variable">balanceFactor</span> <span class="operator">=</span> getBalanceFactor(retNode);
+
+        <span class="comment">//LL</span>
+        <span class="keyword">if</span>(balanceFactor &gt; <span class="number">1</span> &amp;&amp; getBalanceFactor(retNode.left) &gt;= <span class="number">0</span> )&#123;
+            <span class="keyword">return</span> rightRotate(retNode);
+        &#125;
+        
+        <span class="comment">//RR</span>
+        <span class="keyword">if</span>(balanceFactor &lt; -<span class="number">1</span> &amp;&amp; getBalanceFactor(retNode.right) &lt;= <span class="number">0</span> )&#123;
+            <span class="keyword">return</span> leftRotate(retNode);
+        &#125;
+
+        <span class="comment">//LR</span>
+        <span class="keyword">if</span>(balanceFactor &gt; <span class="number">1</span> &amp;&amp; getBalanceFactor(retNode.left) &lt; <span class="number">0</span>)&#123;
+            retNode.left = leftRotate(retNode.left);
+            <span class="keyword">return</span> rightRotate(retNode);
+        &#125;
+
+        <span class="comment">//RL</span>
+        <span class="keyword">if</span>(balanceFactor &lt; -<span class="number">1</span> &amp;&amp; getBalanceFactor(retNode.right) &gt; <span class="number">0</span>)&#123;
+            retNode.right = rightRotate(retNode.right);
+            <span class="keyword">return</span> leftRotate(retNode);
+        &#125;
+    &#125;
+
+    <span class="keyword">return</span> retNode;
+&#125;</code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2023/10/24/算法和数据结构/AVL树二/';
+var disqus_title = 'AVL树二';
+var disqus_url = 'https://mirsery.github.io/2023/10/24/算法和数据结构/AVL树二/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2024/01/09/linux/%E6%B0%B4%E5%B9%B3%E8%A7%A6%E5%8F%91%E5%92%8C%E8%BE%B9%E7%BC%98%E8%A7%A6%E5%8F%91/">上一篇</a><a class="next" href="/2023/10/16/%E7%AE%97%E6%B3%95%E5%92%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/AVL%E6%A0%91%E4%B8%80/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

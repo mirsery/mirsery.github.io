@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 常用的进程线程查看命令 · mirsery</title><meta name="description" content="常用的进程线程查看命令 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">常用的进程线程查看命令</h1><div class="post-info">作者: mirsery         创建日期: 2023年1月6日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E5%8D%A0%E7%94%A8cpu%E6%9C%80%E5%A4%9A%E7%9A%84%E8%BF%9B%E7%A8%8B">查看占用cpu最多的进程</a><ul>
+<li><a href="#%E9%87%87%E7%94%A8-ps-%E5%91%BD%E4%BB%A4">采用 ps 命令</a></li>
+<li><a href="#%E9%87%87%E7%94%A8top%E5%91%BD%E4%BB%A4">采用top命令</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B9%E6%8D%AE%E8%BF%9B%E7%A8%8Bid%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E5%90%8D">根据进程ID查看服务名</a><ul>
+<li><a href="#ps%E5%91%BD%E4%BB%A4">ps命令</a></li>
+<li><a href="#proc%E5%91%BD%E4%BB%A4%E6%9F%A5%E8%AF%A2">proc命令查询</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E7%AB%AF%E5%8F%A3%E7%9A%84%E8%BF%9E%E6%8E%A5%E7%8A%B6%E5%86%B5">查看端口的连接状况</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="查看占用cpu最多的进程">查看占用cpu最多的进程</span></h2><h3><span id="采用-ps-命令">采用 ps 命令</span></h3><pre><code class="highlight shell">ps H -eo pid,pcpu | sort -nk2 | tail</code></pre>
+
+<h3><span id="采用top命令">采用top命令</span></h3><pre><code class="highlight shell">top
+<span class="meta prompt_"># </span><span class="language-bash">键盘按下 Shift + t</span></code></pre>
+
+<blockquote>
+<p>也可以采用 <strong>htop</strong> 命令进行可视化的查看</p>
+</blockquote>
+<h2><span id="根据进程id查看服务名">根据进程ID查看服务名</span></h2><h3><span id="ps命令">ps命令</span></h3><pre><code class="highlight shell">ps aux | fgrep pid</code></pre>
+
+<h3><span id="proc命令查询">proc命令查询</span></h3><pre><code class="highlight shell">ll /proc/&#123;pid&#125;</code></pre>
+
+<h2><span id="查看端口的连接状况">查看端口的连接状况</span></h2><pre><code class="highlight shell">netstat -lap | fgrep &#123;port&#125;</code></pre>
+
+<pre><code class="highlight shell">lsof -i :&#123;port&#125;</code></pre>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2023/01/06/talk/2023/常用的进程线程查看命令/';
+var disqus_title = '常用的进程线程查看命令';
+var disqus_url = 'https://mirsery.github.io/2023/01/06/talk/2023/常用的进程线程查看命令/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2023/01/31/talk/2023/tcp%E5%8D%8F%E8%AE%AE%E5%B0%8F%E8%AE%B0%EF%BC%881%EF%BC%89/">上一篇</a><a class="next" href="/2023/01/04/talk/2023/scoop%E5%AE%89%E8%A3%85/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

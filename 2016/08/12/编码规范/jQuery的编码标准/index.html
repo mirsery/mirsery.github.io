@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> jQuery的编码标准 · mirsery</title><meta name="description" content="jQuery的编码标准 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">jQuery的编码标准</h1><div class="post-info">作者: mirsery         创建日期: 2016年8月12日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E5%8A%A0%E8%BD%BDjquery">加载jQuery</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E5%8F%98%E9%87%8F">关于变量</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E9%80%89%E6%8B%A9%E5%99%A8">关于选择器</a></li>
+<li><a href="#dom%E6%93%8D%E4%BD%9C%E7%9B%B8%E5%85%B3">DOM操作相关</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="加载jquery">加载jQuery</span></h2><p>1.坚持使用CDN来加载jQuery，这种别人服务器免费帮你托管文件的便宜干嘛不占呢。点击查看使用CDN的好处，点此查看一些主流的jQuery CDN地址。</p>
+<pre><code class="highlight javascript">&lt;script type=<span class="string">&quot;text/javascript&quot;</span> src=<span class="string">&quot;//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js&quot;</span>&gt;&lt;/script&gt;
+
+<span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-handlebars"><span class="language-xml">window.jQuery || document.write(&#x27;<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;js/jquery-1.11.0.min.js&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span>&lt;\/script&gt;&#x27;)</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></code></pre>
+<p>2.安全起见，最好还是提供一个本地备份以便在无法从远程CDN服务器获取jQuery时网站也能工作，如上面代码所示<a target="_blank" rel="noopener" href="https://css-tricks.com/snippets/jquery/fallback-for-cdn-hosted-jquery/">详细见此</a><br>3.使用<a target="_blank" rel="noopener" href="http://www.paulirish.com/2010/the-protocol-relative-url/">裸协议</a>的URL（也就是说去掉http:或者https:），如上面代码展示的那样。<br>4.如果可能，尽量将你的JavaScript和jQuery代码放到页面底部。<br>5.该使用哪个版本？</p>
+<ul>
+<li>如果你想兼容IE678请表用2.x的版本</li>
+<li>针对极少数不用考虑兼容性的幸运儿，极力推荐使用最新版本的jQuery</li>
+<li>当从CDN服务器加载jQuery时，最好把版本写全（比如1.11.0而不是1.11或者直接写个1）<br>千万不要重复加载.<br>6.如果你同时还使用了其他JS框架诸如Prototype, MooTools, Zepto云云，因为他们也使用了<code>$</code>符号，所以你就不能再用美刀符号来进行jQuery 编码了，而请用<code>jQuery</code>代替。并且调用保证<code>$.noConflict( )</code>不会有冲突出现。<br>7.要检测浏览器对一些新特性是否支持，请用Modernizr。</li>
+</ul>
+<h2><span id="关于变量">关于变量</span></h2><p>1.jQuery类型的变量最好加个$前缀。</p>
+<p>2.时常将jQuery选择器返回的内容存进变量以便重用</p>
+<p>var $products &#x3D; $(“div.products”); &#x2F;&#x2F; 慢<br>var $products &#x3D; $(“.products”); &#x2F;&#x2F; 快</p>
+<p>3.使用驼峰命名</p>
+<h2><span id="关于选择器">关于选择器</span></h2><p>1.尽量ID选择器。其背后机理其实是调用原生的document.getElementById()，所以速度较其他选择器快。</p>
+<p>2.使用类选择器时表指定元素的类型。不信你看这个性能比较</p>
+<pre><code class="highlight html">var $products = $(&quot;div.products&quot;); // 慢
+var $products = $(&quot;.products&quot;); // 快</code></pre>
+<p>3.ID父亲容器下面再查找子元素请用.find()方法。这样做快的原因是通过id选择元素不会使用Sizzle引擎。详情看这里</p>
+<p>4.多级查找中，右边尽量指定得详细点而左边则尽量简单点。了解更多</p>
+<pre><code class="highlight html">// 丑陋
+$(&quot;div.data .gonzalez&quot;);
+ 
+// 优化后
+$(&quot;.data td.gonzalez&quot;);</code></pre>
+<p>5.避免冗余。详情或者查看性能比较</p>
+<pre><code class="highlight html">$(&quot;.data table.attendees td.gonzalez&quot;); 
+// 好的方式：去掉了中间的冗余
+$(&quot;.data td.gonzalez&quot;);</code></pre>
+<p>6.指定选择的上下文。</p>
+<pre><code class="highlight html">// 劣质的代码：因为需要遍历整个DOM来找到.class
+$(&#x27;.class&#x27;);
+ 
+// 高品代码：因为只需在指定容器范围内进行查找
+$(&#x27;.class&#x27;, &#x27;#class-container&#x27;);</code></pre>
+<p>7.表使用万能选择器。查看具体阐释</p>
+<pre><code class="highlight html">$(&#x27;div.container &gt; *&#x27;); // 差
+$(&#x27;div.container&#x27;).children(); // 棒</code></pre>
+<p>8.警惕隐式的万能选择器。省略的情况下其实使用的就是*号通配符。更多信息</p>
+<pre><code class="highlight html">$(&#x27;div.someclass :radio&#x27;); // 差
+$(&#x27;div.someclass input:radio&#x27;); // 棒</code></pre>
+<p>9.ID已经表示唯一了，背后使用的是document.getElementById()，所以表跟其他选择器混搭了。</p>
+<pre><code class="highlight html">$(&#x27;#outer #inner&#x27;); // 脏
+$(&#x27;div#inner&#x27;); // 乱
+$(&#x27;.outer-container #inner&#x27;); // 差
+$(&#x27;#inner&#x27;); // 干净利落，后台只需调用document.getElementById()</code></pre>
+<h2><span id="dom操作相关">DOM操作相关</span></h2><p>1.操作任何元素前先将其从文档卸载，完了再贴回去。这事儿还能说细点</p>
+<pre><code class="highlight plaintext">var $myList = $(&quot;#list-container &gt; ul&quot;).detach();
+//...一大堆对$myList的处理
+$myList.appendTo(&quot;#list-container&quot;);</code></pre>
+<p>2.代码里将HTML组织好后再一次性贴到DOM中去。具体来说，性能比较</p>
+<pre><code class="highlight plaintext">// 这样不好
+var $myList = $(&quot;#list&quot;);
+for(var i = 0; i &lt; 10000; i++)&#123;
+    $myList.append(&quot;&lt;li&gt;&quot;+i+&quot;&lt;/li&gt;&quot;);
+&#125;
+ 
+// 这样好
+var $myList = $(&quot;#list&quot;);
+var list = &quot;&quot;;
+for(var i = 0; i &lt; 10000; i++)&#123;
+    list += &quot;&lt;li&gt;&quot;+i+&quot;&lt;/li&gt;&quot;;
+&#125;
+$myList.html(list);
+ 
+// 但这样更好
+var array = []; 
+for(var i = 0; i &lt; 10000; i++)&#123;
+    array[i] = &quot;&lt;li&gt;&quot;+i+&quot;&lt;/li&gt;&quot;; 
+&#125;
+$myList.html(array.join(&#x27;&#x27;));</code></pre>
+<p>3.不要处理不存在的元素。详情</p>
+<pre><code class="highlight plaintext">// 无良的做法：jQuery后台要跑完三个函数后才会知道这个元素其实根本不存在
+$(&quot;#nosuchthing&quot;).slideUp();
+// 应该这样
+var $mySelection = $(&quot;#nosuchthing&quot;);
+if ($mySelection.length) &#123;
+    $mySelection.slideUp();
+&#125;</code></pre>
+<p>##事件相关<br>1.一个页面只写一个文档ready事件的处理程序。这样代码既清晰好调试，又容易跟踪代码的进程。<br>2.表用匿名函数来做事件的回调。匿名函数不易调试维护测试和复用。或许你想较真，看看这里吧</p>
+<pre><code class="highlight plaintext">$(&quot;#myLink&quot;).on(&quot;click&quot;, function()&#123;...&#125;); // 表这样
+ 
+// 这样
+function myLinkClickHandler()&#123;...&#125;
+$(&quot;#myLink&quot;).on(&quot;click&quot;, myLinkClickHandler);</code></pre>
+<p>3.处理文档ready事件的回调也表用匿名函数，匿名函数不易调试维护测试和复用:(</p>
+<pre><code>$(function()&#123; ... &#125;); // 糟糕的做法：无法利用此函数也无法为其写测试用例
+
+// 好的做法
+$(initPage); // 抑或 $(document).ready(initPage);
+function initPage()&#123;
+    // 这里你可以进行程序的初始化了
+&#125;
+<pre><code class="highlight plaintext">4.进一步，最好也将ready事件的处理程序放到外部文件中引入到页面，而页面中内嵌的代码只需调用即可。</code></pre>
+&lt;script src=&quot;my-document-ready.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+    // 初始化一些必要的全局变量
+    $(document).ready(initPage); // 抑或 $(initPage);
+&lt;/script&gt;
+<pre><code class="highlight plaintext">5.千万表写内联到HTML的JS代码，这是调试的梦魇！应该总是用jQuery来绑定事件自带程序，这样也方便随时动态地取消绑定。</code></pre>
+&lt;a id=&quot;myLink&quot; href=&quot;#&quot; onclick=&quot;myEventHandler();&quot;&gt;my link&lt;/a&gt; &lt;!--不好 --&gt;
+$(&quot;#myLink&quot;).on(&quot;click&quot;, myEventHandler); // GOOD
+<pre><code class="highlight plaintext">6.如果可能尽量在绑定事件处理程序时使用一个命名空间，这样可以方便地取消绑定而不会影响其他绑定。</code></pre>
+$(&quot;#myLink&quot;).on(&quot;click.mySpecialClick&quot;, myEventHandler); // 不错
+// 之后，让我们优雅地解除绑定
+$(&quot;#myLink&quot;).unbind(&quot;click.mySpecialClick&quot;);
+<pre><code class="highlight plaintext">异步操作
+1.直接用$.ajax()而表去用.getJson() 或 .get(),因为jQuery内部还是将其转为前者
+
+2.表对HTTPS站点使用HTTP去发起请求，最好干脆就表指定（将HTTP或者HTTPS从你的URL中移除）
+
+3.表在链接里面嵌参数，请使用专门的参数设置来传递</code></pre>
+// 不易阅读的代码...
+$.ajax(&#123;
+    url: &quot;something.php?param1=test1&amp;param2=test2&quot;,
+    ....
+&#125;);
+ 
+// 更易阅读...
+$.ajax(&#123;
+    url: &quot;something.php&quot;,
+    data: &#123; param1: test1, param2: test2 &#125;
+&#125;);
+<pre><code class="highlight plaintext">4.尽量指明数据类型以便你自己清楚要处理什么样的数据（见下方会提到的Ajax模板）
+
+5.对于异步动态加载的内容，最好使用代理来绑定事件处理程序。这样的好处是对于之后动态加载的元素事件同样有效。你或许想了解更多</code></pre>
+$(&quot;#parent-container&quot;).on(&quot;click&quot;, &quot;a&quot;, delegatedClickHandlerForAjax);
+<pre><code class="highlight plaintext">6.使用Promise模式。更多例子</code></pre>
+$.ajax(&#123; ... &#125;).then(successHandler, failureHandler);
+ 
+// 抑或
+var jqxhr = $.ajax(&#123; ... &#125;);
+jqxhr.done(successHandler);
+jqxhr.fail(failureHandler);
+<pre><code class="highlight plaintext">7.标准的Ajax模板一分。追寻根源</code></pre>
+var jqxhr = $.ajax(&#123;
+    url: url,
+    type: &quot;GET&quot;, // 默认为GET,你可以根据需要更改
+    cache: true, // 默认为true,但对于script,jsonp类型为false,可以自行设置
+    data: &#123;&#125;, // 将请求参数放这里.
+    dataType: &quot;json&quot;, // 指定想要的数据类型
+    jsonp: &quot;callback&quot;, // 指定回调处理JSONP类型的请求
+    statusCode: &#123; // 如果你想处理各状态的错误的话
+        404: handler404,
+        500: handler500
+    &#125;
+&#125;);
+jqxhr.done(successHandler);
+jqxhr.fail(failureHandler);
+<pre><code class="highlight plaintext">##动画与特效
+1.保持一个始终如一风格统一的动画实现
+
+2.紧遵用户体验，表滥用动画特效
+
+使用简洁的显示隐藏，状态切换，滑入滑出等效果来展示元素
+使用预设值来设置动画的速度’fast’，’slow’，或者400（中等速度）
+插件相关
+1.始终选择一个有良好支持，完善文档，全面测试过并且社区活跃的插件
+
+2.注意所用插件与当前使用的jQuery版本是否兼容
+
+3.一些常用功能应该写成jQuery插件。一分jQuery插件的编写模板
+
+##链式句法
+1.除了用变量将jQuery选择器返回的结果保存，还可以利用好链式调用。
+</code></pre>
+$(&quot;#myDiv&quot;).addClass(&quot;error&quot;).show();
+<pre><code class="highlight plaintext">
+2.当链式调用多达3次以上或代码因绑定回调略显复杂时，使用换行和适当的缩进来提高代码的可读性。
+</code></pre>
+$(&quot;#myLink&quot;)
+    .addClass(&quot;bold&quot;)
+    .on(&quot;click&quot;, myClickHandler)
+    .on(&quot;mouseover&quot;, myMouseOverHandler)
+    .show();
+<pre><code class="highlight plaintext">3.对于特别长的调用最好还是用变量保存下中间结果来简化代码。
+
+## 其他
+
+1.使用对象字面量来传递参数
+</code></pre>
+$myLink.attr(&quot;href&quot;, &quot;#&quot;).attr(&quot;title&quot;, &quot;my link&quot;).attr(&quot;rel&quot;, &quot;external&quot;); // 糟糕：调用了三次attr
+// 不错，只调用了一次attr
+$myLink.attr(&#123;
+    href: &quot;#&quot;,
+    title: &quot;my link&quot;,
+    rel: &quot;external&quot;
+&#125;);
+<pre><code class="highlight plaintext">
+2.表将CSS与jQuery杂揉
+</code></pre>
+$(&quot;#mydiv&quot;).css(&#123;&#39;color&#39;:red, &#39;font-weight&#39;:&#39;bold&#39;&#125;); // 不好
+.error &#123;/* 不错 */
+    color: red;
+    font-weight: bold;
+&#125;
+$(&quot;#mydiv&quot;).addClass(&quot;error&quot;);
+<pre><code class="highlight plaintext">
+3.时刻关注官方Changelog，表使用摒弃了的方法。点此查看所有废弃的方法
+
+4.适时地使用原生JavaScript。一些与此有关的性能比较
+</code></pre>
+$(&quot;#myId&quot;); // 多少还是会逊色于...
+document.getElementById(&quot;myId&quot;);
+```
+</code></pre>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/08/12/编码规范/jQuery的编码标准/';
+var disqus_title = 'jQuery的编码标准';
+var disqus_url = 'https://mirsery.github.io/2016/08/12/编码规范/jQuery的编码标准/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/08/12/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E8%A7%84%E8%8C%83/">上一篇</a><a class="next" href="/2016/08/10/linux/%EF%BC%88%E8%BD%AC%EF%BC%89linux%E4%B8%8B%E7%9A%84sudoers%E9%85%8D%E7%BD%AE/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Future模式 · mirsery</title><meta name="description" content="Future模式 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Future模式</h1><div class="post-info">作者: mirsery         创建日期: 2021年7月24日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#future-%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%A6%82%E8%BF%B0">future 模式的概述</a></li>
+<li><a href="#future-%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0">future 模式的简单实现</a></li>
+<li><a href="#jdk%E4%B8%AD%E7%9A%84future%E6%A8%A1%E5%BC%8F">JDK中的Future模式</a></li>
+</ul>
+<!-- tocstop -->
+
+<blockquote>
+<p>future 模式是多线程开发中比较常见的一种模式，他的核心思想是利用多线程来实现耗时操作的异步调用。主要利用多线程去处理耗时的任务，并支持异步回调处理相关的信息。</p>
+</blockquote>
+<h2><span id="future-模式的概述">future 模式的概述</span></h2><p>future模式优点类似快递订餐，比如我们利用xx软件进行外卖下单。下完单之后我们可以继续我们上班的摸鱼动作，等待骑手的电话。其中下完单之后会立刻返回一个订单号，我们可以根据这个订单号去获取相应的订单信息。对于future模式来说，虽然他并不能立刻给予我们所需要的数据（外卖），但是他会返回订单给到我们，我们可以借由订单去获取相应的骑手以及派送状态信息。可以充分的节约我们的摸鱼时间。</p>
+<h2><span id="future-模式的简单实现">future 模式的简单实现</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Data</span> &#123;
+
+    <span class="keyword">public</span> String <span class="title function_">getFood</span><span class="params">()</span>; <span class="comment">//取餐</span>
+&#125;
+</code></pre>
+
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">record</span> <span class="title class_">RealData</span><span class="params">(String result)</span> <span class="keyword">implements</span> <span class="title class_">Data</span> &#123;		<span class="comment">//since @jdk14</span>
+
+    <span class="keyword">public</span> RealData &#123;
+        <span class="keyword">try</span> &#123;
+            Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);		<span class="comment">// 午餐制作</span>
+        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+            e.printStackTrace();
+        &#125;
+
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> String <span class="title function_">getFood</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> <span class="built_in">this</span>.result;
+    &#125;
+&#125;
+</code></pre>
+
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FutureData</span> <span class="keyword">implements</span> <span class="title class_">Data</span> &#123;
+
+    <span class="keyword">protected</span> <span class="type">RealData</span> <span class="variable">realData</span> <span class="operator">=</span> <span class="literal">null</span>;
+
+    <span class="keyword">protected</span> <span class="type">boolean</span> <span class="variable">isReady</span> <span class="operator">=</span> <span class="literal">false</span>;
+
+    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">setRealData</span><span class="params">(RealData realData)</span> &#123; <span class="comment">// 骑手取餐</span>
+        <span class="keyword">if</span> (isReady)
+            <span class="keyword">return</span>;
+        <span class="built_in">this</span>.realData = realData;
+        isReady = <span class="literal">true</span>;
+        notifyAll();	<span class="comment">//唤醒当前对象上的等待线程</span>
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title function_">getFood</span><span class="params">()</span> &#123;	<span class="comment">//用户取餐</span>
+        <span class="keyword">while</span> (!isReady) &#123;
+            <span class="keyword">try</span> &#123;
+                wait();	<span class="comment">//当前线程进入等待并释放锁</span>
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+        <span class="keyword">return</span> realData.getFood();
+    &#125;
+&#125;
+</code></pre>
+
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Client</span> &#123;
+
+        <span class="keyword">public</span> Data <span class="title function_">request</span><span class="params">(String order)</span> &#123;
+            <span class="type">FutureData</span> <span class="variable">futureData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FutureData</span>();
+            <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;
+                <span class="type">RealData</span> <span class="variable">realData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RealData</span>(order);
+                futureData.setRealData(realData);
+            &#125;).start();
+            <span class="keyword">return</span> futureData;
+        &#125;
+    &#125;
+
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;
+        <span class="type">Client</span> <span class="variable">client</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Client</span>();
+        <span class="type">Data</span> <span class="variable">data</span> <span class="operator">=</span> client.request(<span class="string">&quot;鱼香肉丝&quot;</span>); <span class="comment">//开始订餐</span>
+        System.out.println(<span class="string">&quot;订单已经提交，骑手赶往店铺&quot;</span>);<span class="comment">//订餐完成</span>
+
+        <span class="keyword">try</span> &#123;<span class="comment">// do something 摸鱼时间</span>
+            Thread.sleep(<span class="number">3000</span>);
+        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+            e.printStackTrace();
+        &#125;
+
+        System.out.println(<span class="string">&quot;food is: &quot;</span> + data.getFood()); <span class="comment">//拿到外卖</span>
+    &#125;
+&#125;
+</code></pre>
+
+<h2><span id="jdk中的future模式">JDK中的Future模式</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Food</span> <span class="keyword">implements</span> <span class="title class_">Callable</span>&lt;String&gt; &#123;
+
+
+    <span class="keyword">private</span> String food;
+
+
+    <span class="keyword">public</span> <span class="title function_">Food</span><span class="params">(String food)</span> &#123;
+        <span class="built_in">this</span>.food = food;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> String <span class="title function_">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;
+
+        Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);	<span class="comment">//配送</span>
+
+        <span class="keyword">return</span> <span class="built_in">this</span>.food;
+    &#125;
+&#125;
+</code></pre>
+
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;
+    FutureTask&lt;String&gt; futureTask = <span class="keyword">new</span> <span class="title class_">FutureTask</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">Food</span>(<span class="string">&quot;鱼香肉丝&quot;</span>));
+    <span class="type">ExecutorService</span> <span class="variable">service</span> <span class="operator">=</span> Executors.newSingleThreadExecutor();
+    service.execute(futureTask);
+
+    System.out.println(<span class="string">&quot;下单完成&quot;</span>);
+    
+    <span class="keyword">try</span> &#123;
+        Thread.sleep(<span class="number">6</span> * <span class="number">1000</span>);<span class="comment">//摸鱼</span>
+        System.out.println(<span class="string">&quot;lunch is : &quot;</span> + futureTask.get());
+        service.shutdown();
+    &#125; <span class="keyword">catch</span> (InterruptedException | ExecutionException e) &#123;
+        e.printStackTrace();
+    &#125;
+&#125;
+</code></pre>
+
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/07/24/java/2021/Future模式/';
+var disqus_title = 'Future模式';
+var disqus_url = 'https://mirsery.github.io/2021/07/24/java/2021/Future模式/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/07/27/mac/2021/mac%E4%BD%BF%E7%94%A8%E6%8A%80%E5%B7%A7/">上一篇</a><a class="next" href="/2021/07/22/java/2021/Locksupport%E7%BA%BF%E7%A8%8B%E9%98%BB%E5%A1%9E%E5%B7%A5%E5%85%B7/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

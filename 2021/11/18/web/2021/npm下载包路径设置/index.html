@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> npm下载包路径设置 · mirsery</title><meta name="description" content="npm下载包路径设置 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">npm下载包路径设置</h1><div class="post-info">作者: mirsery         创建日期: 2021年11月18日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#mac-npm-%E4%B8%8B%E8%BD%BD%E5%8C%85%E8%B7%AF%E5%BE%84%E8%AE%BE%E7%BD%AE">MAC npm 下载包路径设置</a><ul>
+<li><a href="#%E6%9F%A5%E7%9C%8Bnpm%E7%9A%84prefix%E5%92%8Ccache%E8%B7%AF%E5%BE%84%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF">查看npm的prefix和cache路径配置信息</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E4%B8%8B%E8%BD%BD%E8%B7%AF%E5%BE%84-%E7%BC%93%E5%AD%98%E8%B7%AF%E5%BE%84">设置下载路径 缓存路径</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8Bnpm%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF">查看npm配置信息</a></li>
+<li><a href="#%E6%B8%85%E7%A9%BAnpm%E7%BC%93%E5%AD%98">清空npm缓存</a></li>
+<li><a href="#%E9%AA%8C%E8%AF%81%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E7%9A%84%E6%9C%89%E6%95%88%E6%80%A7%E5%92%8C%E5%AE%8C%E6%95%B4%E6%80%A7%E6%B8%85%E7%90%86%E5%9E%83%E5%9C%BE%E6%95%B0%E6%8D%AE">验证缓存数据的有效性和完整性，清理垃圾数据</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<h1><span id="mac-npm-下载包路径设置">MAC npm 下载包路径设置</span></h1><h2><span id="查看npm的prefix和cache路径配置信息">查看npm的prefix和cache路径配置信息</span></h2><pre><code class="highlight shell">npm config get cache
+npm config get prefix</code></pre>
+
+<h2><span id="设置下载路径-缓存路径">设置下载路径 缓存路径</span></h2><pre><code class="highlight shell">npm config set cache &quot;/cachePath&quot;
+npm config set prefix &quot;/prefixPath&quot;</code></pre>
+
+<h2><span id="查看npm配置信息">查看npm配置信息</span></h2><pre><code class="highlight shell">npm config list</code></pre>
+
+<h2><span id="清空npm缓存">清空npm缓存</span></h2><pre><code class="highlight shell">npm cache clean -f</code></pre>
+
+<h2><span id="验证缓存数据的有效性和完整性清理垃圾数据">验证缓存数据的有效性和完整性，清理垃圾数据</span></h2><pre><code class="highlight shell">npm cache verfy</code></pre></div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/11/25/web/2021/npm%E9%95%9C%E5%83%8F%E6%BA%90%E7%AE%A1%E7%90%86/">上一篇</a><a class="next" href="/2021/11/17/talk/2021/hls%E6%B5%8B%E8%AF%95%E6%B5%81%E9%83%A8%E7%BD%B2/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> springboot自带的事件驱动模型使用 · mirsery</title><meta name="description" content="springboot自带的事件驱动模型使用 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">springboot自带的事件驱动模型使用</h1><div class="post-info">作者: mirsery         创建日期: 2021年3月1日</div><div class="post-content"><h1><span id="springboot自带的事件驱动模型使用">springboot自带的事件驱动模型使用</span></h1><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p> Springboot框架自行封装了一套发布订阅模式可以供我们日常开发的使用</p>
+</blockquote>
+<p>##自定义事件类<br>在springboot中继承 <strong>ApplicationEvent</strong>类可以实现自定义事件<br>下面是示例代码:</p>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestEvent</span> <span class="keyword">extends</span> <span class="title class_">ApplicationEvent</span> &#123;
+    <span class="keyword">private</span> String message;
+    <span class="keyword">public</span> <span class="title function_">TestEvent</span><span class="params">(Object source, String message)</span> &#123;
+        <span class="built_in">super</span>(source);
+        <span class="built_in">this</span>.message = message;
+    &#125;
+    <span class="keyword">public</span> String <span class="title function_">getMessage</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> message;
+    &#125;
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMessage</span><span class="params">(String message)</span> &#123;
+        <span class="built_in">this</span>.message = message;
+    &#125;
+&#125;</code></pre>
+
+<p>##定义事件监听组件<br>只要实现<strong>ApplicationListner<t>接口</t></strong>，组件就可以订阅相关的事件</p>
+<pre><code class="highlight java"><span class="meta">@Component</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestEventListerner</span> <span class="keyword">implements</span> <span class="title class_">ApplicationListener</span>&lt;TestEvent&gt; &#123;
+
+    <span class="comment">/**</span>
+<span class="comment">     * Handle an application event.</span>
+<span class="comment">     *</span>
+<span class="comment">     * <span class="doctag">@param</span> event the event to respond to</span>
+<span class="comment">     */</span>
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onApplicationEvent</span><span class="params">(TestEvent event)</span> &#123;
+        System.out.println(<span class="built_in">this</span>.getClass() + <span class="string">&quot; message is &quot;</span> + event.getMessage() + <span class="string">&quot;, source is :&quot;</span> + event.getSource());
+    &#125;
+&#125;</code></pre>
+
+<h2><span id="事件发布">事件发布</span></h2><pre><code class="highlight java"><span class="type">ApplicationContext</span> <span class="variable">applicationContext</span> <span class="operator">=</span> SpringApplication.run(WebTestApplication.class, args);
+<span class="type">TestEvent</span> <span class="variable">test</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TestEvent</span>(<span class="string">&quot;test-code&quot;</span>, <span class="string">&quot;测试事件发生&quot;</span>);
+applicationContext.publishEvent(test);</code></pre>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/02/28/java/2021/Springboot自带的事件驱动使用/';
+var disqus_title = 'springboot自带的事件驱动模型使用';
+var disqus_url = 'https://mirsery.github.io/2021/02/28/java/2021/Springboot自带的事件驱动使用/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/04/14/java/2021/netty%E6%A1%86%E6%9E%B6%E4%B8%AD%E8%8E%B7%E5%8F%96websocket%E5%8D%87%E7%BA%A7%E5%8D%8F%E8%AE%AE%E5%89%8D%E7%9A%84http%20header/">上一篇</a><a class="next" href="/2021/02/28/java/2021/springboot%E8%87%AA%E5%8A%A8%E5%8C%96%E9%85%8D%E7%BD%AE/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

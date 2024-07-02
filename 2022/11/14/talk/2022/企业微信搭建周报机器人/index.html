@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 企业微信搭建周报机器人 · mirsery</title><meta name="description" content="企业微信搭建周报机器人 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">企业微信搭建周报机器人</h1><div class="post-info">作者: mirsery         创建日期: 2022年11月14日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E7%94%B3%E8%AF%B7%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA">申请企业微信机器人</a></li>
+<li><a href="#%E4%BA%86%E8%A7%A3%E7%A7%81%E6%9C%8D%E7%9A%84gitlab%E6%8E%A5%E5%8F%A3">了解私服的gitlab接口</a></li>
+<li><a href="#private-token">PRIVATE-TOKEN</a></li>
+<li><a href="#%E5%BC%80%E5%A7%8B%E7%BC%96%E7%A0%81">开始编码</a></li>
+</ul>
+<!-- tocstop -->
+
+<p>最近实在是懒得写周报以及一个个去询问同事的工作进度做汇总，故就产生了本项目。本人的思路是希望可以收集最近一周所有项目开发上传代码的Commit记录生成一个周报并且将周报信息发送至企业微信群中。</p>
+<h2><span id="申请企业微信机器人">申请企业微信机器人</span></h2><p>此步骤省略，直接手机企业微信群里面添加企业微信机器人即可，对于我们项目来说只需要拿到机器人对应的webhook。<br>注意： 你需要安全妥善保存好你的webhook不能被第三方所知晓。</p>
+<h2><span id="了解私服的gitlab接口">了解私服的gitlab接口</span></h2><p>对应的Commits类型的接口地址如下：https:&#x2F;&#x2F;{私服host地址}&#x2F;help&#x2F;api&#x2F;commits.md</p>
+<pre><code class="highlight plaintext">GET /projects/:id/repository/commits</code></pre>
+
+<h2><span id="private-token">PRIVATE-TOKEN</span></h2><p><strong>PRIVATE-TOKEN</strong> 可以在gitlab私服 https:&#x2F;&#x2F;{私服host地址}&#x2F;profile&#x2F;personal_access_tokens 这个页面中生成并配置相应的权限。</p>
+<blockquote>
+<p>保存好你的PRIVATE-TOKEN 字符串</p>
+</blockquote>
+<h2><span id="开始编码">开始编码</span></h2><p>下面是git Commits收集代码</p>
+<pre><code class="highlight java:n">@Service
+public class GitlabService &#123;
+
+    @Value(&quot;$&#123;gitlab.pojects&#125;&quot;)
+    private String projects; //项目名称数组用;隔开
+
+    @Value(&quot;$&#123;gitlab.refName&#125;&quot;)
+    private String refName;
+
+    @Value(&quot;$&#123;gitlab.token&#125;&quot;)
+    private String gitlabToken; //上面的PRIVATE-TOKEN
+
+    private final Logger logger = LoggerFactory.getLogger(GitlabService.class);
+
+    public String doAction(String url, Map&lt;String, String&gt; params) throws IOException &#123;
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+
+        Request.Builder reqBuild = new Request.Builder();
+        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(url))
+                .newBuilder();
+
+        params.keySet().forEach(key -&gt; urlBuilder.addQueryParameter(key, params.get(key)));
+
+        reqBuild.url(urlBuilder.build());
+        reqBuild.addHeader(&quot;PRIVATE-TOKEN&quot;, gitlabToken);
+        reqBuild.addHeader(&quot;Cache-Control&quot;, &quot;no-cache&quot;);
+        reqBuild.method(&quot;GET&quot;, null);
+
+        Request request = reqBuild.build();
+
+        Response response = client.newCall(request).execute();
+        return Objects.requireNonNull(response.body()).string();
+    &#125;
+
+
+    public List&lt;WxDto&gt; getSimpleCommits(String since, String until) &#123;
+        Map&lt;String, String&gt; params = new HashMap&lt;&gt;();
+        params.put(&quot;since&quot;, since);
+        params.put(&quot;until&quot;, until);
+        params.put(&quot;ref_name&quot;, refName);
+
+        List&lt;WxDto&gt; result = new ArrayList&lt;&gt;();
+        String[] ps = projects.split(&quot;;&quot;);
+        for (String p : ps) &#123;
+            try &#123;
+                WxDto wxDto = new WxDto();
+                List&lt;SimpleCommit&gt; simpleCommits = new ArrayList&lt;&gt;();
+
+                String iid = URLEncoder.encode(p, &quot;utf-8&quot;);
+                String url =
+                        &quot;https://&#123;gitlab私服地址&#125;/api/v4/projects/&quot; + iid + &quot;/repository/commits&quot;;
+
+                String responseBody = this.doAction(url, params);
+                List&lt;GitCommit&gt; gitCommits = JSON.parseObject(responseBody,
+                                                              new TypeReference&lt;List&lt;GitCommit&gt;&gt;() &#123;
+                                                              &#125;);
+                assert gitCommits!=null;
+                for (int i = gitCommits.size() - 1; i &gt;= 0; i--) &#123;
+                    GitCommit temp = gitCommits.get(i);
+                    if (temp.getParent_ids().size()==1) &#123;
+                        SimpleCommit simpleCommit = new SimpleCommit();
+                        simpleCommit.setAuthor(temp.getCommitter_name());
+                        simpleCommit.setContent(temp.getMessage());
+                        simpleCommits.add(simpleCommit);
+                    &#125;
+                &#125;
+
+                wxDto.setTitle(p);
+                wxDto.setCommits(simpleCommits);
+                if (simpleCommits.size() &gt; 0) &#123;
+                    result.add(wxDto);
+                &#125;
+            &#125; catch (Exception e) &#123;
+                logger.error(e.getMessage());
+            &#125;
+
+        &#125;
+        return result;
+    &#125;
+&#125;</code></pre>
+
+<pre><code class="highlight java:n">public class WxMarkdown &#123;
+    private String content;
+
+    public String getContent() &#123;
+        return content;
+    &#125;
+
+    public void setContent(String content) &#123;
+        this.content = content;
+    &#125;
+&#125;
+</code></pre>
+
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WxObj</span> &#123;
+
+    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">msgtype</span> <span class="operator">=</span> <span class="string">&quot;markdown&quot;</span>;
+
+    <span class="keyword">private</span> WxMarkdown markdown;
+
+    <span class="keyword">public</span> String <span class="title function_">getMsgtype</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> msgtype;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMsgtype</span><span class="params">(String msgtype)</span> &#123;
+        <span class="built_in">this</span>.msgtype = msgtype;
+    &#125;
+
+    <span class="keyword">public</span> WxMarkdown <span class="title function_">getMarkdown</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> markdown;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMarkdown</span><span class="params">(WxMarkdown markdown)</span> &#123;
+        <span class="built_in">this</span>.markdown = markdown;
+    &#125;
+&#125;
+</code></pre>
+
+
+<pre><code class="highlight java"><span class="meta">@Repository</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WxReporter</span> &#123;<span class="comment">//wx周报发送</span>
+
+    <span class="meta">@Value(&quot;$&#123;wxHook&#125;&quot;)</span>
+    <span class="keyword">private</span> String wxHook;
+
+    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> LoggerFactory.getLogger(WxReporter.class);
+
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doReport</span><span class="params">(List&lt;WxDto&gt; wxDto, String sinceTime, String endTime)</span> &#123;
+
+        <span class="keyword">try</span> &#123;
+            <span class="type">WxObj</span> <span class="variable">wxObj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WxObj</span>();
+            <span class="type">WxMarkdown</span> <span class="variable">wxMarkdown</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WxMarkdown</span>();
+
+            <span class="type">StringBuilder</span> <span class="variable">content</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(<span class="string">&quot;# &quot;</span> + sinceTime + <span class="string">&quot;-&quot;</span> + endTime + <span class="string">&quot;周报\n&quot;</span>);
+
+            wxDto.forEach(item -&gt; content.append(item.toString()));
+            wxMarkdown.setContent(content.toString());
+            wxObj.setMarkdown(wxMarkdown);
+
+            <span class="type">OkHttpClient</span> <span class="variable">client</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OkHttpClient</span>().newBuilder()
+                    .build();
+            <span class="type">MediaType</span> <span class="variable">mediaType</span> <span class="operator">=</span> MediaType.parse(<span class="string">&quot;application/json&quot;</span>);
+            <span class="type">RequestBody</span> <span class="variable">body</span> <span class="operator">=</span> RequestBody.create(mediaType, JSON.toJSONString(wxObj));
+            <span class="type">Request</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Request</span>.Builder()
+                    .url(wxHook)
+                    .method(<span class="string">&quot;POST&quot;</span>, body)
+                    .addHeader(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json&quot;</span>)
+                    .build();
+            client.newCall(request).execute();
+        &#125; <span class="keyword">catch</span> (IOException e) &#123;
+            logger.error(e.getMessage());
+        &#125;
+    &#125;
+
+&#125;
+</code></pre>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2023/01/03/web/2023/nginx%E4%BD%BF%E7%94%A8%E4%B8%AD%E7%9A%84%E4%B8%80%E7%82%B9%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">上一篇</a><a class="next" href="/2022/11/14/java/2022/springboot%E7%BB%93%E5%90%88swing/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

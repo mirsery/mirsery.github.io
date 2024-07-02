@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Creating and running a daemon thread · mirsery</title><meta name="description" content="Creating and running a daemon thread - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Creating and running a daemon thread</h1><div class="post-info">作者: mirsery         创建日期: 2016年7月11日</div><div class="post-content"><p>Java has a special kind of thread called daemon thread. These kind of threads have very low priority and normally only executes when no other thread of the same program is running. When daemon threads are the only threads running in a program, the JVM ends the program finishing these threads.<br>With these characteristics, the daemon threads are normally used as service providers for normal (also called user) threads running in the same program. They usually have an infinite loop that waits for the service request or performs the tasks of the thread. They can’t do important jobs because we don’t know when they are going to have CPU time and they can finish any time if there aren’t any other threads running. A typical example of these kind of threads is the Java garbage collector.<br>In this recipe, we will learn how to create a daemon thread developing an example with two threads; one user thread that writes events on a queue and a daemon one that cleans that queue, removing the events which were generated more than 10 seconds ago.</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><h1><span id="how-to-do-it">How to do it …</span></h1><ul>
+<li>Create the Event class. This class only stores information about the events our program will work with. Declare two private attributes, one called date of java.util.Date type and the other called event of String type. Generate the methods to write and read their values.</li>
+<li>Create the WriterTask class and specify that it implements the Runnable interface.<br>public class WriterTask implements Runnable {</li>
+<li>Declare the queue that stores the events and implement the constructor of the class, which initializes this queue.<pre><code class="highlight java"><span class="keyword">private</span> Deque&lt;Event&gt; deque;
+<span class="keyword">public</span> <span class="title function_">WriterTask</span> <span class="params">(Deque&lt;Event&gt; deque)</span>&#123;
+    <span class="built_in">this</span>.deque = deque;  
+&#125;</code></pre></li>
+<li>Implatement the run() method of the task.This method will have a loop with 100 oterations.In each iteration,we create a new Event,save it inthe queue,and sleep for one second.<pre><code class="highlight java"><span class="meta">@override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span>&#123;
+    Event event=<span class="keyword">new</span> <span class="title class_">Event</span>();
+      event.setDate(<span class="keyword">new</span> <span class="title class_">Date</span>());
+      event.setEvent(String.format(<span class="string">&quot;The thread %s has generated an event&quot;</span>,Thread.currentThread().getId()));
+      deque.addFirst(event);
+      <span class="keyword">try</span> &#123;
+        TimeUnit.SECONDS.sleep(<span class="number">1</span>);
+      &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+        e.printStackTrace();
+      &#125;
+    &#125;</code></pre></li>
+<li>Create the CleanerTask class and specify that it extends the Thread class.<br>  public class CleanerTask extends Thread{</li>
+<li>Declare the queue that stores the events and implatement the constructor of the class,which initializes this queue.In the constructor,mark this thread as a daemon thread with the setDaemon() method.<pre><code class="highlight java"><span class="keyword">private</span> Deque&lt;Event&gt; deque;
+<span class="keyword">public</span> <span class="title function_">CleanerTask</span><span class="params">(Deque&lt;Event&gt; deque)</span>&#123;
+    <span class="built_in">this</span>.deque = deque;
+    
+&#125;</code></pre></li>
+<li>Implement the run() method. It has an infinite loop that gets the actual date and calls the clean() method.<pre><code class="highlight java"><span class="meta">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;
+  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;
+    <span class="type">Date</span> <span class="variable">date</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();
+    clean(date);
+  &#125;      
+&#125;</code></pre></li>
+<li>Implement the clean() method. It gets the last event and, if it was created more than 10 seconds ago, it deletes it and checks the next event. If an event is deleted, it writes the message of the event and the new size of the queue, so you can see its evolution.<pre><code class="highlight java"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">clean</span><span class="params">(Date date)</span> &#123;
+  <span class="type">long</span> difference;
+  <span class="type">boolean</span> delete;
+  
+  <span class="keyword">if</span> (deque.size()==<span class="number">0</span>) &#123;
+    <span class="keyword">return</span>;
+  &#125;
+  delete=<span class="literal">false</span>;
+  <span class="keyword">do</span> &#123;
+    <span class="type">Event</span> <span class="variable">e</span> <span class="operator">=</span> deque.getLast();
+    difference = date.getTime() - e.getDate().getTime();
+    <span class="keyword">if</span> (difference &gt; <span class="number">10000</span>) &#123;
+      System.out.printf(<span class="string">&quot;Cleaner: %s\n&quot;</span>,e.getEvent());
+      deque.removeLast();
+      delete=<span class="literal">true</span>;
+    &#125;  
+  &#125; <span class="keyword">while</span> (difference &gt; <span class="number">10000</span>);
+  <span class="keyword">if</span> (delete)&#123;
+    System.out.printf(<span class="string">&quot;Cleaner: Size of the queue: %d\n&quot;</span>,deque.size());
+  &#125;
+&#125;</code></pre></li>
+<li>Now, implement the main class. Create a class called Main with a main() method.<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;
+  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;
+Create the queue to store the events using the Deque class.
+    Deque&lt;Event&gt; deque=<span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;Event&gt;();
+Create and start three WriterTask threads and one CleanerTask.
+    WriterTask writer=<span class="keyword">new</span> <span class="title class_">WriterTask</span>(deque);
+    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;<span class="number">3</span>; i++)&#123;
+      Thread thread=<span class="keyword">new</span> <span class="title class_">Thread</span>(writer);
+      thread.start();
+    &#125;
+    CleanerTask cleaner=<span class="keyword">new</span> <span class="title class_">CleanerTask</span>(deque);
+    cleaner.start();</code></pre></li>
+<li>Run the program and see the results.</li>
+</ul>
+<h1><span id="how-it-works">How it works…</span></h1><p>If you analyze the output of one execution of the program, you can see how the queue begins to grow until it has 30 events and then, its size will vary between 27 and 30 events until the end of the execution.<br>The program starts with three WriterTask threads. Each Thread writes an event and sleeps for one second. After the first 10 seconds, we have 30 threads in the queue. During these 10 seconds, CleanerTasks has been executing while the three WriterTask threads were sleeping, but it hasn’t deleted any event, because all of them were generated less than 10 seconds ago. During the rest of the execution, CleanerTask deletes three events every second and the three WriterTask threads write another three, so the size of the queue varies between 27 and 30 events.<br>You can play with the time until the WriterTask threads are sleeping. If you use a smaller value, you will see that CleanerTask has less CPU time and the size of the queue will increase because CleanerTask doesn’t delete any event.</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/07/11/java/2016/Creating and running a daemon thread/';
+var disqus_title = 'Creating and running a daemon thread';
+var disqus_url = 'https://mirsery.github.io/2016/07/11/java/2016/Creating and running a daemon thread/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/07/12/git/git%20stash/">上一篇</a><a class="next" href="/2016/06/30/%E5%89%8D%E7%AB%AF/JSTips/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

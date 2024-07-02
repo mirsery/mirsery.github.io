@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 乐观锁和悲观锁 · mirsery</title><meta name="description" content="乐观锁和悲观锁 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">乐观锁和悲观锁</h1><div class="post-info">作者: mirsery         创建日期: 2024年1月18日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E4%B9%90%E8%A7%82%E9%94%81%E5%92%8C%E6%82%B2%E8%A7%82%E9%94%81">乐观锁和悲观锁</a><ul>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F">实现方式</a></li>
+<li><a href="#%E4%BC%98%E7%BC%BA%E7%82%B9">优缺点</a></li>
+<li><a href="#cas%E7%9A%84%E4%B8%8D%E8%B6%B3">CAS的不足</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<h1><span id="乐观锁和悲观锁">乐观锁和悲观锁</span></h1><p>对待数据并发的锁的设计思想分为乐观锁和悲观锁。</p>
+<ul>
+<li>乐观锁<br>乐观锁对每次数据操作保持乐观态度，不会对数据进行上锁。每次修改数据的时候需要对数据判断是否被修改过。</li>
+<li>悲观锁<br>悲观锁在操作数据时候比较悲观，认为别人会同时修改数据。每次操作的时候会对数据上锁，防止在操作的过程中被他人同时操作导致更新丢失。</li>
+</ul>
+<h2><span id="实现方式">实现方式</span></h2><ul>
+<li>乐观锁：</li>
+</ul>
+<ol>
+<li><p>采用版本号或者时间戳。在表中增加version 或者 updatetime 字段，在每次更新操作的时候对比下该字段，如果一直则更新数据，数据不等则放弃本次修改，根据实际业务需求做相应的处理。</p>
+<blockquote>
+<p>CAS包含了Compare和Swap两个操作,CAS是由CPU支持的原子操作，其原子性是在硬件层面进行保证的。</p>
+</blockquote>
+</li>
+<li><p>采用 CAS 方式，对应 java 中的（compareAndSwap）。CAS 操作涉及到三个操作数，内存值（valueOffSet）、期望值（expect）、更新值（update）。当内存值和期望值一致的时候会更新数据，反之不会操作。</p>
+</li>
+</ol>
+<ul>
+<li>悲观锁：</li>
+</ul>
+<ol>
+<li>数据库实现方式：使用数据库的读锁、写锁、行锁等实现进程的悬挂阻塞等当前操作完成之后才能进行下一个操作。</li>
+<li>java 中采用 <em><strong>synchronize</strong></em> 关键字实现悲观锁。</li>
+</ol>
+<h2><span id="优缺点">优缺点</span></h2><p>乐观锁和悲观锁并没有优劣之分，下面从功能上和竞争激烈程度两个方面来分析其各自的优势以及适用场景。</p>
+<ul>
+<li><p>适用场景：<br>  乐观锁：由于不上锁的特性，性能方面由于悲观锁，适合读操作多的场景，相对来说写的操作比较少。它的优点在于程序实现，不存在死锁问题，不过适用场景也会相对乐观，因为它阻止不了除了程序以外的数据库操作。<br>  悲观锁 适合写操作比较多的场景，具有排他性。采用悲观锁的方式可以在数据库层面阻止其他事务对该数据的操作权限，防止读-写和写-写冲突。</p>
+</li>
+<li><p>功能限制<br>与悲观锁相比，乐观锁适用的场景受到了更多的限制，无论是CAS还是版本号机制。<br>例如，CAS只能保证单个变量操作的原子性，当涉及到多个变量时，CAS是无能为力的，而synchronized则可以通过对整个代码块加锁来处理。再比如版本号机制，如果query的时候是针对表1，而update的时候是针对表2，也很难通过简单的版本号来实现乐观锁。</p>
+</li>
+<li><p>竞争激烈程度<br>如果悲观锁和乐观锁都可以使用，那么选择就要考虑竞争的激烈程度：<br>当竞争不激烈 (出现并发冲突的概率小)时，乐观锁更有优势，因为悲观锁会锁住代码块或数据，其他线程无法同时访问，影响并发，而且加锁和释放锁都需要消耗额外的资源。<br>当竞争激烈(出现并发冲突的概率大)时，悲观锁更有优势，因为乐观锁在执行更新时频繁失败，需要不断重试，浪费CPU资源。</p>
+</li>
+</ul>
+<h2><span id="cas的不足">CAS的不足</span></h2><ol>
+<li><p>无法解决ABA问题<br> (1)线程1读取内存中数据为A<br> (2)线程2将该数据修改为B<br> (3)线程2将该数据修改为A<br> (4)线程1对数据进行CAS操作<br>在第(4)步中，由于内存中数据仍然为A，因此CAS操作成功，但实际上该数据已经被线程2修改过了。这就是ABA问题。<br>但是在某些场景下，ABA却会带来隐患，例如栈顶问题：一个栈的栈顶经过两次(或多次)变化又恢复了原值，但是栈可能已发生了变化。对于ABA问题，比较有效的方案是引入版本号，内存中的值每发生一次变化，版本号都+1；在进行CAS操作时，不仅比较内存中的值，也会比较版本号，只有当二者都没有变化时，CAS才能执行成功。Java中的AtomicStampedReference类便是使用版本号来解决ABA问题的。</p>
+</li>
+<li><p>高竞争下的开销问题 在并发冲突概率大的高竞争环境下，如果CAS一直失败，会一直重试，CPU开销较大。</p>
+</li>
+<li><p>功能限制 CAS的功能是比较受限的，例如CAS只能保证单个变量（或者说单个内存值）操作的原子性。<br> (1) 原子性不一定能保证线程安全，例如在Java中需要与volatile配合来保证线程安全；<br> (2) 当涉及到多个变量(内存值)时，CAS也无能为力。</p>
+</li>
+</ol>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2024/01/29/talk/2024/rabbitmq%E7%AC%94%E8%AE%B0/">上一篇</a><a class="next" href="/2024/01/18/%E7%AE%97%E6%B3%95%E5%92%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E4%B9%90%E8%A7%82%E9%94%81%E5%92%8C%E6%82%B2%E8%A7%82%E9%94%81/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

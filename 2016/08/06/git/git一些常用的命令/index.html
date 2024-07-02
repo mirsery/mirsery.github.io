@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> git一些常用的命令 · mirsery</title><meta name="description" content="git一些常用的命令 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">git一些常用的命令</h1><div class="post-info">作者: mirsery         创建日期: 2016年8月6日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#gitignore%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F%E8%A7%84%E8%8C%83%E6%A0%BC%E5%BC%8F">.gitignore文件的格式规范格式</a></li>
+<li><a href="#git-rm-%E5%91%BD%E4%BB%A4">git rm 命令</a></li>
+<li><a href="#git-log">git log</a></li>
+<li><a href="#%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C">撤销操作</a></li>
+<li><a href="#%E5%8F%96%E6%B6%88%E5%B7%B2%E7%BB%8F%E6%9A%82%E5%AD%98%E7%9A%84%E6%96%87%E4%BB%B6">取消已经暂存的文件</a></li>
+<li><a href="#%E5%8F%96%E6%B6%88%E5%AF%B9%E6%96%87%E4%BB%B6%E7%9A%84%E4%BF%AE%E6%94%B9">取消对文件的修改</a></li>
+</ul>
+<!-- tocstop -->
+
+<h1><span id="gitignore文件的格式规范格式">.gitignore文件的格式规范格式</span></h1><ul>
+<li>所有的空行或者以注释符号#开头的行都会被Git忽略。</li>
+<li>可以使用标准的glob模式匹配</li>
+<li>匹配模式最后跟反斜杠（&#x2F;）说明要忽略的是目录</li>
+<li>要忽略指定模式意外的文件或者目录，可以在模式前面加上惊叹号（！）取反。</li>
+</ul>
+<p>所谓的 glob 模式是指 shell 所使用的简化了的正则表达式。星号（*）匹配零个或多个任意字符；[abc] 匹配任何一个列在方括号中的字符（这个例子要么匹配一个 a，要么匹配一个 b，要么匹配一个 c）；问号（?）只匹配一个任意字符；如果在方括号中使用短划线分隔两个字符，表示所有在这两个字符范围内的都可以匹配（比如 [0-9] 表示匹配所有 0 到 9 的数字）。</p>
+<h1><span id="git-rm-命令">git rm 命令</span></h1><p>我们想把文件从 Git 仓库中删除（亦即从暂存区域移除），但仍然希望保留在当前工作目录中。换句话说，仅是从跟踪清单中删除。比如一些大型日志文件或者一堆 .a 编译文件，不小心纳入仓库后，要移除跟踪但不删除文件，以便稍后在 .gitignore 文件中补上，用 –cached 选项即可：</p>
+<pre><code class="highlight bash">git <span class="built_in">rm</span> --cached readme.txt</code></pre>
+<h1><span id="git-log">git log</span></h1><pre><code class="highlight bash">git <span class="built_in">mv</span> --- 对文件的改名
+git <span class="built_in">log</span> 查看历史提交记录
+git <span class="built_in">log</span> -p -2 显示最近两次提交内容的差异</code></pre>
+<p>在做代码审查，或者要快速浏览其他协作者提交的更新都作了哪些改动时，就可以用这个选项。此外，还有许多摘要选项可以用，比如 –stat，仅显示简要的增改行数统计：</p>
+<pre><code class="highlight bash">git <span class="built_in">log</span> --<span class="built_in">stat</span></code></pre>
+
+<h1><span id="撤销操作">撤销操作</span></h1><ul>
+<li>修改最后一次提交<br>有时候我们提交完了才发现漏掉了几个文件没有加，或者提交信息写错了。想要撤消刚才的提交操作，可以使用 –amend 选项重新提交：</li>
+</ul>
+<pre><code class="highlight bash">git commit --amend</code></pre>
+
+<p>此命令将使用当前的暂存区域快照提交。如果刚才提交完没有作任何改动，直接运行此命令的话，相当于有机会重新编辑提交说明，而所提交的文件快照和之前的一样。<br>启动文本编辑器后，会看到上次提交时的说明，编辑它确认没问题后保存退出，就会使用新的提交说明覆盖刚才失误的提交。<br>如果刚才提交时忘了暂存某些修改，可以先补上暂存操作，然后再运行 –amend 提交：</p>
+<pre><code class="highlight bash">git commit -m <span class="string">&#x27;initial commit&#x27;</span>
+git add forgotten_file
+git commit --amend</code></pre>
+<h1><span id="取消已经暂存的文件">取消已经暂存的文件</span></h1><pre><code class="highlight bash">git reset HEAD &lt;file&gt;</code></pre>
+<h1><span id="取消对文件的修改">取消对文件的修改</span></h1><pre><code class="highlight bash">git checkout &lt;file&gt;</code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/08/06/git/git一些常用的命令/';
+var disqus_title = 'git一些常用的命令';
+var disqus_url = 'https://mirsery.github.io/2016/08/06/git/git一些常用的命令/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/08/06/git/git%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/">上一篇</a><a class="next" href="/2016/07/24/mac/2016/mac%20ox%E7%B3%BB%E7%BB%9F%E4%B8%8B%E6%90%9C%E7%B4%A2%E6%96%87%E4%BB%B6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

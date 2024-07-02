@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> RSA 算法加解密代码实现片段 · mirsery</title><meta name="description" content="RSA 算法加解密代码实现片段 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">RSA 算法加解密代码实现片段</h1><div class="post-info">作者: mirsery         创建日期: 2021年5月23日</div><div class="post-content"><h1><span id="rsa-算法加解密代码实现片段">RSA 算法加解密代码实现片段</span></h1><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p> 采用java</p>
+</blockquote>
+<!-- toc -->
+
+<ul>
+<li><a href="#%E7%A7%98%E9%92%A5%E7%94%9F%E6%88%90">秘钥生成</a></li>
+<li><a href="#%E5%85%AC%E9%92%A5%E5%8A%A0%E5%AF%86">公钥加密</a></li>
+<li><a href="#%E5%85%AC%E9%92%A5%E8%A7%A3%E5%AF%86">公钥解密</a></li>
+<li><a href="#%E7%A7%81%E9%92%A5%E5%8A%A0%E5%AF%86">私钥加密</a></li>
+<li><a href="#%E7%A7%81%E9%92%A5%E8%A7%A3%E5%AF%86">私钥解密</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="秘钥生成">秘钥生成</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initKey</span><span class="params">()</span> &#123;
+      <span class="type">KeyPairGenerator</span> <span class="variable">keyPairGenerator</span> <span class="operator">=</span> KeyPairGenerator.getInstance(<span class="string">&quot;RSA&quot;</span>);
+      keyPairGenerator.initialize(<span class="number">2048</span>);<span class="comment">//长度必须为64的倍数 512~65536 之间</span>
+      <span class="type">KeyPair</span> <span class="variable">keyPair</span> <span class="operator">=</span> keyPairGenerator.generateKeyPair();
+      <span class="type">RSAPublicKey</span> <span class="variable">publicKey</span> <span class="operator">=</span> (RSAPublicKey) keyPair.getPublic(); <span class="comment">//公钥</span>
+      <span class="type">RSAPrivateKey</span> <span class="variable">privateKey</span> <span class="operator">=</span> (RSAPrivateKey) keyPair.getPrivate();    <span class="comment">//私钥</span>
+  &#125;</code></pre>
+
+<h2><span id="公钥加密">公钥加密</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="type">byte</span>[] encryptByPublicKey(<span class="type">byte</span>[] data, <span class="type">byte</span>[] key) <span class="keyword">throws</span> Exception &#123;
+      <span class="type">KeyFactory</span> <span class="variable">keyFactory</span> <span class="operator">=</span> KeyFactory.getInstance(<span class="string">&quot;RSA&quot;</span>);
+      <span class="type">X509EncodedKeySpec</span> <span class="variable">x509KeySpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">X509EncodedKeySpec</span>(key);
+      <span class="type">PublicKey</span> <span class="variable">pubKey</span> <span class="operator">=</span> keyFactory.generatePublic(x509KeySpec);
+      <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(keyFactory.getAlgorithm());
+      cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+      <span class="keyword">return</span> cipher.doFinal(data);
+  &#125;</code></pre>
+
+<h2><span id="公钥解密">公钥解密</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="type">byte</span>[] decryptByPublicKey(<span class="type">byte</span>[] data) <span class="keyword">throws</span> Exception &#123;
+       <span class="type">ByteArrayOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();
+       <span class="type">KeyFactory</span> <span class="variable">keyFactory</span> <span class="operator">=</span> KeyFactory.getInstance(KEY_ALGORITHM);
+       <span class="type">X509EncodedKeySpec</span> <span class="variable">x509KeySpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">X509EncodedKeySpec</span>(Base64.getDecoder().decode(publicKey.trim()));
+       <span class="type">PublicKey</span> <span class="variable">pubKey</span> <span class="operator">=</span> keyFactory.generatePublic(x509KeySpec);
+       <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(keyFactory.getAlgorithm());
+       cipher.init(Cipher.DECRYPT_MODE, pubKey);
+       <span class="type">int</span> <span class="variable">inputLen</span> <span class="operator">=</span> data.length;
+       <span class="type">int</span> <span class="variable">offSet</span> <span class="operator">=</span> <span class="number">0</span>;
+       <span class="type">byte</span>[] cache;
+       <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;
+       <span class="keyword">while</span> (inputLen - offSet &gt; <span class="number">0</span>) &#123;
+           <span class="keyword">if</span> (inputLen - offSet &gt; MAX_DECRYPT_BLOCK) &#123;
+               cache = cipher.doFinal(data, offSet, MAX_DECRYPT_BLOCK);
+           &#125; <span class="keyword">else</span> &#123;
+               cache = cipher.doFinal(data, offSet, inputLen - offSet);
+           &#125;
+           out.write(cache, <span class="number">0</span>, cache.length);
+           i++;
+           offSet = i * MAX_DECRYPT_BLOCK;
+       &#125;
+       out.close();
+       <span class="keyword">return</span> out.toByteArray();
+   &#125;</code></pre>
+
+<h2><span id="私钥加密">私钥加密</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="type">byte</span>[] encryptByPrivateKey(<span class="type">byte</span>[] data, <span class="type">byte</span>[] key) <span class="keyword">throws</span> Exception &#123;
+        <span class="type">ByteArrayOutputStream</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();
+        <span class="type">PKCS8EncodedKeySpec</span> <span class="variable">pkcs8KeySpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PKCS8EncodedKeySpec</span>(key);
+        <span class="type">KeyFactory</span> <span class="variable">keyFactory</span> <span class="operator">=</span> KeyFactory.getInstance(KEY_ALGORITHM);
+        <span class="type">PrivateKey</span> <span class="variable">privateKey</span> <span class="operator">=</span> keyFactory.generatePrivate(pkcs8KeySpec);
+        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(keyFactory.getAlgorithm());
+        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        <span class="type">int</span> <span class="variable">inputLen</span> <span class="operator">=</span> data.length;
+        <span class="type">int</span> <span class="variable">offSet</span> <span class="operator">=</span> <span class="number">0</span>;
+        <span class="type">byte</span>[] cache;
+        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;
+        <span class="keyword">while</span> (inputLen - offSet &gt; <span class="number">0</span>) &#123;
+            <span class="keyword">if</span> (inputLen - offSet &gt; MAX_ENCRYPT_BLOCK) &#123;
+                cache = cipher.doFinal(data, offSet, MAX_ENCRYPT_BLOCK);
+            &#125; <span class="keyword">else</span> &#123;
+                cache = cipher.doFinal(data, offSet, inputLen - offSet);
+            &#125;
+            out.write(cache, <span class="number">0</span>, cache.length);
+            i++;
+            offSet = i * MAX_ENCRYPT_BLOCK;
+        &#125;
+        out.close();
+        <span class="keyword">return</span> out.toByteArray();
+    &#125;</code></pre>
+
+<h2><span id="私钥解密">私钥解密</span></h2><pre><code class="highlight java"><span class="keyword">public</span> <span class="type">byte</span>[] decryptByPrivateKey(<span class="type">byte</span>[] data, <span class="type">byte</span>[] key) <span class="keyword">throws</span> Exception &#123;
+        <span class="type">PKCS8EncodedKeySpec</span> <span class="variable">pkcs8KeySpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PKCS8EncodedKeySpec</span>(key);
+        <span class="type">KeyFactory</span> <span class="variable">keyFactory</span> <span class="operator">=</span> KeyFactory.getInstance(KEY_ALGORITHM);
+        <span class="type">PrivateKey</span> <span class="variable">privateKey</span> <span class="operator">=</span> keyFactory.generatePrivate(pkcs8KeySpec);
+        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(keyFactory.getAlgorithm());
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        <span class="keyword">return</span> cipher.doFinal(data);
+    &#125;</code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/05/22/java/2021/java RSA 加密解密代码片段/';
+var disqus_title = 'RSA 算法加解密代码实现片段';
+var disqus_url = 'https://mirsery.github.io/2021/05/22/java/2021/java RSA 加密解密代码片段/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/06/07/java/2021/Springboot%20%E6%A1%86%E6%9E%B6%E8%87%AA%E5%B8%A6%E7%9A%84md5%E6%91%98%E8%A6%81/">上一篇</a><a class="next" href="/2021/05/12/docker/%E7%AE%80%E6%98%93docker%20registry%E6%90%AD%E5%BB%BA%E8%84%9A%E6%9C%AC/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> netty框架获取websocket协议客户端的真实IP地址问题 · mirsery</title><meta name="description" content="netty框架获取websocket协议客户端的真实IP地址问题 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">netty框架获取websocket协议客户端的真实IP地址问题</h1><div class="post-info">作者: mirsery         创建日期: 2021年4月15日</div><div class="post-content"><h1><span id="netty框架获取websocket协议客户端的真实ip地址问题">netty框架获取websocket协议客户端的真实IP地址问题</span></h1><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p> 背景 目前服务器采用nginx进行反向代理部署，利用socketchannel获取的socketAddress为代理服务器的局域网ip</p>
+</blockquote>
+<h2><span id="代理服务器的配置">代理服务器的配置</span></h2><p>首先代理服务器需将真实的ip地址转发到反向代理的服务上，因此代理服务器需增加代理的请求头。下面是nginx作为代理服务器的样例配置项</p>
+<pre><code class="highlight plaintext">server &#123;
+    listen xx;
+    location / &#123;
+                client_max_body_size 0;
+                proxy_redirect http://$host/ http://$http_host/;
+                proxy_set_header Host $host:$server_port;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_pass http://xxxxxx:xxxx;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection &#x27;upgrade&#x27;;
+                proxy_read_timeout 600s;
+      &#125;
+&#125;</code></pre>
+<p>其中 <strong>proxy_set_header X-Real-IP $remote_addr;</strong> 将真实的客户端ip转发给代理服务中。</p>
+<h2><span id="netty框架中获取传递的x-real-ip请求头地址">netty框架中获取传递的<strong>X-Real-IP</strong>请求头地址</span></h2><p>netty中需要在协议升级之前读取channel的请求头的内容，下面是实例代码。</p>
+<blockquote>
+<p> 该handler需配置在<strong>WebSocketServerProtocolHandler</strong>之前<strong>ChannelInboundHandlerAdapter</strong>不会修改Bytebuf的引用计数问题，详情见<a href="./bytebuf-yin-yong-ji-shu-wen-ti"># ByteBuf 引用计数问题</a></p>
+</blockquote>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HttpHeadersHandler</span> <span class="keyword">extends</span> <span class="title class_">ChannelInboundHandlerAdapter</span> &#123;
+    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">REAL_IP</span> <span class="operator">=</span> <span class="string">&quot;X-Real-IP&quot;</span>;
+    <span class="meta">@Autowired</span>
+    <span class="keyword">private</span> IotClientManager clientManager;
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception &#123;
+       <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> FullHttpRequest) &#123;
+            <span class="type">FullHttpRequest</span> <span class="variable">httpRequest</span> <span class="operator">=</span> (FullHttpRequest) msg;
+            <span class="type">HttpHeaders</span> <span class="variable">headers</span> <span class="operator">=</span> httpRequest.headers();
+            <span class="type">String</span> <span class="variable">ip</span> <span class="operator">=</span> headers.get(REAL_IP);
+            <span class="keyword">if</span> (ip != <span class="literal">null</span>) &#123;
+                clientManager.setIP(ctx.channel(), ip);
+            &#125;
+        &#125;
+        ctx.fireChannelRead(msg);
+    &#125;
+&#125;</code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/04/14/java/2021/netty框架中获取websocket升级协议前的http header/';
+var disqus_title = 'netty框架获取websocket协议客户端的真实IP地址问题';
+var disqus_url = 'https://mirsery.github.io/2021/04/14/java/2021/netty框架中获取websocket升级协议前的http header/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/04/15/mac/2021/mac%20app%E5%B7%B2%E7%A0%B4%E6%8D%9F%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/">上一篇</a><a class="next" href="/2021/02/28/java/2021/Springboot%E8%87%AA%E5%B8%A6%E7%9A%84%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E4%BD%BF%E7%94%A8/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>
