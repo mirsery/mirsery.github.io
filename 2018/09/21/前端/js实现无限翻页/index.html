@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 无限翻页测试 · mirsery</title><meta name="description" content="无限翻页测试 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">无限翻页测试</h1><div class="post-info">作者: mirsery         创建日期: 2018年9月21日</div><div class="post-content"><pre><code class="highlight html"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><span class="tag">&lt;<span class="name">html</span>&gt;</span>
+<span class="tag">&lt;<span class="name">head</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">title</span>&gt;</span>无限翻页测试<span class="tag">&lt;/<span class="name">title</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=utf-8&quot;</span>/&gt;</span>
+    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">head</span>&gt;</span>
+<span class="tag">&lt;<span class="name">body</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;sample&quot;</span>&gt;</span>
+    <span class="tag">&lt;/<span class="name">div</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;spinner&quot;</span>&gt;</span>
+        正在加载
+    <span class="tag">&lt;/<span class="name">div</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span>
+<span class="language-javascript">        <span class="keyword">var</span> index = <span class="number">0</span>;</span>
+<span class="language-javascript">        <span class="keyword">function</span> <span class="title function_">lowEnough</span>(<span class="params"></span>)&#123;</span>
+<span class="language-javascript">            <span class="keyword">var</span> pageHeight = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">scrollHeight</span>,<span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">offsetHeight</span>);</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">            <span class="keyword">var</span> viewportHeight = <span class="variable language_">window</span>.<span class="property">innerHeight</span> || </span>
+<span class="language-javascript"></span>
+<span class="language-javascript">                <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">clientHeight</span> ||</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">                <span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">clientHeight</span> || <span class="number">0</span>;</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">            <span class="keyword">var</span> scrollHeight = <span class="variable language_">window</span>.<span class="property">pageYOffset</span> ||</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">                <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">scrollTop</span> ||</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">                <span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">scrollTop</span> || <span class="number">0</span>;</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">            <span class="keyword">return</span> pageHeight - viewportHeight - scrollHeight &lt; <span class="number">20</span>;</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">        &#125;</span>
+<span class="language-javascript"></span>
+<span class="language-javascript"></span>
+<span class="language-javascript"></span>
+<span class="language-javascript">        <span class="keyword">function</span> <span class="title function_">loading</span>(<span class="params"></span>)&#123;</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">            <span class="keyword">var</span> htmlStr = <span class="string">&quot;&quot;</span>;</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">            <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">                htmlStr += <span class="string">&quot;这是第&quot;</span>+index+<span class="string">&quot;次加载&lt;br&gt;&quot;</span>;</span>
+<span class="language-javascript"></span>
+<span class="language-javascript">            &#125;</span>
+<span class="language-javascript">            $(<span class="string">&#x27;#sample&#x27;</span>).<span class="title function_">append</span>(htmlStr);</span>
+<span class="language-javascript">            index++;</span>
+<span class="language-javascript">            <span class="title function_">pollScroll</span>();<span class="comment">//继续循环</span></span>
+<span class="language-javascript">        &#125;</span>
+<span class="language-javascript">        <span class="keyword">function</span> <span class="title function_">checkScroll</span>(<span class="params"></span>)&#123;</span>
+<span class="language-javascript">            <span class="keyword">if</span>(!<span class="title function_">lowEnough</span>()) <span class="keyword">return</span> <span class="title function_">pollScroll</span>();</span>
+<span class="language-javascript">            $(<span class="string">&#x27;#spinner&#x27;</span>).<span class="title function_">show</span>();</span>
+<span class="language-javascript">            <span class="built_in">setTimeout</span>(loading,<span class="number">0</span>);</span>
+<span class="language-javascript">        &#125;</span>
+<span class="language-javascript">        <span class="keyword">function</span> <span class="title function_">pollScroll</span>(<span class="params"></span>)&#123;</span>
+<span class="language-javascript">            <span class="built_in">setTimeout</span>(checkScroll,<span class="number">1000</span>);</span>
+<span class="language-javascript">        &#125;</span>
+<span class="language-javascript">        <span class="title function_">checkScroll</span>();</span>
+<span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">html</span>&gt;</span></code></pre></div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2018/09/21/前端/js实现无限翻页/';
+var disqus_title = '无限翻页测试';
+var disqus_url = 'https://mirsery.github.io/2018/09/21/前端/js实现无限翻页/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2018/09/21/%E5%89%8D%E7%AB%AF/JS%E5%AE%9E%E7%8E%B0%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD/">上一篇</a><a class="next" href="/2018/09/21/%E5%89%8D%E7%AB%AF/JS%E5%AE%9A%E6%97%B6%E5%99%A8/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

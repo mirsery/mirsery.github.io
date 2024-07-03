@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> scoop安装 · mirsery</title><meta name="description" content="scoop安装 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">scoop安装</h1><div class="post-info">作者: mirsery         创建日期: 2023年1月4日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4%E5%90%88%E9%9B%86">基础命令合集</a></li>
+<li><a href="#%E5%8D%B8%E8%BD%BD%E5%91%BD%E4%BB%A4">卸载命令</a></li>
+<li><a href="#%E6%8D%A2%E6%BA%90">换源</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6">安装软件</a></li>
+<li><a href="#%E6%A3%80%E6%B5%8B%E5%BD%93%E5%89%8D%E5%AE%89%E8%A3%85%E6%98%AF%E5%90%A6%E6%9C%89%E9%97%AE%E9%A2%98">检测当前安装是否有问题</a></li>
+<li><a href="#%E5%88%A9%E7%94%A8aria2%E8%BF%9B%E8%A1%8C%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0">利用aria2进行断点续传</a></li>
+<li><a href="#%E6%89%93%E5%BC%80%E6%9F%90%E4%B8%AAapp%E7%9A%84%E4%B8%BB%E9%A1%B5">打开某个app的主页</a></li>
+<li><a href="#%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AAapp%E7%9A%84%E4%BF%A1%E6%81%AF">显示某个app的信息</a></li>
+</ul>
+<!-- tocstop -->
+
+<p>mac 有homebrew，linux有yum，apt，apk等等。对于win平台如果高效快捷的管理软件，我们可以使用scoop来管理我们的软件。</p>
+<p>以下是安装命令，在powershell中直接运行如下代码：</p>
+<pre><code class="highlight shell"><span class="meta prompt_"># </span><span class="language-bash">scoop 安装</span>
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">更改脚本执行策略</span>
+Set-ExecutionPolicy RemoteSigned -scope CurrentUser;
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">安装命令</span>
+iwr -useb https://gitee.com/glsnames/scoop-installer/raw/master/bin/install.ps1 | iex
+
+scoop config SCOOP_REPO &#x27;https://gitee.com/glsnames/scoop-installer&#x27;
+
+scoop update</code></pre>
+
+<h2><span id="基础命令合集">基础命令合集</span></h2><pre><code class="highlight shell">scoop help #查看帮助
+scoop help &lt;cmdName&gt; # 具体查看某个命令的帮助
+
+scoop install &lt;appName&gt;   # 安装 APP
+scoop uinstall &lt;app&gt;  # 卸载 APP
+
+scoop list  # 列出已安装的 APP
+scoop search # 搜索 APP
+scoop status # 检查哪些软件有更新
+
+scoop update # 更新 Scoop 自身
+scoop update appName1 appName2 # 更新某些app
+scoop update *  # 更新所有 app （前提是需要在apps目录下操作）
+
+scoop bucket known #通过此命令列出已知所有 bucket（软件源）
+scoop bucket add bucketName #添加某个 bucket
+
+scoop cache rm &lt;appName&gt; # 移除某个app的缓存
+</code></pre>
+
+
+<h2><span id="卸载命令">卸载命令</span></h2><blockquote>
+<p>很危险，此命令会删除scoop下面的所有软件</p>
+</blockquote>
+<pre><code class="highlight shell">scoop uninstall scoop</code></pre>
+
+<h2><span id="换源">换源</span></h2><pre><code class="highlight shell">scoop bucket add extras</code></pre>
+
+<h2><span id="安装软件">安装软件</span></h2><pre><code class="highlight shell">scoop install [appname]</code></pre>
+
+<h2><span id="检测当前安装是否有问题">检测当前安装是否有问题</span></h2><pre><code class="highlight shell">scoop checkup</code></pre>
+
+<h2><span id="利用aria2进行断点续传">利用aria2进行断点续传</span></h2><p>首先安装aria2</p>
+<pre><code class="highlight shell">scoop install aria2</code></pre>
+
+<p>下载其他软件失败后进行断点续传</p>
+<pre><code class="highlight shell">aria2c.exe --input-file=&#x27;&#123;your path&#125;&#x27;</code></pre>
+
+<p>当提示下载完成之后需要再次运行scoop对应的更新或者安装命令，即可完成app的更新或者安装</p>
+<pre><code class="highlight shell">scoop update &lt;appName&gt;</code></pre>
+
+<h2><span id="打开某个app的主页">打开某个app的主页</span></h2><pre><code class="highlight shell">scoop home &lt;appName&gt;</code></pre>
+
+<h2><span id="显示某个app的信息">显示某个app的信息</span></h2><pre><code class="highlight shell">scoop info &lt;appName&gt;</code></pre></div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2023/01/06/talk/2023/%E5%B8%B8%E7%94%A8%E7%9A%84%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%9F%A5%E7%9C%8B%E5%91%BD%E4%BB%A4/">上一篇</a><a class="next" href="/2023/01/03/web/2023/nginx%E4%BD%BF%E7%94%A8%E4%B8%AD%E7%9A%84%E4%B8%80%E7%82%B9%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

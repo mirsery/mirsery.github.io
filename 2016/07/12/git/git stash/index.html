@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> git stash · mirsery</title><meta name="description" content="git stash - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">git stash</h1><div class="post-info">作者: mirsery         创建日期: 2016年7月12日</div><div class="post-content"><p>命令：git stash</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ol>
+<li><p>使用git stash保存当前的工作现场，那么就可以切换到其他分支进行工作，或者在当前分支上完成其他紧急的工作，比如修订一个bug测试提交。</p>
+</li>
+<li><p>如果一个使用了一个git stash，切换到一个分支，且在该分支上的工作未完成也需要保存它的工作现场。再使用git stash。那么stash 队列中就有了两个工作现场。</p>
+</li>
+<li><p>可以使用git stash list。查看stash队列。</p>
+</li>
+<li><p>如果在一个分支上想要恢复某一个工作现场怎么办：先用git stash list查看stash队列。确定要恢复哪个工作现场到当前分支。然后用git stash pop stash@{num}。num 就是你要恢复的工作现场的编号。</p>
+</li>
+<li><p>如果想要清空stash队列则使用git stash clear。</p>
+</li>
+<li><p>同时注意使用git stash pop命令是恢复stash队列中的stash@{0}即最上层的那个工作现场。而且使用pop命令恢复的工作现场，其对应的stash 在队列中删除。使用git stash apply stash@{num}方法除了不在stash队列删除外其他和git stash pop 完全一样。</p>
+</li>
+</ol>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/07/12/git/git stash/';
+var disqus_title = 'git stash';
+var disqus_url = 'https://mirsery.github.io/2016/07/12/git/git stash/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/07/18/java/2016/Grouping%20threads%20into%20a%20group/">上一篇</a><a class="next" href="/2016/07/11/java/2016/Creating%20and%20running%20a%20daemon%20thread/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

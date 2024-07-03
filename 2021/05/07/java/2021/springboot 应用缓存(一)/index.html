@@ -1,0 +1,176 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> springboot 中应用缓存（一） · mirsery</title><meta name="description" content="springboot 中应用缓存（一） - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">springboot 中应用缓存（一）</h1><div class="post-info">作者: mirsery         创建日期: 2021年5月8日</div><div class="post-content"><h1><span id="springboot-中应用缓存一">springboot 中应用缓存（一）</span></h1><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#springboot-%E7%BC%93%E5%AD%98%E6%94%AF%E6%8C%81">springboot 缓存支持</a></li>
+<li><a href="#cachemanager-%E7%9A%84%E4%BD%BF%E7%94%A8">CacheManager 的使用</a></li>
+</ul>
+<!-- tocstop -->
+
+<p>一般情况的程序的压力瓶颈在数据库。当需要重复的获取相同的数据或者获取的数据更新周期很慢时，我们会进行如果一次又一次直接进行数据库的请求或远程服务的调用会导致IO的阻塞，从而导致程序性能的恶化。</p>
+<h2><span id="springboot-缓存支持">springboot 缓存支持</span></h2><p>springboot定义了org.springframework.cache.CacheManager和org.springframework.cache.Cache接口用来统一不通的缓存技术。其中CacheManager是Spring提供的各种缓存技术抽象接口，Cache接口包含缓存的各种操作（增加、删除、获得缓存）。</p>
+<p>CacheManager 的实现</p>
+<table>
+<thead>
+<tr>
+<th>CacheManager</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SimpleCacheManager</td>
+<td>使用简单的Collection来存储缓存，主要用来测试用途</td>
+</tr>
+<tr>
+<td>ConcurrentMapCacheManager</td>
+<td>使用ConcurrentMap来存储缓存</td>
+</tr>
+<tr>
+<td>NoOpCacheManager</td>
+<td>仅做测试用途，不会实际存储缓存</td>
+</tr>
+<tr>
+<td>EhCacheManager</td>
+<td>使用EhCache作为缓存技术</td>
+</tr>
+<tr>
+<td>GuavaCacheManager</td>
+<td>使用Google Guava的GuavaCache做为缓存技术</td>
+</tr>
+<tr>
+<td>HazelcastCacheManager</td>
+<td>使用Hazelcast作为缓存技术</td>
+</tr>
+<tr>
+<td>JCacheCacheManager</td>
+<td>支持JCache（JSR-107)标准的实现作为缓存技术，如Apache Commons JCS</td>
+</tr>
+<tr>
+<td>RedisCacheManager</td>
+<td>使用redis作为缓存技术</td>
+</tr>
+</tbody></table>
+<h2><span id="cachemanager-的使用">CacheManager 的使用</span></h2><blockquote>
+<p>1、 <a href="#CacheManager_1">注册bean</a><br>2、<a href="#CacheManager_2">开启声明缓存支持</a><br>3、<a href="#CacheManager_3">声明缓存规则</a></p>
+</blockquote>
+<ol>
+<li><span id="CacheManager_1">注册Bean</span><br> 在pom.xml中引入如下:<pre><code class="highlight xml:n">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-cache&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;net.sf.ehcache&lt;/groupId&gt;
+    &lt;artifactId&gt;ehcache&lt;/artifactId&gt;
+    &lt;version&gt;2.10.6&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+根据查看源码,可知<strong>spring-boot-starter-cache</strong> 引入<strong>spring-context-support-5.2.2.RELEASE.jar</strong> 包，查看源码<strong>org.springframework.boot.autoconfigure.cache.EhCacheCacheConfiguration</strong></li>
+</ol>
+<pre><code class="highlight java:n">/*
+ * Copyright 2012-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.boot.autoconfigure.cache;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ResourceCondition;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.ehcache.EhCacheManagerUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+
+/**
+ * EhCache cache configuration. Only kick in if a configuration file location is set or if
+ * a default configuration file exists.
+ *
+ * @author Eddú Meléndez
+ * @author Stephane Nicoll
+ * @author Madhura Bhave
+ */
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnClass(&#123; Cache.class, EhCacheCacheManager.class &#125;)
+@ConditionalOnMissingBean(org.springframework.cache.CacheManager.class)
+@Conditional(&#123; CacheCondition.class, EhCacheCacheConfiguration.ConfigAvailableCondition.class &#125;)
+class EhCacheCacheConfiguration &#123;
+
+	@Bean
+	EhCacheCacheManager cacheManager(CacheManagerCustomizers customizers, CacheManager ehCacheCacheManager) &#123;
+		return customizers.customize(new EhCacheCacheManager(ehCacheCacheManager));
+	&#125;
+
+	@Bean
+	@ConditionalOnMissingBean
+	CacheManager ehCacheCacheManager(CacheProperties cacheProperties) &#123;
+		Resource location = cacheProperties.resolveConfigLocation(cacheProperties.getEhcache().getConfig());
+		if (location != null) &#123;
+			return EhCacheManagerUtils.buildCacheManager(location);
+		&#125;
+		return EhCacheManagerUtils.buildCacheManager();
+	&#125;
+	/**
+	 * Determine if the EhCache configuration is available. This either kick in if a
+	 * default configuration has been found or if property referring to the file to use
+	 * has been set.
+	 */
+	static class ConfigAvailableCondition extends ResourceCondition &#123;
+		ConfigAvailableCondition() &#123;
+			super(&quot;EhCache&quot;, &quot;spring.cache.ehcache.config&quot;, &quot;classpath:/ehcache.xml&quot;);
+		&#125;
+
+	&#125;
+&#125;</code></pre>
+<p>可以自动注册bean。配置文件默认地址是<strong>classpath:&#x2F;ehcache.xml</strong></p>
+<ol>
+<li><span id="CacheManager_2">开启声明缓存支持</span><br> 开启缓存支持只需要在配置类中增加**@EnableCaching**注解即可。</li>
+<li><span id="#CacheManager_3">声明缓存规则</span></li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Cacheable</td>
+<td>在方法前spring 先查看缓存中是否有数据，如果有数据，则直接返回缓存数据；若没有数据，调用方法并将方法返回值放进缓存</td>
+</tr>
+<tr>
+<td>@CachePut</td>
+<td>无论怎样，都会将方法的返回值放到缓存中。@CachePut的属性与@Cacheable保存一致。</td>
+</tr>
+<tr>
+<td>@CacheEvict</td>
+<td>将一条或多条数据从缓存中删除</td>
+</tr>
+<tr>
+<td>@Caching</td>
+<td>可以通过@Caching注解组合多个注解策略在一个方法上</td>
+</tr>
+</tbody></table>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/05/07/java/2021/springboot 应用缓存(一)/';
+var disqus_title = 'springboot 中应用缓存（一）';
+var disqus_url = 'https://mirsery.github.io/2021/05/07/java/2021/springboot 应用缓存(一)/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/05/12/docker/%E7%AE%80%E6%98%93docker%20registry%E6%90%AD%E5%BB%BA%E8%84%9A%E6%9C%AC/">上一篇</a><a class="next" href="/2021/05/07/java/2021/springboot%20%E5%BA%94%E7%94%A8%E7%BC%93%E5%AD%98(%E4%BA%8C)/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

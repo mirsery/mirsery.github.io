@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 读写锁 · mirsery</title><meta name="description" content="读写锁 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">读写锁</h1><div class="post-info">作者: mirsery         创建日期: 2021年7月27日</div><div class="post-content"><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p>ReadWriteLock是JDK5中提供的读写分离锁.读写锁可以有效的减少锁竞争，提升系统的吞吐量。</p>
+</blockquote>
+<!-- toc -->
+
+<ul>
+<li><a href="#%E8%AF%BB%E5%86%99%E9%94%81%E7%9A%84%E8%AE%BF%E9%97%AE%E7%BA%A6%E6%9D%9F%E6%83%85%E5%86%B5">读写锁的访问约束情况</a></li>
+<li><a href="#%E6%A0%B7%E4%BE%8B%E6%AF%94%E8%BE%83%E8%AF%BB%E5%86%99%E9%94%81%E5%92%8C%E9%87%8D%E5%85%A5%E9%94%81%E7%9A%84%E6%80%A7%E8%83%BD%E5%B7%AE%E8%B7%9D">样例比较读写锁和重入锁的性能差距</a></li>
+<li><a href="#%E8%BE%93%E5%87%BA%E5%80%BC">输出值</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="读写锁的访问约束情况">读写锁的访问约束情况</span></h2><table>
+<thead>
+<tr>
+<th></th>
+<th>读</th>
+<th>写</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读</td>
+<td>非阻塞</td>
+<td>阻塞</td>
+</tr>
+<tr>
+<td>写</td>
+<td>阻塞</td>
+<td>阻塞</td>
+</tr>
+</tbody></table>
+<p>读读之间不阻塞，读和写之间相互阻塞，写和写之间阻塞。系统中如果读操作比写操作多，则可以考虑使用读写锁增加系统的吞吐量，提高系统的性能。<br>读写锁允许多个读线程同时读，使得多个读线程真正并行。但是由于数据的完整性，所以读和写之间，写和写之间需要相互等待和持有锁。读操作占用的时间越长，则使用读写锁的优势越明显。</p>
+<h2><span id="样例比较读写锁和重入锁的性能差距">样例比较读写锁和重入锁的性能差距</span></h2><blockquote>
+<p>测试电脑 配置<br>2.7 GHz 双核Intel Core i5, RAM 8 GB 1867 MHz DDR3<br>openjdk 16.0.1 OpenJDK 64-Bit Server VM Homebrew (build 16.0.1+0, mixed mode, sharing)</p>
+</blockquote>
+<pre><code class="highlight java">
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReadWriteLockDemo</span> &#123;
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">ReentrantReadWriteLock</span> <span class="variable">reentrantReadWriteLock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantReadWriteLock</span>();
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Lock</span> <span class="variable">readLock</span> <span class="operator">=</span> reentrantReadWriteLock.readLock();
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">Lock</span> <span class="variable">writeLock</span> <span class="operator">=</span> reentrantReadWriteLock.writeLock();
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">ReentrantLock</span> <span class="variable">reentrantLock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">CountDownLatch</span> <span class="variable">countDownLatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">20</span>);  <span class="comment">//多线程控制</span>
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">readThreadNum</span> <span class="operator">=</span> <span class="number">20</span>;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">writeThreadNum</span> <span class="operator">=</span> <span class="number">2</span>;
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">CountDownLatch</span> <span class="variable">reentrantDownLatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(<span class="number">20</span>);
+
+    <span class="keyword">private</span> <span class="type">int</span> value;
+
+    <span class="keyword">public</span> Object <span class="title function_">readSomething</span><span class="params">(Lock lock)</span> <span class="keyword">throws</span> InterruptedException &#123;
+        <span class="keyword">try</span> &#123;
+            lock.lock();
+            Thread.sleep(<span class="number">1000</span>); <span class="comment">//模拟耗时操作</span>
+            <span class="keyword">return</span> value;
+        &#125; <span class="keyword">finally</span> &#123;
+            lock.unlock();
+        &#125;
+    &#125;
+
+    <span class="keyword">public</span> Object <span class="title function_">writeSomething</span><span class="params">(Lock lock, <span class="type">int</span> newValue)</span> <span class="keyword">throws</span> InterruptedException &#123;
+        <span class="keyword">try</span> &#123;
+            lock.lock();
+            Thread.sleep(<span class="number">1000</span>); <span class="comment">//模拟耗时操作</span>
+            <span class="built_in">this</span>.value = newValue;
+            <span class="keyword">return</span> <span class="built_in">this</span>.value;
+        &#125; <span class="keyword">finally</span> &#123;
+            lock.unlock();
+        &#125;
+    &#125;
+
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;
+        <span class="type">ReadWriteLockDemo</span> <span class="variable">demo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReadWriteLockDemo</span>();
+
+        <span class="type">Runnable</span> <span class="variable">readTask</span> <span class="operator">=</span> () -&gt; &#123;
+            <span class="keyword">try</span> &#123;
+                demo.readSomething(readLock);
+                countDownLatch.countDown();
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;;
+
+        <span class="type">Runnable</span> <span class="variable">writeTask</span> <span class="operator">=</span> () -&gt; &#123;
+            <span class="keyword">try</span> &#123;
+                demo.writeSomething(writeLock, <span class="keyword">new</span> <span class="title class_">Random</span>().nextInt());
+                countDownLatch.countDown();
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;;
+
+        <span class="type">Runnable</span> <span class="variable">readTask2</span> <span class="operator">=</span> () -&gt; &#123;
+            <span class="keyword">try</span> &#123;
+                demo.readSomething(reentrantLock);
+                reentrantDownLatch.countDown();
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;;
+
+        <span class="type">Runnable</span> <span class="variable">writeTask2</span> <span class="operator">=</span> () -&gt; &#123;
+            <span class="keyword">try</span> &#123;
+                demo.writeSomething(reentrantLock, <span class="keyword">new</span> <span class="title class_">Random</span>().nextInt());
+                reentrantDownLatch.countDown();
+            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;;
+
+
+
+        <span class="type">long</span> <span class="variable">begin</span> <span class="operator">=</span> System.currentTimeMillis();
+
+        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; readThreadNum; i++) <span class="keyword">new</span> <span class="title class_">Thread</span>(readTask).start();
+
+        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; writeThreadNum; i++) <span class="keyword">new</span> <span class="title class_">Thread</span>(writeTask).start();
+
+        countDownLatch.await(); <span class="comment">//等待子线程全部完成工作</span>
+
+        <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> System.currentTimeMillis();
+
+        System.out.println(<span class="string">&quot;[readWriteLock cost] &quot;</span> + (end - begin) + <span class="string">&quot;ms&quot;</span>);
+
+
+
+        <span class="type">long</span> <span class="variable">begin2</span> <span class="operator">=</span> System.currentTimeMillis();
+        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; readThreadNum; i++) <span class="keyword">new</span> <span class="title class_">Thread</span>(readTask2).start();
+
+        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; writeThreadNum; i++) <span class="keyword">new</span> <span class="title class_">Thread</span>(writeTask2).start();
+
+        reentrantDownLatch.await(); <span class="comment">//等待子线程全部完成工作</span>
+
+        <span class="type">long</span> <span class="variable">end2</span> <span class="operator">=</span> System.currentTimeMillis();
+
+        System.out.println(<span class="string">&quot;[reentrantLock cost] &quot;</span> + (end2 - begin2) + <span class="string">&quot;ms&quot;</span>);
+    &#125;
+
+&#125;
+</code></pre>
+<h2><span id="输出值">输出值</span></h2><p>两者的输出值，在笔者电脑上为如下所示:</p>
+<pre><code class="highlight plaintext">[readWriteLock cost] 1011ms
+[reentrantLock cost] 20069ms</code></pre>
+
+<h2><span id="总结">总结</span></h2><p>性能相差20倍多，不同的电脑和jdk版本表现有所不同。如果将读线程的数量或者耗时增加，则读写锁的性能优势会更加明显。在读多的场景下可以采用读写锁提升性能。</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/07/27/java/2021/读写锁/';
+var disqus_title = '读写锁';
+var disqus_url = 'https://mirsery.github.io/2021/07/27/java/2021/读写锁/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/08/24/java/2021/Mybatis%20xml%E6%98%A0%E5%B0%84%E5%99%A8-%E4%B8%80/">上一篇</a><a class="next" href="/2021/07/27/linux/ubuntu%E5%86%85%E6%A0%B8%E5%8D%87%E7%BA%A7%E9%99%8D%E7%BA%A7%E5%92%8C%E5%88%87%E6%8D%A2/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

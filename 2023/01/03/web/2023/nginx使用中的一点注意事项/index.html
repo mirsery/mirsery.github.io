@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> nginx使用中的一点注意事项 · mirsery</title><meta name="description" content="nginx使用中的一点注意事项 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">nginx使用中的一点注意事项</h1><div class="post-info">作者: mirsery         创建日期: 2023年1月3日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#nginx-%E5%BF%BD%E7%95%A5%E8%B5%B7%E5%A7%8B%E4%B8%BA_-%E7%9A%84%E5%8F%82%E6%95%B0%E7%9A%84%E8%BD%AC%E5%8F%91">nginx 忽略起始为’_’ 的参数的转发</a></li>
+<li><a href="#nginx%E7%BB%91%E5%AE%9A%E4%B8%BB%E6%9C%BA%E5%A4%B4">nginx绑定主机头</a></li>
+<li><a href="#nginx%E6%8A%A5%E9%94%99accept4-failed-23-too-many-open-files-in-system">nginx报错accept4() failed (23: Too many open files in system)</a></li>
+<li><a href="#nginx%E8%B7%A8%E5%9F%9F%E9%85%8D%E7%BD%AE%E5%85%81%E8%AE%B8%E8%B7%A8%E5%9F%9F">nginx跨域配置(允许跨域)</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="nginx-忽略起始为_-的参数的转发">nginx 忽略起始为’_’ 的参数的转发</span></h2><p>nginx的默认配置会忽略’_’的请求头参数的转发需要在配置文件中增加如下配置，才可以实现参数的转发。</p>
+<pre><code class="highlight plaintext">underscores_in_headers on;</code></pre>
+
+<h2><span id="nginx绑定主机头">nginx绑定主机头</span></h2><pre><code class="highlight plaintext">server &#123;
+    listen 80 default;
+    return 404;
+&#125;</code></pre>
+
+<h2><span id="nginx报错accept4-failed-23-too-many-open-files-in-system">nginx报错accept4() failed (23: Too many open files in system)</span></h2><ul>
+<li>首先查看系统对打开文件数目的限制</li>
+</ul>
+<pre><code class="highlight shell">ulimit -n
+ulimit -Sn #查看软限制
+ulimit -Hn #查看硬限制</code></pre>
+
+<ul>
+<li><p>修改ulimit的限制</p>
+<pre><code class="highlight shell">ulimit -SHn 65535 # /etc/bashrc 文件末尾新增如下内容</code></pre>
+</li>
+<li><p>解除linux系统最大打开文件数量可以修改 Linux 的极限配置文件 ** &#x2F;etc&#x2F;security&#x2F;limits.conf ** 来解决，修改此文件加入</p>
+<pre><code class="highlight shell">soft nofile 100000
+hard nofile 100000</code></pre>
+</li>
+<li><p>修改nginx.conf配置文件</p>
+</li>
+</ul>
+<pre><code class="highlight shell">worker_processes auto;
+
+worker_rlimit_nofile 65535;
+events &#123;
+    worker_connections 65535;
+&#125;</code></pre>
+
+<h2><span id="nginx跨域配置允许跨域">nginx跨域配置(允许跨域)</span></h2><pre><code class="highlight shell"><span class="meta prompt_">#</span><span class="language-bash">坑：1、<span class="string">&#x27;Access-Control-Allow-Credentials&#x27;</span>: <span class="literal">true</span> 是不能*  可以 add_header <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span> <span class="variable">$http_origin</span>;</span>
+
+if ($request_method = &#x27;OPTIONS&#x27;) &#123;
+	add_header &#x27;Access-Control-Allow-Origin&#x27; &#x27;*&#x27;;
+	add_header &#x27;Access-Control-Allow-Methods&#x27; &#x27;GET, POST, OPTIONS&#x27;;
+<span class="meta prompt_"></span>
+<span class="meta prompt_">	# </span><span class="language-bash">Custom headers and headers various browsers *should* be OK with but aren<span class="string">&#x27;t</span></span>
+	add_header &#x27;Access-Control-Allow-Headers&#x27; &#x27;DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type&#x27;;
+<span class="meta prompt_"></span>
+<span class="meta prompt_">	# </span><span class="language-bash"><span class="string">Tell client that this pre-flight info is valid for 20 days</span></span>
+	add_header &#x27;Access-Control-Max-Age&#x27; 1728000;
+	add_header &#x27;Content-Type&#x27; &#x27;text/plain charset=UTF-8&#x27;;
+	add_header &#x27;Content-Length&#x27; 0;
+	return 204;
+&#125;
+if ($request_method = &#x27;POST&#x27;) &#123;
+	add_header &#x27;Access-Control-Allow-Origin&#x27; &#x27;*&#x27;;
+	add_header &#x27;Access-Control-Allow-Methods&#x27; &#x27;GET, POST, OPTIONS&#x27;;
+	add_header &#x27;Access-Control-Allow-Headers&#x27; &#x27;DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type&#x27;;
+&#125;
+if ($request_method = &#x27;GET&#x27;) &#123;
+	add_header &#x27;Access-Control-Allow-Origin&#x27; &#x27;*&#x27;;
+	add_header &#x27;Access-Control-Allow-Methods&#x27; &#x27;GET, POST, OPTIONS&#x27;;
+	add_header &#x27;Access-Control-Allow-Headers&#x27; &#x27;DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type&#x27;;
+&#125;</code></pre></div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2023/01/04/talk/2023/scoop%E5%AE%89%E8%A3%85/">上一篇</a><a class="next" href="/2022/11/14/talk/2022/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%90%AD%E5%BB%BA%E5%91%A8%E6%8A%A5%E6%9C%BA%E5%99%A8%E4%BA%BA/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

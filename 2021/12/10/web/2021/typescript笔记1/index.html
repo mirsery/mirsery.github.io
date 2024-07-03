@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> typescript笔记1 · mirsery</title><meta name="description" content="typescript笔记1 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">typescript笔记1</h1><div class="post-info">作者: mirsery         创建日期: 2021年12月10日</div><div class="post-content"><h1><span id="typescript-笔记-1">typescript 笔记 1</span></h1><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#typescript%E7%9A%84%E5%AE%89%E8%A3%85">typescript的安装</a></li>
+<li><a href="#typescript%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%B3%A8%E8%A7%A3">TypeScript的类型注解</a></li>
+<li><a href="#%E6%8E%A5%E5%8F%A3">接口</a></li>
+<li><a href="#%E7%B1%BB">类</a></li>
+<li><a href="#symbol%E7%B1%BB%E5%9E%8B">symbol类型</a></li>
+<li><a href="#%E4%BC%97%E6%89%80%E5%91%A8%E7%9F%A5%E7%9A%84symbols">众所周知的Symbols</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="typescript的安装">typescript的安装</span></h2><p>使用npm包的形式安装</p>
+<pre><code class="highlight shell">npm install -g typescript</code></pre>
+
+<h2><span id="typescript的类型注解">TypeScript的类型注解</span></h2><pre><code class="highlight typeScript"><span class="keyword">function</span> <span class="title function_">greeter</span>(<span class="params">person: <span class="built_in">string</span></span>)&#123;
+    <span class="keyword">return</span> <span class="string">&quot;hello, &quot;</span>+person;
+&#125;
+<span class="keyword">let</span> user = <span class="string">&quot;Jane User&quot;</span>;
+<span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">innerHtml</span> = <span class="title function_">greeter</span>(user)</code></pre>
+
+<p>TypeScript里的类型注解是一种轻量级的为函数或变量添加约束的方式。如果传入的参数不符合类型，则会编译器会给出相应的警告内容.</p>
+<h2><span id="接口">接口</span></h2><p>TypeScript里可以定义类似java中的接口，如下所示:</p>
+<pre><code class="highlight typeScript"><span class="keyword">interface</span> <span class="title class_">Person</span> &#123;
+    <span class="attr">firstName</span>: <span class="built_in">string</span>;
+    <span class="attr">lastName</span>: <span class="built_in">string</span>
+&#125;
+
+<span class="keyword">function</span> <span class="title function_">greeter</span>(<span class="params">person: Person</span>) &#123;
+    <span class="keyword">return</span> <span class="string">&quot;Hello, &quot;</span> + person.<span class="property">firstName</span> + <span class="string">&quot;&quot;</span> + person.<span class="property">lastName</span>;
+&#125;
+
+<span class="keyword">let</span> user = &#123;<span class="attr">firstName</span>:<span class="string">&quot;Jane&quot;</span>,<span class="attr">lastName</span>:<span class="string">&quot;User&quot;</span>&#125;;
+<span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">innerHTML</span> = <span class="title function_">greeter</span>(user)</code></pre>
+
+<h2><span id="类">类</span></h2><p>TypeScript支持JavaScript的新特性，比如支持基于类的面向对象编程。以下是官网的例子:</p>
+<blockquote>
+<p>在构造函数上使用public等同于创建了同名的成员变量</p>
+</blockquote>
+<pre><code class="highlight typeScript"><span class="keyword">class</span> <span class="title class_">Student</span> &#123;
+    <span class="attr">fullName</span>: <span class="built_in">string</span>,
+    <span class="title function_">constructor</span>(<span class="params"><span class="keyword">public</span> firstName,<span class="keyword">public</span> middleInitial,<span class="keyword">public</span> lastName</span>)&#123;
+        <span class="variable language_">this</span>.<span class="property">fullName</span> = firstName + <span class="string">&quot; &quot;</span> + middleInitial + <span class="string">&quot; &quot;</span> + lastName;
+    &#125;
+&#125;
+
+<span class="keyword">interface</span> <span class="title class_">Person</span>&#123;
+    <span class="attr">firstName</span>: <span class="built_in">string</span>,
+    <span class="attr">lastName</span>: <span class="built_in">string</span>;
+&#125;
+
+<span class="keyword">function</span> <span class="title function_">greeter</span>(<span class="params">person: Person</span>)&#123;
+    <span class="keyword">return</span> <span class="string">&quot;Hello, &quot;</span> + person.<span class="property">firstName</span> + <span class="string">&quot; &quot;</span> + person.<span class="property">lastName</span>;
+&#125;
+
+
+<span class="keyword">let</span> user = <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;Jane&quot;</span>,<span class="string">&quot;M.&quot;</span>,<span class="string">&quot;User&quot;</span>);
+<span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">innerHTML</span> = <span class="title function_">greeter</span>(user);
+
+
+</code></pre>
+
+<h2><span id="symbol类型">symbol类型</span></h2><blockquote>
+<p>自ECMAScript 2015起，symbol成为了一种新的原生类型，就像number和string一样。</p>
+</blockquote>
+<p>symbol类型的值是通过Symbol构造函数创建的。</p>
+<pre><code class="highlight typeScript"><span class="keyword">let</span> sym1 = <span class="title class_">Symbol</span>();
+
+<span class="keyword">let</span> sym2 = <span class="title class_">Symbol</span>(<span class="string">&quot;key&quot;</span>); <span class="comment">// 可选的字符串key</span></code></pre>
+
+<p>Symbols是不可以改变且唯一的。</p>
+<pre><code class="highlight typeScript"><span class="keyword">let</span> sym2 = <span class="title class_">Symbol</span>(<span class="string">&quot;key&quot;</span>);
+<span class="keyword">let</span> sym3 = <span class="title class_">Symbol</span>(<span class="string">&quot;key&quot;</span>);
+
+sym2 === sym3; <span class="comment">// false, symbols是唯一的</span></code></pre>
+<p>像字符串一样，symbols也可以被用做对象属性的键。</p>
+<pre><code class="highlight typeScript"><span class="keyword">let</span> sym = <span class="title class_">Symbol</span>();
+
+<span class="keyword">let</span> obj = &#123;
+    [sym]: <span class="string">&quot;value&quot;</span>
+&#125;;
+
+<span class="variable language_">console</span>.<span class="title function_">log</span>(obj[sym]); <span class="comment">// &quot;value&quot;</span></code></pre>
+
+<p>Symbols也可以与计算出的属性名声明相结合来声明对象的属性和类成员.</p>
+<pre><code class="highlight typeScript"><span class="keyword">const</span> getClassNameSymbol = <span class="title class_">Symbol</span>();
+
+<span class="keyword">class</span> <span class="title class_">C</span> &#123;
+    [getClassNameSymbol]()&#123;
+       <span class="keyword">return</span> <span class="string">&quot;C&quot;</span>;
+    &#125;
+&#125;
+
+<span class="keyword">let</span> c = <span class="keyword">new</span> <span class="title function_">C</span>();
+<span class="keyword">let</span> className = c[getClassNameSymbol](); <span class="comment">// &quot;C&quot;</span></code></pre>
+
+<h2><span id="众所周知的symbols">众所周知的Symbols</span></h2><p>除了用户定义的symbols，还有一些已经众所周知的内置symbols。 内置symbols用来表示语言内部的行为。</p>
+<p>以下为这些symbols的列表：</p>
+<ul>
+<li><p>Symbol.hasInstance</p>
+<p>  方法，会被<strong>instanceof</strong>运算符调用。构造器对象用来识别一个对象是否是其实例。</p>
+</li>
+<li><p>Symbol.isConcatSpreadable</p>
+<p>  布尔值，表示当在一个对象上调用<strong>Array.prototype.concat</strong>时，这个对象的数组元素是否可展开。</p>
+</li>
+<li><p>Symbol.iterator</p>
+<p>  方法，被<strong>for-of</strong>语句调用。返回对象的默认迭代器。</p>
+</li>
+<li><p>Symbol.match</p>
+<p>  方法，被<strong>String.prototype.match</strong>调用。正则表达式用来匹配字符串。</p>
+</li>
+<li><p>Symbol.replace</p>
+<p>  方法，被<strong>String.prototype.replace</strong>调用。正则表达式用来替换字符串中匹配的子串。</p>
+</li>
+<li><p>Symbol.search</p>
+<p>  方法，被<strong>String.prototype.search</strong>调用。正则表达式返回被匹配部分在字符串中的索引。</p>
+</li>
+<li><p>Symbol.species</p>
+<p>  函数值，为一个构造函数。用来创建派生对象。</p>
+</li>
+<li><p>Symbol.split</p>
+<p>  方法，被<strong>String.prototype.split</strong>调用。正则表达式来用分割字符串。</p>
+</li>
+<li><p>Symbol.toPrimitive</p>
+<p>  方法，被<strong>ToPrimitive</strong>抽象操作调用。把对象转换为相应的原始值。</p>
+</li>
+<li><p>Symbol.toStringTag</p>
+<p>  方法，被内置方法<strong>Object.prototype.toString</strong>调用。返回创建对象时默认的字符串描述。</p>
+</li>
+<li><p>Symbol.unscopables</p>
+<p>  对象，它自己拥有的属性会被with作用域排除在外。</p>
+</li>
+</ul>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/12/10/web/2021/ubuntu%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">上一篇</a><a class="next" href="/2021/11/25/web/2021/electron-builder%E6%89%93%E5%8C%85%E4%BE%9D%E8%B5%96%E5%AD%98%E6%94%BE%E4%BD%8D%E7%BD%AE/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

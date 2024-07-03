@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> tcp协议小记（1） · mirsery</title><meta name="description" content="tcp协议小记（1） - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">tcp协议小记（1）</h1><div class="post-info">作者: mirsery         创建日期: 2023年1月31日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#tcp-transmission-control-protocol">TCP (Transmission Control Protocol)</a></li>
+<li><a href="#tcp%E7%AA%97%E5%8F%A3%E5%8D%8F%E8%AE%AE">TCP窗口协议</a><ul>
+<li><a href="#%E7%AA%97%E5%8F%A3%E7%BC%93%E5%AD%98">窗口缓存</a></li>
+<li><a href="#%E7%BD%91%E5%8D%A1%E7%BC%93%E5%AD%98">网卡缓存</a></li>
+</ul>
+</li>
+<li><a href="#java-%E5%AF%B9%E4%BA%8Etcp%E7%9A%84%E5%AE%9E%E7%8E%B0">Java 对于tcp的实现</a><ul>
+<li><a href="#netty%E5%AE%A3%E7%A7%B0%E7%9A%84%E9%9B%B6%E6%8B%B7%E8%B4%9D">netty宣称的“零拷贝”</a></li>
+<li><a href="#java-nio">Java NIO</a></li>
+<li><a href="#tcp%E4%BF%9D%E9%9A%9C%E5%8F%AF%E9%9D%A0%E7%9A%84%E4%BC%A0%E8%BE%93">tcp保障可靠的传输</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="tcp-transmission-control-protocol">TCP (Transmission Control Protocol)</span></h2><p>TCP是一种常用的网络传输协议，用于在两个设备之间进行可靠的数据传输。</p>
+<ul>
+<li>面向连接：建立一条可靠的连接，再进行数据传输。</li>
+<li>流量控制：避免发送端数据过多导致接收端缓存溢出。</li>
+<li>拥塞控制：避免网络拥塞导致传输效率降低。</li>
+<li>可靠性保证：确保数据的正确接收，并在必要时进行重传。</li>
+<li>顺序保证：保证数据的接收顺序和发送顺序一致。</li>
+<li>TCP协议是应用层与传输层之间的协议，使用三次握手建立连接，四次挥手关闭连接，保证数据的正确传输。</li>
+</ul>
+<h2><span id="tcp窗口协议">TCP窗口协议</span></h2><p>TCP窗口协议是指TCP协议中的流量控制机制。流量控制的目的是避免发送端数据太快导致接收端缓存区溢出，窗口协议就是实现流量控制的一种方法。每个TCP连接都有一个窗口大小，代表接收端缓存区的大小，发送端每次发送数据前都要查询接收端的窗口大小，确保发送的数据量不超过窗口大小。当接收端的缓存区已满时，接收端可以通过减小窗口大小来限制发送端的数据发送量；当缓存区已经有足够的空间时，接收端可以通过增大窗口大小来鼓励发送端发送数据。这样，窗口协议就实现了发送端和接收端之间的动态平衡，确保了网络资源的有效利用，避免了网络拥塞。对于每个TCP连接，服务端都有一个独立的窗口与该连接相关联。窗口大小是根据接收端的缓存区大小和网络状况动态调整的，因此每个TCP连接的窗口大小都可能不同。这样，窗口协议能够灵活地控制网络流量，确保不同的TCP连接的流量能够得到平衡的分配。</p>
+<p>服务端的每个TCP连接的窗口都有独立的缓存，每个窗口都是独立管理和控制的。这部分缓存是操作系统实现的，由操作系统维护缓存的大小和内容。操作系统在处理TCP数据包时，会把数据包存储在对应的窗口的缓存中，并维护每个窗口的状态。发送端通过窗口协议查询窗口大小来决定数据发送量，接收端通过修改窗口大小来控制流量，操作系统会根据窗口大小来决定接收到的数据包的处理方式。因此，窗口协议的实现是由操作系统和网络协议栈共同完成的，涉及到了操作系统的缓存管理和网络协议栈的数据包处理。</p>
+<p>TCP协议的窗口协议是自动启用的。当两台计算机通过TCP协议建立连接时，窗口协议将自动启用，并在数据传输过程中自动协调流量控制和错误控制。在TCP协议的实现中，窗口协议是一种内置的功能，不需要开发人员显式地启用或配置。所以，在使用TCP协议进行数据传输时，窗口协议是自动启用的。</p>
+<h3><span id="窗口缓存">窗口缓存</span></h3><p>窗口缓存通常存在于内核态。窗口缓存是网络协议栈（内核）实现的一部分，它存储了数据包，并负责在发送端和接收端之间协调数据传输。<br>内核态是操作系统内核运行的状态，它提供了一种抽象的接口来访问和管理系统的硬件资源和管理程序的共享资源。在内核态中，操作系统有较高的权限，可以读取和修改系统内存、访问硬件和驱动程序等。<br>因此，窗口缓存存在于内核态，它可以直接读取和修改内存，以实现数据传输的高效处理。开发人员不需要直接访问窗口缓存，只需要通过高层次的API来发送和接收数据。</p>
+<h3><span id="网卡缓存">网卡缓存</span></h3><p>网卡是与操作系统内核中的网络协议栈相连的硬件，它负责接收来自网络的数据并将数据传输到操作系统内核中。 在接收到数据时，网卡可以将数据缓存在其内部，以等待操作系统内核处理。网卡缓存可以减少系统的网络负载，因为它可以在网卡的缓存中缓存数据，而不是立即将数据传输到操作系统内核中。但是，如果网卡缓存的数据过多，则可能会影响网卡的性能。因此，通常需要在网卡的配置中设置合适的缓存大小，以保证网卡性能的最佳平衡。</p>
+<h2><span id="java-对于tcp的实现">Java 对于tcp的实现</span></h2><p>Java使用的是操作系统的socket来实现TCP协议。 Java的socket编程是在操作系统的socket API的基础上实现的，它提供了一种简单的高层次的API来访问操作系统的socket，而操作系统的socket实现则是基于网络协议栈的。因此，在Java中实现TCP连接时，也是通过操作系统的socket实现的，用户编写的Java代码发出的请求和数据发送均通过操作系统的socket完成。在Java中，TCP协议是通过java.net包中的Socket和ServerSocket类实现的。开发人员可以在Java中通过这些类来编写高层次的网络应用程序，而不用考虑操作系统的底层细节。</p>
+<h3><span id="netty宣称的零拷贝">netty宣称的“零拷贝”</span></h3><p>Netty的”零拷贝”是指在处理网络数据时，Netty避免了将数据从内核空间拷贝到用户空间的操作。这意味着，在从网络读取数据时，Netty可以直接在内核空间读取数据，而无需将数据从内核空间拷贝到用户空间。<br>这样做的好处是：<br>减少了数据在内核空间和用户空间之间的拷贝操作，提高了网络性能<br>避免了用户空间内存的占用，减少了内存压力<br>Netty通过使用Java NIO的特性，如内存映射文件和直接字节缓冲区，来实现零拷贝。</p>
+<blockquote>
+<p>需要注意的是网卡缓存的信息还是需要传输到内核态中的。</p>
+</blockquote>
+<p>Netty是通过使用Java NIO（非阻塞I&#x2F;O）实现来实现零拷贝的。Java NIO提供了通道（Channel）和缓冲区（Buffer）的概念，允许Java程序直接与操作系统的内核空间交互。通道可以直接读取或写入缓冲区，而缓冲区可以存储数据。Netty可以直接使用Java NIO在内核空间和用户空间之间进行数据交换，不需要将内核空间的数据复制到用户空间，从而实现零拷贝。这与其他传统的网络框架的处理方式不同，因为它们通常需要将内核空间的数据复制到用户空间，这样会增加额外的性能开销。所以，Netty在使用Java NIO的基础上实现了零拷贝，这是它实现高性能网络通信的关键原因。Netty中实现零拷贝是通过将底层系统I&#x2F;O读写数据接口和用户空间内存对应连接起来，避免了从内核空间到用户空间的数据拷贝。在Java NIO中，通过使用DirectByteBuffer类型的缓冲区，操作系统会把该缓冲区直接映射到内存，系统读写数据时不需要复制到用户空间的临时缓冲区。这样避免了数据从内核空间到用户空间的复制，减少了内存的拷贝开销，提高了系统性能。<br>Java NIO实现的内核空间和用户空间的数据交换通过Java NIO的Buffer（缓存）机制实现。使用Buffer作为两个空间之间的数据桥梁。数据读取到Buffer，再从Buffer写入到另一个空间。这种方式可以让内核和用户空间的数据在缓存中进行交换，避免频繁的内存复制，提高传输性能。</p>
+<h3><span id="java-nio">Java NIO</span></h3><p>Java NIO中的Buffer（缓存）是Java NIO的核心组件，它用于存储数据。Java NIO提供了多种不同类型的Buffer，如ByteBuffer、CharBuffer、ShortBuffer、IntBuffer等。在Java NIO中，每个Buffer都有一个position（位置）和limit（限制）。position指示下一个要读&#x2F;写的数据的位置，limit指示当前Buffer的数据的最大范围。Java NIO的Buffer是基于内存映射的，可以直接访问内核空间的数据，但Java程序不能直接访问内核空间的数据。通过使用Buffer，内核空间和用户空间的数据可以在缓存中进行交换，而不需要频繁的内存复制。如果在内核空间接收到数据，它可以将数据存储到Buffer中，然后在用户空间读取数据时，可以直接从Buffer中读取数据。同样的，如果要发送数据，它可以先写入到Buffer中，然后在内核空间将数据从Buffer中发送出去。这就是Java NIO实现内核空间和用户空间的数据交换的方式，使用Buffer作为数据桥梁，避免频繁的内存复制，提高传输性能。<br>DirectByteBuffer类型的缓存和内存映射是由Java虚拟机来控制的。Java虚拟机可以通过使用相应的本地方法，直接在内存上进行读写操作，而不需要进行数据的拷贝。使用DirectByteBuffer映射文件并利用通道进行读写操作可以实现高速的文件复制。</p>
+<blockquote>
+<p>但需要注意的是，DirectByteBuffer对系统内存的占用可能较高，因此使用时需谨慎考虑。</p>
+</blockquote>
+<h3><span id="tcp保障可靠的传输">tcp保障可靠的传输</span></h3><ol>
+<li>建立连接：通过三次握手建立连接，保证连接实体真实存在</li>
+<li>序号机制：保证数据是按序、完整到达</li>
+<li>合理分片：tcp会按最大传输单元(MTU)合理分片，接收方会缓存未按序到达的数据，重新排序后交给应用层。</li>
+<li>数据校验：TCP报文头有校验和，用于校验报文是否损坏</li>
+<li>超时重传：如果发送一直收不到应答，可能是发送数据丢失，也可能是应答丢失，发送方再等待一段时间之后都会进行重传。</li>
+<li>流量控制：当接收方来不及处理发送方的数据，能通过滑动窗口，提示发送方降低发送的速率，防止包丢失。</li>
+<li>拥塞控制：网络层拥堵造成的拥塞，包括慢启动，拥塞避免，快速重传三种机制</li>
+</ol>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2023/10/16/%E7%AE%97%E6%B3%95%E5%92%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/AVL%E6%A0%91%E4%B8%80/">上一篇</a><a class="next" href="/2023/01/06/talk/2023/%E5%B8%B8%E7%94%A8%E7%9A%84%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%9F%A5%E7%9C%8B%E5%91%BD%E4%BB%A4/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

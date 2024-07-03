@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> springboot 中新增异步任务 · mirsery</title><meta name="description" content="springboot 中新增异步任务 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">springboot 中新增异步任务</h1><div class="post-info">作者: mirsery         创建日期: 2020年1月3日</div><div class="post-content"><h1><span id="springboot-中新增异步任务">springboot 中新增异步任务</span></h1><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p> 一般情况下，异步任务主要是处理一些相对耗时的任务。比如邮件、短信等信息的推送。</p>
+</blockquote>
+<p>springboot中使用支持异步任务开箱即用。<br>1、首先在application中添加 <em><strong>@EnableAsync</strong></em>注解<br>2、新增一个compent组件，并且在application中添加其扫描包地址<br>3、在新建的compent中使用***@Async**注解注释方法即可实现任务的异步调用。<br><br><br>下面是示例代码<br><br><br>1、WebTestApplication</p>
+<pre><code class="highlight java"><span class="meta">@SpringBootApplication</span>
+<span class="meta">@EnableAsync</span>
+<span class="meta">@ComponentScan(basePackages = &quot;com.xxxx.component&quot;)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebTestApplication</span> &#123;
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;
+        SpringApplication.run(WebTestApplication.class, args);
+    &#125;
+&#125;</code></pre>
+<br>
+2、TestController.java
+<pre><code class="highlight java"><span class="meta">@RestController</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestController</span> &#123;
+    <span class="meta">@Autowired</span>
+    <span class="keyword">private</span> PushCompent pushCompent;
+    <span class="meta">@PostMapping(&quot;/testAsync&quot;)</span>
+    <span class="keyword">public</span> String <span class="title function_">testAsync</span><span class="params">(<span class="meta">@RequestBody</span> String requestBody)</span> <span class="keyword">throws</span> InterruptedException &#123;
+        <span class="type">long</span> <span class="variable">time</span> <span class="operator">=</span> System.currentTimeMillis();
+        Future&lt;Boolean&gt; r1 = pushCompent.pushToAndroid(requestBody);
+        Future&lt;Boolean&gt; r2 = pushCompent.pushToIos(requestBody);
+        Future&lt;Boolean&gt; r3 = pushCompent.pushToWeb(requestBody);
+        <span class="keyword">for</span> (; ; ) &#123;
+            <span class="keyword">if</span> (r1.isDone() &amp;&amp; r2.isDone() &amp;&amp; r3.isDone()) &#123;
+                <span class="keyword">break</span>;
+            &#125;
+        &#125;
+        <span class="keyword">return</span> <span class="string">&quot;cost millis is &quot;</span> + (System.currentTimeMillis() - time);
+    &#125;
+&#125;</code></pre>
+
+<p>3、PushCompent.java</p>
+<pre><code class="highlight java"><span class="meta">@Component</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PushCompent</span> &#123;
+
+    <span class="meta">@Async</span>
+    <span class="keyword">public</span> Future&lt;Boolean&gt; <span class="title function_">pushToAndroid</span><span class="params">(String message)</span> <span class="keyword">throws</span> InterruptedException &#123;
+        Thread.sleep(<span class="number">2000</span>);
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AsyncResult</span>&lt;&gt;(<span class="literal">true</span>);
+    &#125;
+
+    <span class="meta">@Async</span>
+    <span class="keyword">public</span> Future&lt;Boolean&gt; <span class="title function_">pushToIos</span><span class="params">(String message)</span> <span class="keyword">throws</span> InterruptedException &#123;
+        Thread.sleep(<span class="number">2345</span>);
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AsyncResult</span>&lt;&gt;(<span class="literal">false</span>);
+    &#125;
+
+    <span class="meta">@Async</span>
+    <span class="keyword">public</span> Future&lt;Boolean&gt; <span class="title function_">pushToWeb</span><span class="params">(String message)</span> <span class="keyword">throws</span> InterruptedException &#123;
+        Thread.sleep(<span class="number">4567</span>);
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AsyncResult</span>&lt;&gt;(<span class="literal">true</span>);
+    &#125;
+&#125;
+</code></pre>
+<hr>
+<p>注意事项:<br>如下方式会使@Async失效</p>
+<ul>
+<li>异步方法使用static修饰</li>
+<li>异步类没有使用@Component注解（或其他注解）导致spring无法扫描到异步类</li>
+<li>异步方法不能与调用异步方法的方法在同一个类中</li>
+<li>类中需要使用@Autowired或@Resource等注解自动注入，不能自己手动new对象</li>
+<li>如果使用SpringBoot框架必须在启动类中增加@EnableAsync注解</li>
+<li>在Async 方法上标注@Transactional是没用的。 在Async 方法调用的方法上标注@Transactional 有效</li>
+</ul>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2020/01/02/java/2020/springboot中的异步任务使用/';
+var disqus_title = 'springboot 中新增异步任务';
+var disqus_url = 'https://mirsery.github.io/2020/01/02/java/2020/springboot中的异步任务使用/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2020/01/19/java/2020/springboot%20%E4%B8%AD%E6%B7%BB%E5%8A%A0filter/">上一篇</a><a class="next" href="/2019/09/17/java/2019/Memory/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

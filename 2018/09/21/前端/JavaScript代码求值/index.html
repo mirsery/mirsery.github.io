@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 代码求值 · mirsery</title><meta name="description" content="代码求值 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">代码求值</h1><div class="post-info">作者: mirsery         创建日期: 2018年9月21日</div><div class="post-content"><p>JavaScript可以在代码执行时动态地执行解释代码。</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p>##代码求值机制<br>在javaScript中有很多代码求值机制</p>
+<ul>
+<li>eval( ) 函数</li>
+<li>函数构造器</li>
+<li>定时器</li>
+<li>&lt;script&gt;元素</li>
+</ul>
+<p>##使用eval( ) 方法进行函数求值<br>eval( ) 定义在全局作用域，该方法将在当前上下文执行所传入字符串形式的代码，执行返回结果是最后一个表达式的执行结果。<br>###基本功能</p>
+<ul>
+<li>该方法将执行传入代码的字符串</li>
+<li>在调用eval( ) 方法的作用域内进行代码求值。<br>eval 创建的函数会继承该作用域的闭包 - - -局部作用域内执行eval()时的衍生结果。</li>
+</ul>
+<p>##使用函数构造器进行求值<br>JavaScript中的所有函数都是Function的实例<br>直接通过Function构造器实例化函数</p>
+<pre><code class="highlight javaScript"><span class="keyword">var</span> add=<span class="keyword">new</span> <span class="title class_">Function</span>(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;return a+b;&quot;</span>);</code></pre>
+<blockquote>
+<p>使用Function构造器方式创建函数的时候不会创建闭包</p>
+</blockquote>
+<p>##用定时器进行求值<br>定时器可以对代码字符串进行求值，而且还是异步的。<br>我们使用定时器的时候一般传递给定时器一个内联函数或者函数引用，这是setTimeout()、setInterval()方法推荐使用的方式，但是这些方式也可以接受字符串的传入，从而在定时器触发的时候进行求值。<br>示例如下:</p>
+<pre><code class="highlight javaScript"><span class="keyword">var</span> tick = <span class="variable language_">window</span>.<span class="built_in">setTimeout</span>(<span class="string">&#x27;alert(&quot;hi&quot;)&#x27;</span>,<span class="number">100</span>);</code></pre>
+<p>大致相当于new Function()的使用方式。</p>
+<p>##全局作用域内的求值操作</p>
+<p>我们可以把将要执行的代码放在动态的&lt;script&gt;标签内，并将标签注入到文档中。<br>##函数序列化(“反编译”)</p>
+<p>toString ( ) ————–JavaScript可以把已经求值的代码转换成字符串。</p>
+<p>##面向切面的脚本标签<br>AOP或面向切面编程。———-维基百科对AOP的定义:“一种旨在通过分离横切关注点而增加模块化的编程范式”。<br>简单的说AOP技术可以在运行时将代码进行注入并执行一些横切代码，如日志记录、缓存、安全检查等。AOP引擎将在运行时添加日志代码而不是在原有代码中添加大量的日志语句以便让开发人员在开发期间不用关注这些事情。<br>比方说我们可以创建一个类型为onload的新脚本。<br>我们可以指定如下的代码块实现。</p>
+<pre><code class="highlight html"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>&quot;<span class="attr">x</span>/<span class="attr">onload</span>&quot;&gt;</span>
+... ...
+<span class="tag">&lt;/<span class="name">script</span>&gt;</span></code></pre>
+<p>创建一个在页面加载后才执行的脚本标签类型。</p>
+<pre><code class="highlight javaScript">&lt;script type<span class="string">&quot;text/javascript&quot;</span>&gt;
+<span class="variable language_">window</span>.<span class="property">onload</span> =  <span class="keyword">function</span>(<span class="params"></span>)&#123;
+    <span class="keyword">var</span> scripts = <span class="variable language_">document</span>.<span class="title function_">getElementByTagName</span>(<span class="string">&quot;script&quot;</span>);
+    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;scripts.<span class="property">length</span>;i++)&#123;
+        <span class="keyword">if</span>(scripts[i].<span class="property">type</span>==<span class="string">&quot;x/onload&quot;</span>)&#123;
+            <span class="title function_">globalEval</span>(<span class="title class_">Scripts</span>[i].<span class="property">innerHTML</span>);
+        &#125;
+    &#125;
+&#125;
+&lt;/script&gt;</code></pre>
+<p>这是一个简单的例子，但是这种技术更复杂且有更有意义的用途。例如:将自定义脚本快和JQuery.tmpl()方法一起使用，用于提供运行时模板，利用它可以在用户界面上执行脚本或者在准备操作DOM的时候甚至是相邻元素上执行脚本。</p>
+<p>##元语言和领域特定语言(待补)</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2018/09/21/前端/JavaScript代码求值/';
+var disqus_title = '代码求值';
+var disqus_url = 'https://mirsery.github.io/2018/09/21/前端/JavaScript代码求值/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2018/09/21/%E5%89%8D%E7%AB%AF/JS%E5%AE%9A%E6%97%B6%E5%99%A8/">上一篇</a><a class="next" href="/2018/09/15/java/2018/Spring%20interceptor/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

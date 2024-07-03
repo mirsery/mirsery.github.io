@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> java集合 · mirsery</title><meta name="description" content="java集合 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">java集合</h1><div class="post-info">作者: mirsery         创建日期: 2016年9月6日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E4%B8%80-java%E4%B8%AD%E9%9B%86%E5%90%88%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9B%BE">一、java中集合的关系图</a></li>
+<li><a href="#%E4%BA%8C-collection">二、Collection</a><ul>
+<li><a href="#collection%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD">Collection基本功能</a></li>
+<li><a href="#list%E6%8E%A5%E5%8F%A3">List接口</a></li>
+<li><a href="#set-%E6%8E%A5%E5%8F%A3">Set 接口</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<h1><span id="一-java中集合的关系图">一、java中集合的关系图</span></h1><p><img src="/~/20150501232236784.png"><br>集合体系图</p>
+<p><img src="/~/20150501232625059.png"></p>
+<h1><span id="二-collection">二、Collection</span></h1><p>   Collection是最基本的集合接口，一个Collection代表一组Object，即Collection的元素（Elements）。一些Collection允许相同的元素而另一些不行。一些能排序而另一些不行，于是衍生出两个子类接口List和Set。</p>
+<p><img src="/~/20150501233345854.png"></p>
+<h2><span id="collection基本功能">Collection基本功能</span></h2><pre><code>      A:添加功能
+                      boolean add(Object obj):向集合中添加一个元素
+                      boolean addAll(Collection c)：向集合中添加一个集合的元素。
+      B:删除功能
+                      void clear()：删除集合中的所有元素。
+                      boolean remove(Object obj)：从集合中删除指定的元素
+                      boolean removeAll(Collection c):从集合中删除一个指定的集合元素。
+      C:判断功能
+                      boolean isEmpty()：判断集合是否为空。
+                      boolean contains(Object obj)：判断集合中是否存在指定的元素。
+                      boolean containsAll(Collection c)：判断集合中是否存在指定的一个集合中的元素。
+      D:遍历功能
+                      Iterator iterator():就是用来获取集合中每一个元素。
+      E:长度功能
+                      int size():获取集合中的元素个数
+      F:交集功能
+                      boolean retainAll(Collection c):判断两个集合中是否有相同的元素。???
+      G:把集合转换成数组
+                      Object[] toArray():把集合变成数组。
+</code></pre>
+<h2><span id="list接口">List接口</span></h2><pre><code>    List接口下的集合元素存储有序，可以重复。
+        List的特有功能
+          A:添加功能
+              void add(int index, Object obj):在指定位置添加元素
+          B:删除功能
+              Object remove(int index):根据指定索引删除元素，并把删除的元素返回。
+          C:修改功能
+              Object set(int index, Object obj):把指定索引位置的元素修改为指定的值，返回修改前的值。
+          D:获取功能
+              int indexOf(Object o):返回指定元素在集合中第一次出现的索引
+              Object get(int index):获取指定位置的元素
+              ListIterator listIterator()：列表迭代器
+          E:截取功能
+              List subList(int fromIndex, int toIndex)：截取集合。
+</code></pre>
+<h2><span id="set-接口">Set 接口</span></h2><pre><code>           Set接口下的元素无序，不可以重复。其下面分为HashSet和TreeSet。
+          HashSet
+           底层数据结构是哈希表，线程不安全，效率高。
+           保证唯一性依赖两个方法：hashCode()和equals()。
+           顺序：
+                   判断hashCode()值是否相同。
+                   相同：继续走equals(),看返回值
+                               如果true：就不添加到集合。
+                               如果false：就添加到集合。
+                   不同：就添加到集合。
+          TreeSet
+            底层数据结构是二叉树，线程不安全，效率高。
+            保证元素唯一性的方法时根据返回值是否是0。
+            保证排序的两种方式：
+                    自然排序（元素具备比较性）：实现Comparable接口
+                    比较器排序（集合具备比较性）：实现Comparator接口
+    
+</code></pre>
+<p><img src="/~/20150501235138962.png"></p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/09/06/java/2016/java集合/';
+var disqus_title = 'java集合';
+var disqus_url = 'https://mirsery.github.io/2016/09/06/java/2016/java集合/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/10/07/java/2016/Jconsole%E7%9A%84%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5/">上一篇</a><a class="next" href="/2016/09/06/java/2016/Java%E9%AB%98%E7%BA%A7%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E5%B8%88%E9%9D%A2%E8%AF%95%E8%80%83%E7%BA%B2/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

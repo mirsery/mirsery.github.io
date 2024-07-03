@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> DockerCompose介绍 · mirsery</title><meta name="description" content="DockerCompose介绍 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">DockerCompose介绍</h1><div class="post-info">作者: mirsery         创建日期: 2021年1月29日</div><div class="post-content"><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p> Compose 是用于定义和运行多容器 Docker 应用程序的工具。通过 Compose，您可以使用 YML 文件来配置应用程序需要的所有服务。然后，使用一个命令，就可以从 YML 文件配置中创建并启动所有服务。</p>
+</blockquote>
+<h2><span id="docker-compose-使用步骤">Docker compose 使用步骤</span></h2><ul>
+<li>使用 <strong>Dockerfile</strong> 定义应用程序的环境。</li>
+<li>使用 <strong>docker-compose.yml</strong>定义构成应用程序的服务，这样它们可以在隔离环境中一起运行。</li>
+<li>最后，执行 **docker-compose up -d ** 命令在后台启动并运行整个应用程序。</li>
+</ul>
+<h2><span id="docker-compose-安装">Docker compose 安装</span></h2><ul>
+<li>直接下载安装<br> mac os 可以安装docker的gui客户端直接包含docker compose ，<a target="_blank" rel="noopener" href="https://docs.docker.com/docker-for-mac/install/">下载地址</a><br>windows 也可以直接安装docker的gui客户端 ,<a target="_blank" rel="noopener" href="https://docs.docker.com/docker-for-windows/install/">下载地址</a><br>linux可以在仓库中直接下载docker-compose ，例如:<strong>sudo apt-get install docker-compose</strong>,或者直接下载其二进制包。</li>
+<li>手动下载二进制包使用</li>
+</ul>
+<p>Linux 上我们可以从 Github 上下载它的二进制包来使用，最新发行的版本地址：<a target="_blank" rel="noopener" href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a>。</p>
+<pre><code class="highlight bash">sudo curl -l https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(<span class="built_in">uname</span> -s)-$(<span class="built_in">uname</span> -m) \ 
+-o /usr/local/bin/docker-compose
+sudo <span class="built_in">chmod</span> +x /usr/local/bin/docker-compose
+sudo <span class="built_in">ln</span> -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+</code></pre>
+<blockquote>
+<p>  <strong>$(uname -m) 显示计算机类型，$(uname -s) 显示操作系统名称</strong></p>
+</blockquote>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/01/29/docker/Docker Compose介绍/';
+var disqus_title = 'DockerCompose介绍';
+var disqus_url = 'https://mirsery.github.io/2021/01/29/docker/Docker Compose介绍/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/02/28/java/2021/springboot%E8%87%AA%E5%8A%A8%E5%8C%96%E9%85%8D%E7%BD%AE/">上一篇</a><a class="next" href="/2021/01/28/docker/%E6%90%AD%E5%BB%BAdocker%E7%A7%81%E6%9C%8D/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> mac ox系统下搜索文件的一些方法 · mirsery</title><meta name="description" content="mac ox系统下搜索文件的一些方法 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">mac ox系统下搜索文件的一些方法</h1><div class="post-info">作者: mirsery         创建日期: 2016年7月24日</div><div class="post-content"><p>mac系统自带Spotlight，他可以很方便的帮助我们从文件系统中搜索寻找特定的文档和文件，但是有些情况下Spotlight并不能正常工作.对于类unix的mac ox来说自带的终端命令行才是最强的搜索工具.</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><blockquote>
+<p>本文参考于<a target="_blank" rel="noopener" href="https://www.macx.cn/thread-2070979-1-1.html?mod=viewthread&tid=2070979&extra=page%253D1&page=1">https://www.macx.cn/thread-2070979-1-1.html?mod=viewthread&tid=2070979&extra=page%253D1&page=1</a></p>
+</blockquote>
+<p>#通过Find命令搜索文件<br>find命令非常高效并且使用比较简单.</p>
+<pre><code class="highlight bash">find [路径] [参数]</code></pre>
+<p>下面是一个demo，寻找在用户根目录下的名字中包含”screen”的文件</p>
+<pre><code class="highlight bash">find ~ -iname <span class="string">&quot;screen*&quot;</span></code></pre>
+<p>#通过mdfind命令搜索文件<br>mdfind命令就是Spotlight功能的终端界面，这意味着如果Spotlight被禁用，mdfind命令也将无法工作。mdfind命令非常迅速、高效。最基本的使用方法是:</p>
+<pre><code class="highlight bash">mdfind -name 文件名</code></pre>
+
+<p>mdfind命令还可以通过-onlyin参数搜索特定文件夹的内容，比如:</p>
+<pre><code class="highlight bash">mdfind -onlyin ~/Library plist</code></pre>
+
+<p>这条命令可以搜索Library文件夹中所有plist文件。<br>#通过Alfred App搜索文件</p>
+<p>#通过Spotlight App搜索文件</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/07/24/mac/2016/mac ox系统下搜索文件的一些方法/';
+var disqus_title = 'mac ox系统下搜索文件的一些方法';
+var disqus_url = 'https://mirsery.github.io/2016/07/24/mac/2016/mac ox系统下搜索文件的一些方法/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/08/06/git/git%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4/">上一篇</a><a class="next" href="/2016/07/24/java/2016/Thread%20Synchronization%20Utilities/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

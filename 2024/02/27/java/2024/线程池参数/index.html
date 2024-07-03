@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> java线程池的七大参数 · mirsery</title><meta name="description" content="java线程池的七大参数 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">java线程池的七大参数</h1><div class="post-info">作者: mirsery         创建日期: 2024年2月27日</div><div class="post-content"><p>Java 线程池主要有7个核心线程数，最大线程数，最大线程存活时间，单位，等待线程，线程工厂，拒绝策略。在请求到来时，优先在核心线程中取线程给消费者（核心线程是一直开启的），核心线程全部分配出去后，消费者的请求会放到等待队列中。如果等待队列也满了，则会开启到最大线程数处理请求（最大线程数的线程在空闲存活时间后会被回收），如果前三者都满了，则会触发拒绝策略（抛弃等待队列队首或者队尾的请求，抛出或者不抛出异常）。</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p>线程池参数源码</p>
+<pre><code class="highlight java:n">/**
+ * Creates a new &#123;@code ThreadPoolExecutor&#125; with the given initial
+ * parameters.
+ *
+ * @param corePoolSize the number of threads to keep in the pool, even
+ *        if they are idle, unless &#123;@code allowCoreThreadTimeOut&#125; is set
+ * @param maximumPoolSize the maximum number of threads to allow in the
+ *        pool
+ * @param keepAliveTime when the number of threads is greater than
+ *        the core, this is the maximum time that excess idle threads
+ *        will wait for new tasks before terminating.
+ * @param unit the time unit for the &#123;@code keepAliveTime&#125; argument
+ * @param workQueue the queue to use for holding tasks before they are
+ *        executed.  This queue will hold only the &#123;@code Runnable&#125;
+ *        tasks submitted by the &#123;@code execute&#125; method.
+ * @param threadFactory the factory to use when the executor
+ *        creates a new thread
+ * @param handler the handler to use when execution is blocked
+ *        because the thread bounds and queue capacities are reached
+ * @throws IllegalArgumentException if one of the following holds:&lt;br&gt;
+ *         &#123;@code corePoolSize &lt; 0&#125;&lt;br&gt;
+ *         &#123;@code keepAliveTime &lt; 0&#125;&lt;br&gt;
+ *         &#123;@code maximumPoolSize &lt;= 0&#125;&lt;br&gt;
+ *         &#123;@code maximumPoolSize &lt; corePoolSize&#125;
+ * @throws NullPointerException if &#123;@code workQueue&#125;
+ *         or &#123;@code threadFactory&#125; or &#123;@code handler&#125; is null
+ */
+public ThreadPoolExecutor(int corePoolSize,
+                          int maximumPoolSize,
+                          long keepAliveTime,
+                          TimeUnit unit,
+                          BlockingQueue&lt;Runnable&gt; workQueue,
+                          ThreadFactory threadFactory,
+                          RejectedExecutionHandler handler) &#123;
+    if (corePoolSize &lt; 0 ||
+        maximumPoolSize &lt;= 0 ||
+        maximumPoolSize &lt; corePoolSize ||
+        keepAliveTime &lt; 0)
+        throw new IllegalArgumentException();
+    if (workQueue == null || threadFactory == null || handler == null)
+        throw new NullPointerException();
+    this.corePoolSize = corePoolSize;
+    this.maximumPoolSize = maximumPoolSize;
+    this.workQueue = workQueue;
+    this.keepAliveTime = unit.toNanos(keepAliveTime);
+    this.threadFactory = threadFactory;
+    this.handler = handler;
+&#125;</code></pre>
+
+<h2><span id="corepoolsize-核心线程数">corePoolSize 核心线程数</span></h2><p>指的是核心线程大小，线程池中维护一个最小的线程数量，即使这些线程处于空闲状态，也一直存在池中，除非设置了核心线程超时时间。</p>
+<h2><span id="maximunpoolsize">maximunPoolSize</span></h2><p>指的是线程池中允许的最大线程数量。当线程池中核心线程都处理执行状态，有新请求的任务：<br>1、工作队列未满：新请求的任务加入工作队列<br>2、工作队列已满：线程池会创建新线程，来执行这个任务。当然，创建新线程不是无限制的，因为会受到 <strong>maximumPoolSize</strong> 最大线程数量的限制。</p>
+<h2><span id="keepalivetime">keepAliveTime</span></h2><p>指的是空闲线程存活时间。具体说，当线程数大于核心线程数时，空闲线程在等待新任务到达的最大时间，如果超过这个时间还没有任务请求，该空闲线程就会被销毁。</p>
+<h2><span id="unit">unit</span></h2><p>指空闲线程存活时间的单位。keepAliveTime的计量单位。枚举类型TimeUnit类</p>
+<h2><span id="workqueue">workQueue</span></h2><h3><span id="arrayblockingqueue">ArrayBlockingQueue</span></h3><p>基于数组的有界阻塞队列，特点FIFO（先进先出）。<br>当线程池中已经存在最大数量的线程时候，再请求新的任务，这时就会将任务加入工作队列的队尾，一旦有空闲线程，就会取出队头执行任务。<br>因为是基于数组的有界阻塞队列，所以可以避免系统资源的耗尽。如果出现有界队列已满，最大数量的所有线程都处于执行状态，这时又有新的任务请求，会采用Handler拒绝策略，对请求的任务进行处理。</p>
+<h3><span id="linkedblockingqueue">LinkedBlockingQueue</span></h3><p>基于链表的无界阻塞队列，默认最大容量Integer.MAX_VALUE( 2^{32}-1​)，可认为是无限队列，特点FIFO。<br>关于<strong>maximumPoolSize</strong>参数在工作队列为LinkedBlockingQueue时候，是否起作用这个问题，我们需要视情况而定！</p>
+<blockquote>
+<p>情况①：如果指定了工作队列大小，比如core&#x3D;2，max&#x3D;3，workQueue&#x3D;2，任务数task&#x3D;5，这种情况的最大线程数量的限制是有效的。<br>情况②：如果工作队列大小默认<strong>2^32 -1</strong>，这时<strong>maximumPoolSize</strong>不起作用，因为新请求的任务一直可以加到队列中。</p>
+</blockquote>
+<h3><span id="priorityblockingqueue">PriorityBlockingQueue</span></h3><p>优先级无界阻塞队列，优先级阻塞队列可以通过参数Comparator实现对任务进行排序。</p>
+<h3><span id="synchronousqueue">SynchronousQueue</span></h3><p>不缓存任务的阻塞队列，它实际上不是真正的队列，因为它没有提供存储任务的空间。生产者一个任务请求到来，会直接执行，也就是说这种队列在消费者充足的情况下更加适合。</p>
+<h2><span id="threadfactory">threadFactory</span></h2><p>线程工厂，创建一个新线程时使用的工厂，可以用来设定线程名、是否为<strong>daemon线程</strong>等。</p>
+<p>Java线程分两种：用户线程和守护线程。<br>守护线程，是指在程序运行的时，后台提供一种通用服务的线程。比如垃圾回收线程就是一个很称职的守护者，并且这种线程并不属于程序中不可或缺的部分。因此，当所有的非守护线程结束时，程序也就终止了，同时会杀死进程中的所有守护线程。反过来说，只要任何非守护线程还在运行，程序就不会终止。<br>守护线程和用户线程的没有本质的区别，不同之处在于虚拟机的离开；若用户线程已全部退出运行，只剩守护线程存在，虚拟机也即退出。 因没有了被守护者，守护线程也就无工作可做，也就没有继续运行程序的必要了。<br>将线程转换为守护线程可以通过调用Thread对象的setDaemon(true)方法来实现。在使用守护线程时需要注意一下几点：<br>(1)thread.setDaemon(true)须在thread.start()之前设置，不能把正在运行的常规线程设置为守护线程，否则会抛出IllegalThreadStateException异常。<br>(2) 在Daemon线程中创建的新线程也是Daemon的。<br>(3) 守护线程应该永远不去访问固有资源，如文件、数据库，因为它会在任何时候甚至在一个操作的中间发生中断。<br>(4)java多线程编程，偏向使用java自带的多线程框架，比如ExecutorService，但是java的线程池会将守护线程转换为用户线程，所以如果要使用后台线程就不能用java的线程池。</p>
+<pre><code class="highlight java"><span class="comment">/**</span>
+<span class="comment"> * The default thread factory</span>
+<span class="comment"> */</span>
+<span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">DefaultThreadFactory</span> <span class="keyword">implements</span> <span class="title class_">ThreadFactory</span> &#123;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">AtomicInteger</span> <span class="variable">poolNumber</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">1</span>);
+    <span class="keyword">private</span> <span class="keyword">final</span> ThreadGroup group;
+    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">AtomicInteger</span> <span class="variable">threadNumber</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">1</span>);
+    <span class="keyword">private</span> <span class="keyword">final</span> String namePrefix;
+
+    DefaultThreadFactory() &#123;
+        <span class="type">SecurityManager</span> <span class="variable">s</span> <span class="operator">=</span> System.getSecurityManager();
+        group = (s != <span class="literal">null</span>) ? s.getThreadGroup() :
+                              Thread.currentThread().getThreadGroup();
+        namePrefix = <span class="string">&quot;pool-&quot;</span> +
+                      poolNumber.getAndIncrement() +
+                     <span class="string">&quot;-thread-&quot;</span>;
+    &#125;
+
+    <span class="keyword">public</span> Thread <span class="title function_">newThread</span><span class="params">(Runnable r)</span> &#123;
+        <span class="type">Thread</span> <span class="variable">t</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(group, r,
+                              namePrefix + threadNumber.getAndIncrement(),
+                              <span class="number">0</span>);
+        <span class="keyword">if</span> (t.isDaemon())
+            t.setDaemon(<span class="literal">false</span>);
+        <span class="keyword">if</span> (t.getPriority() != Thread.NORM_PRIORITY)
+            t.setPriority(Thread.NORM_PRIORITY);
+        <span class="keyword">return</span> t;
+    &#125;
+&#125;</code></pre>
+
+<h2><span id="rejectedexecutionhandler-拒绝执行处理器">RejectedExecutionHandler 拒绝执行处理器</span></h2><p>Java 并发超出线程数和工作队列时候的任务请求处理策略，使用了策略设计模式。</p>
+<pre><code class="highlight java"><span class="comment">/**</span>
+<span class="comment"> * A handler for tasks that cannot be executed by a &#123;<span class="doctag">@link</span> ThreadPoolExecutor&#125;.</span>
+<span class="comment"> *</span>
+<span class="comment"> * <span class="doctag">@since</span> 1.5</span>
+<span class="comment"> * <span class="doctag">@author</span> Doug Lea</span>
+<span class="comment"> */</span>
+<span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">RejectedExecutionHandler</span> &#123;
+
+    <span class="comment">/**</span>
+<span class="comment">     * Method that may be invoked by a &#123;<span class="doctag">@link</span> ThreadPoolExecutor&#125; when</span>
+<span class="comment">     * &#123;<span class="doctag">@link</span> ThreadPoolExecutor#execute execute&#125; cannot accept a</span>
+<span class="comment">     * task.  This may occur when no more threads or queue slots are</span>
+<span class="comment">     * available because their bounds would be exceeded, or upon</span>
+<span class="comment">     * shutdown of the Executor.</span>
+<span class="comment">     *</span>
+<span class="comment">     * &lt;p&gt;In the absence of other alternatives, the method may throw</span>
+<span class="comment">     * an unchecked &#123;<span class="doctag">@link</span> RejectedExecutionException&#125;, which will be</span>
+<span class="comment">     * propagated to the caller of &#123;<span class="doctag">@code</span> execute&#125;.</span>
+<span class="comment">     *</span>
+<span class="comment">     * <span class="doctag">@param</span> r the runnable task requested to be executed</span>
+<span class="comment">     * <span class="doctag">@param</span> executor the executor attempting to execute this task</span>
+<span class="comment">     * <span class="doctag">@throws</span> RejectedExecutionException if there is no remedy</span>
+<span class="comment">     */</span>
+    <span class="keyword">void</span> <span class="title function_">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor executor)</span>;
+&#125;</code></pre>
+
+
+<h3><span id="threadpoolexecutorabortpolicy">ThreadPoolExecutor.AbortPolicy</span></h3><p>在默认的处理策略。该处理在拒绝时抛出RejectedExecutionException，拒绝执行。<br>默认处理器直接抛出异常</p>
+<pre><code class="highlight java:n">public static class AbortPolicy implements RejectedExecutionHandler &#123;
+     /**
+      * Creates an &#123;@code AbortPolicy&#125;.
+      */
+     public AbortPolicy() &#123; &#125;
+
+     /**
+      * Always throws RejectedExecutionException.
+      *
+      * @param r the runnable task requested to be executed
+      * @param e the executor attempting to execute this task
+      * @throws RejectedExecutionException always
+      */
+     public void rejectedExecution(Runnable r, ThreadPoolExecutor e) &#123;
+         throw new RejectedExecutionException(&quot;Task &quot; + r.toString() +
+                                              &quot; rejected from &quot; +
+                                              e.toString());
+     &#125;
+ &#125;</code></pre>
+
+
+<h3><span id="threadpoolexecutorcallerrunspolicy">ThreadPoolExecutor.CallerRunsPolicy</span></h3><p>调用 execute 方法的线程(current thread) 本身运行任务。并提供了一个简单的反馈控制机制，可以降低新任务提交的速度。</p>
+<pre><code class="highlight java"><span class="comment">/**</span>
+<span class="comment"> * A handler for rejected tasks that runs the rejected task</span>
+<span class="comment"> * directly in the calling thread of the &#123;<span class="doctag">@code</span> execute&#125; method,</span>
+<span class="comment"> * unless the executor has been shut down, in which case the task</span>
+<span class="comment"> * is discarded.</span>
+<span class="comment"> */</span>
+<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">CallerRunsPolicy</span> <span class="keyword">implements</span> <span class="title class_">RejectedExecutionHandler</span> &#123;
+    <span class="comment">/**</span>
+<span class="comment">     * Creates a &#123;<span class="doctag">@code</span> CallerRunsPolicy&#125;.</span>
+<span class="comment">     */</span>
+    <span class="keyword">public</span> <span class="title function_">CallerRunsPolicy</span><span class="params">()</span> &#123; &#125;
+
+    <span class="comment">/**</span>
+<span class="comment">     * Executes task r in the caller&#x27;s thread, unless the executor</span>
+<span class="comment">     * has been shut down, in which case the task is discarded.</span>
+<span class="comment">     *</span>
+<span class="comment">     * <span class="doctag">@param</span> r the runnable task requested to be executed</span>
+<span class="comment">     * <span class="doctag">@param</span> e the executor attempting to execute this task</span>
+<span class="comment">     */</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor e)</span> &#123;
+        <span class="keyword">if</span> (!e.isShutdown()) &#123;
+            r.run();
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+
+<h3><span id="threadpoolexecutordiscardoldestpolicy">ThreadPoolExecutor.DiscardOldestPolicy</span></h3><p>如果执行程序未关闭，则删除工作队列头部的任务，然后重试执行(可能再次失败，导致重复执行)。</p>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">DiscardOldestPolicy</span> <span class="keyword">implements</span> <span class="title class_">RejectedExecutionHandler</span> &#123;
+    <span class="comment">/**</span>
+<span class="comment">     * Creates a &#123;<span class="doctag">@code</span> DiscardOldestPolicy&#125; for the given executor.</span>
+<span class="comment">     */</span>
+    <span class="keyword">public</span> <span class="title function_">DiscardOldestPolicy</span><span class="params">()</span> &#123; &#125;
+
+    <span class="comment">/**</span>
+<span class="comment">     * Obtains and ignores the next task that the executor</span>
+<span class="comment">     * would otherwise execute, if one is immediately available,</span>
+<span class="comment">     * and then retries execution of task r, unless the executor</span>
+<span class="comment">     * is shut down, in which case task r is instead discarded.</span>
+<span class="comment">     *</span>
+<span class="comment">     * <span class="doctag">@param</span> r the runnable task requested to be executed</span>
+<span class="comment">     * <span class="doctag">@param</span> e the executor attempting to execute this task</span>
+<span class="comment">     */</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor e)</span> &#123;
+        <span class="keyword">if</span> (!e.isShutdown()) &#123;
+            e.getQueue().poll();
+            e.execute(r);
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+
+<h3><span id="threadpoolexecutordiscardpolicy">ThreadPoolExecutor.DiscardPolicy</span></h3><p>无法执行的任务被简单地删除，将会丢弃当前任务，通过源码可以看出，该策略不会执行任务操作。</p>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">DiscardPolicy</span> <span class="keyword">implements</span> <span class="title class_">RejectedExecutionHandler</span> &#123;
+    <span class="comment">/**</span>
+<span class="comment">     * Creates a &#123;<span class="doctag">@code</span> DiscardPolicy&#125;.</span>
+<span class="comment">     */</span>
+    <span class="keyword">public</span> <span class="title function_">DiscardPolicy</span><span class="params">()</span> &#123; &#125;
+
+    <span class="comment">/**</span>
+<span class="comment">     * Does nothing, which has the effect of discarding task r.</span>
+<span class="comment">     *</span>
+<span class="comment">     * <span class="doctag">@param</span> r the runnable task requested to be executed</span>
+<span class="comment">     * <span class="doctag">@param</span> e the executor attempting to execute this task</span>
+<span class="comment">     */</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor e)</span> &#123;
+    &#125;
+&#125;</code></pre>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2024/02/27/java/2024/java%E4%B8%AD%E7%9A%84AQS%E6%8A%BD%E8%B1%A1%E9%98%9F%E5%88%97%E5%90%8C%E6%AD%A5%E5%99%A8/">上一篇</a><a class="next" href="/2024/02/03/java/2024/netty-%E9%AB%98%E6%80%A7%E8%83%BD%E6%A1%86%E6%9E%B6%E7%9A%84%E5%8E%9F%E7%90%86/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

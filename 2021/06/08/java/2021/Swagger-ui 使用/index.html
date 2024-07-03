@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Swagger-ui 使用 · mirsery</title><meta name="description" content="Swagger-ui 使用 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Swagger-ui 使用</h1><div class="post-info">作者: mirsery         创建日期: 2021年6月9日</div><div class="post-content"><h1><span id="swagger-ui-使用">Swagger-ui 使用</span></h1><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E5%BC%95%E5%85%A5%E7%9B%B8%E5%85%B3%E4%BE%9D%E8%B5%96jar%E5%8C%85">引入相关依赖jar包</a></li>
+<li><a href="#%E5%90%AF%E7%94%A8-swagger">启用 swagger</a></li>
+<li><a href="#controller-%E6%B7%BB%E5%8A%A0%E6%8F%8F%E8%BF%B0%E4%BF%A1%E6%81%AF">Controller 添加描述信息</a></li>
+<li><a href="#%E6%8E%A5%E5%8F%A3%E6%B7%BB%E5%8A%A0%E6%8F%8F%E8%BF%B0%E4%BF%A1%E6%81%AF">接口添加描述信息</a></li>
+<li><a href="#%E7%BB%99%E5%AE%9E%E4%BD%93%E7%B1%BB%E6%B7%BB%E5%8A%A0%E6%8F%8F%E8%BF%B0%E4%BF%A1%E6%81%AF">给实体类添加描述信息</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="引入相关依赖jar包">引入相关依赖jar包</span></h2><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></code></pre>
+
+<h2><span id="启用-swagger">启用 swagger</span></h2><p>下面是swagger-ui 配置样例:</p>
+<pre><code class="highlight java"><span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;
+<span class="keyword">import</span> org.springframework.context.annotation.Bean;
+<span class="keyword">import</span> org.springframework.context.annotation.Configuration;
+<span class="keyword">import</span> springfox.documentation.builders.ApiInfoBuilder;
+<span class="keyword">import</span> springfox.documentation.builders.PathSelectors;
+<span class="keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;
+<span class="keyword">import</span> springfox.documentation.service.ApiInfo;
+<span class="keyword">import</span> springfox.documentation.service.ApiKey;
+<span class="keyword">import</span> springfox.documentation.service.AuthorizationScope;
+<span class="keyword">import</span> springfox.documentation.service.SecurityReference;
+<span class="keyword">import</span> springfox.documentation.service.SecurityScheme;
+<span class="keyword">import</span> springfox.documentation.spi.DocumentationType;
+<span class="keyword">import</span> springfox.documentation.spi.service.contexts.SecurityContext;
+<span class="keyword">import</span> springfox.documentation.spring.web.plugins.Docket;
+<span class="keyword">import</span> springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+<span class="comment">/**</span>
+<span class="comment"> * <span class="doctag">@description</span>:</span>
+<span class="comment"> * <span class="doctag">@author</span>: misery</span>
+<span class="comment"> * <span class="doctag">@create</span>: 2021-06-04 16:26</span>
+<span class="comment"> **/</span>
+<span class="meta">@Configuration</span>
+<span class="meta">@EnableSwagger2</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SwaggerConfig</span> &#123;
+
+    <span class="meta">@Value(&quot;$&#123;swagger.enable:false&#125;&quot;)</span>
+    <span class="keyword">private</span> <span class="type">boolean</span> swagger2Enable;
+
+    <span class="meta">@Bean</span>
+    <span class="keyword">public</span> Docket <span class="title function_">createRestApi</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.OAS_30).apiInfo(apiInfo())
+                .enable(swagger2Enable)
+                .groupName(<span class="string">&quot;所有&quot;</span>)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .paths(PathSelectors.regex(<span class="string">&quot;(?!/error.*).*&quot;</span>))     <span class="comment">// 去除默认basicController</span>
+                .paths(PathSelectors.regex(<span class="string">&quot;(?!/actuator.*).*&quot;</span>))    <span class="comment">//去除actuator</span>
+                .build()
+                .securityContexts(securityContext())
+                .securitySchemes(security());
+    &#125;
+
+    <span class="meta">@Bean</span>
+    <span class="keyword">public</span> Docket <span class="title function_">appApi</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.OAS_30).apiInfo(apiInfo())
+                .enable(swagger2Enable)
+                .groupName(<span class="string">&quot;groupName&quot;</span>)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.xxxx.xxx&quot;</span>))
+                .paths(PathSelectors.any())
+                .build()
+                .securityContexts(securityContext())
+                .securitySchemes(security());
+    &#125;
+
+    <span class="keyword">private</span> ApiInfo <span class="title function_">apiInfo</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>()
+                .title(<span class="string">&quot;title&quot;</span>)
+                .description(<span class="string">&quot;description&quot;</span>)
+                .version(<span class="string">&quot;0.0.1&quot;</span>)
+                .build();
+    &#125;
+
+    <span class="keyword">private</span> List&lt;SecurityScheme&gt; <span class="title function_">security</span><span class="params">()</span> &#123;
+        <span class="type">SecurityScheme</span> <span class="variable">token</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ApiKey</span>(<span class="string">&quot;token&quot;</span>, <span class="string">&quot;token&quot;</span>, <span class="string">&quot;header&quot;</span>);
+        List&lt;SecurityScheme&gt; securitySchemeList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();
+        securitySchemeList.add(token);
+        <span class="keyword">return</span> securitySchemeList;
+    &#125;
+
+    List&lt;SecurityReference&gt; <span class="title function_">defaultAuth</span><span class="params">()</span> &#123;
+        <span class="type">AuthorizationScope</span> <span class="variable">authorizationScope</span>
+                <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AuthorizationScope</span>(<span class="string">&quot;global&quot;</span>, <span class="string">&quot;accessEverything&quot;</span>);
+        AuthorizationScope[] authorizationScopes = <span class="keyword">new</span> <span class="title class_">AuthorizationScope</span>[<span class="number">1</span>];
+        authorizationScopes[<span class="number">0</span>] = authorizationScope;
+        List&lt;SecurityReference&gt; lists = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();
+        lists.add(<span class="keyword">new</span> <span class="title class_">SecurityReference</span>(<span class="string">&quot;token&quot;</span>, authorizationScopes));
+        <span class="keyword">return</span> lists;
+    &#125;
+
+    <span class="keyword">private</span> List&lt;SecurityContext&gt; <span class="title function_">securityContext</span><span class="params">()</span> &#123;
+        <span class="type">SecurityContext</span> <span class="variable">securityContext</span> <span class="operator">=</span> SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .build();
+        List&lt;SecurityContext&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();
+        list.add(securityContext);
+        <span class="keyword">return</span> list;
+    &#125;
+
+&#125;</code></pre>
+
+<h2><span id="controller-添加描述信息">Controller 添加描述信息</span></h2><p>@Api 可以对Controller进行描述</p>
+<pre><code class="highlight java"><span class="meta">@Api(tags = &quot;xxx相关接口&quot;)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestController</span>&#123;
+    ...
+&#125;</code></pre>
+
+<h2><span id="接口添加描述信息">接口添加描述信息</span></h2><p>@ApiOperation 可以对接口进行描述</p>
+<pre><code class="highlight java"><span class="meta">@GETMapping(&quot;/hi&quot;)</span>
+<span class="meta">@ApiOperation(&quot;xxxxx接口&quot;)</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">hello</span><span class="params">()</span>&#123;
+    ...
+&#125;</code></pre>
+
+<ul>
+<li><p><em><strong>@ApiOperation 注解属性</strong></em></p>
+<table>
+<thead>
+<tr>
+<th>注解属性</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>String</td>
+<td>接口说明</td>
+</tr>
+<tr>
+<td>notes</td>
+<td>String</td>
+<td>接口发布说明</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>Stirng[]</td>
+<td>标签</td>
+</tr>
+<tr>
+<td>response</td>
+<td>Class&lt;?&gt;</td>
+<td>接口返回类型</td>
+</tr>
+<tr>
+<td>httpMethod</td>
+<td>String</td>
+<td>接口请求方式</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><em><strong>@ApiIgnore</strong></em><br>  Swagger 文档不会显示拥有该注解的接口。</p>
+</li>
+<li><p><em><strong>@ApiImplicitParams</strong></em><br>  用于描述接口的非对象参数集。</p>
+</li>
+<li><p><em><strong>@ApiImplicitParam</strong></em><br>  用于描述接口的非对象参数，一般与 <em><strong>@ApiImplicitParams</strong></em> 组合使用</p>
+</li>
+</ul>
+<table>
+    <tr>
+        <td rowspan="15">@ApiImplicitParam</td>
+    </tr>
+    <tr>
+        <td colspan="3">用在@ApiImplicitParams注解中，指定一个请求参数的各个方面</td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td colspan="2">参数名</td>
+    </tr>
+    <tr>
+       <td>value</td>
+        <td colspan="2">参数的汉字说明、解释</td>
+    </tr>
+    <tr>
+       <td>required</td>
+        <td colspan="2">参数是否必须传</td>
+    </tr>
+    <tr>
+       <td>dataType</td>
+       <td colspan="2">参数类型，默认String，其它值dataType="Integer"</td>
+    </tr>
+    <tr>
+       <td>defaultValue</td>
+        <td colspan="2">参数的默认值</td>
+    </tr>
+    <tr>
+       <td rowspan="8">paramType</td>
+   </tr>
+    <tr>
+       <td colspan="2">参数放在哪个地方</td>
+    </tr>
+ <tr>
+       <td>header</td>
+        <td>请求参数的获取@RequestHeader</td>
+ </tr>
+ <tr>
+       <td>header</td>
+        <td>请求参数的获取@RequestHeader</td>
+ </tr>
+ <tr>
+       <td>query</td>
+        <td>请求参数的获取@RequestParam</td>
+ </tr>
+ <tr>
+       <td>path</td>
+        <td>请求参数的获取@PathVariable</td>
+ </tr>
+ <tr>
+       <td>body</td>
+        <td>请求参数的获取@RequestBody</td>
+ </tr>
+ <tr>
+       <td>form</td>
+        <td>普通表单提交</td>
+ </tr>
+
+</table>
+
+<h2><span id="给实体类添加描述信息">给实体类添加描述信息</span></h2><pre><code class="highlight java"><span class="meta">@ApiModel(&quot;用户实体&quot;)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Entity</span> &#123;
+    <span class="meta">@ApiModelProperty(&quot;用户 id&quot;)</span>
+    <span class="keyword">private</span> <span class="type">int</span> id;
+&#125;
+</code></pre>
+
+<ul>
+<li>@ApiModelProperty 主要属性</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>注解属性</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>String</td>
+<td>字段说明</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>重写字段名称</td>
+</tr>
+<tr>
+<td>dataType</td>
+<td>Stirng</td>
+<td>重写字段类型</td>
+</tr>
+<tr>
+<td>required</td>
+<td>boolean 是否必填</td>
+<td></td>
+</tr>
+<tr>
+<td>example</td>
+<td>Stirng</td>
+<td>举例说明</td>
+</tr>
+<tr>
+<td>hidden</td>
+<td>boolean</td>
+<td>是否在文档中隐藏该字段</td>
+</tr>
+<tr>
+<td>allowEmptyValue</td>
+<td>boolean</td>
+<td>是否允许为空</td>
+</tr>
+<tr>
+<td>allowableValues</td>
+<td>String</td>
+<td>该字段允许的值，当我们 API 的某个参数为枚举类型时，使用这个属性就可以清楚地告诉 API 使用者该参数所能允许传入的值</td>
+</tr>
+</tbody></table>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/06/08/java/2021/Swagger-ui 使用/';
+var disqus_title = 'Swagger-ui 使用';
+var disqus_url = 'https://mirsery.github.io/2021/06/08/java/2021/Swagger-ui 使用/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/06/12/java/2021/java%E4%B8%AD%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2aop%E8%A7%A3%E6%9E%90/">上一篇</a><a class="next" href="/2021/06/07/java/2021/Springboot%20%E6%A1%86%E6%9E%B6%E8%87%AA%E5%B8%A6%E7%9A%84md5%E6%91%98%E8%A6%81/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

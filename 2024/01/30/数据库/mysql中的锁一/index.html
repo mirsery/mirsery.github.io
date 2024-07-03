@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> mysql中的锁一 · mirsery</title><meta name="description" content="mysql中的锁一 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">mysql中的锁一</h1><div class="post-info">作者: mirsery         创建日期: 2024年1月30日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E6%A6%82%E8%BF%B0">概述</a><ul>
+<li><a href="#mysql-myisam%E8%A1%A8%E7%BA%A7%E9%94%81%E7%9A%84%E9%94%81%E6%A8%A1%E5%BC%8F">MySQL MyISAM表级锁的锁模式</a></li>
+<li><a href="#%E8%A1%A8%E7%BA%A7%E9%94%81%E7%9A%84%E9%94%81%E6%A8%A1%E5%BC%8F">表级锁的锁模式</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%8A%A0%E8%A1%A8%E9%94%81">如何加表锁</a></li>
+<li><a href="#%E5%B9%B6%E5%8F%91%E9%94%81">并发锁</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E6%AD%BB%E9%94%81">关于死锁</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<h1><span id="概述">概述</span></h1><p>相对其他数据库而言，MySQL的锁机制比较简单，其最显著的特点是不同的存储引擎支持不同的锁机制。<br>MySQL大致可归纳为以下3种锁：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>开销</th>
+<th>速度</th>
+<th>锁粒度</th>
+<th>锁冲突</th>
+<th>死锁风险</th>
+<th>并发度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>表级锁</td>
+<td>最小</td>
+<td>最快</td>
+<td>最大</td>
+<td>概率最高</td>
+<td>无</td>
+<td>最低</td>
+</tr>
+<tr>
+<td>行级锁</td>
+<td>最大</td>
+<td>最小</td>
+<td>最小</td>
+<td>概率最低</td>
+<td>有</td>
+<td>最高</td>
+</tr>
+<tr>
+<td>页面锁</td>
+<td>中</td>
+<td>中</td>
+<td>中</td>
+<td>中</td>
+<td>有</td>
+<td>中</td>
+</tr>
+</tbody></table>
+<p>表级锁：开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率最高，并发度最低。</p>
+<p>行级锁：开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低，并发度也最高。</p>
+<p>页面锁：开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般</p>
+<h2><span id="mysql-myisam表级锁的锁模式">MySQL MyISAM表级锁的锁模式</span></h2><p>MySQL表级锁有两种模式：表共享锁（Table Read Lock）和表独占写锁（Table Write Lock）。<br>对MyISAM的读操作，不会阻塞其他用户对同一表请求，但会阻塞对同一表的写请求；<br>对MyISAM的写操作，则会阻塞其他用户对同一表的读和写操作；<br>MyISAM表的读操作和写操作之间，以及写操作之间是串行的。<br>当一个线程获得对一个表的写锁后，只有持有锁线程可以对表进行更新操作。其他线程的读、写操作都会等待，直到锁被释放为止。</p>
+<h2><span id="表级锁的锁模式">表级锁的锁模式</span></h2><p> ＭySQL的表锁有两种模式：表共享读锁（Table Read Lock）和表独占写锁（Table Write Lock）。</p>
+<p>锁模式的兼容性</p>
+<table>
+<thead>
+<tr>
+<th>请求锁模式</th>
+<th>None</th>
+<th>读锁</th>
+<th>写锁</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读锁</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td>写锁</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+</tr>
+</tbody></table>
+<p>对ＭyISAM引擎的表的读操作，不会阻塞其他用户对同一表的读请求，但会阻塞对同一表的写请求；<br>对ＭyISAM表的写操作，则会阻塞其他用户对同一表的读和写请求；<br>ＭyISAM表的读和写操作之间，以及写和写操作之间是串行的！（当一线程获得对一个表的写锁后，只有持有锁的线程可以对表进行更新操作。其他线程的读、写操作都会等待，直到锁被释放为止。）</p>
+<h2><span id="如何加表锁">如何加表锁</span></h2><p>MyISAM在执行查询语句（SELECT）前，会自动给涉及的所有表加读锁.</p>
+<blockquote>
+<p>在执行更新操作（UPDATE、DELETE、INSERT等）前，会自动给涉及的表加写锁，这个过程并不需要用户干预，因此用户一般不需要直接用LOCK TABLE命令给MyISAM表显式加锁。</p>
+</blockquote>
+<p>给MyISAM表显示加锁，一般是为了一定程度模拟事务操作，实现对某一时间点多个表的一致性读取。例如，有一个订单表 <em><strong>orders</strong></em> ，其中记录有订单的总金额 total ，同时还有一个订单明细表 <em><strong>order_detail</strong></em> ，其中记录有订单每一产品的金额小计 subtotal ,假设我们需要检查这两个表的金额合计是否相等，可能就需要执行如下两条SQL:</p>
+<pre><code class="highlight sql"><span class="keyword">SELECT</span> <span class="built_in">SUM</span>(total) <span class="keyword">FROM</span> orders;
+<span class="keyword">SELECT</span> <span class="built_in">SUM</span>(subtotal) <span class="keyword">FROM</span> order_detail;</code></pre>
+<p>这时，如果不先给这两个表加锁，就可能产生错误的结果，因为第一条语句执行过程中，<em><strong>order_detail</strong></em> 表可能已经发生了改变。因此，正确的方法应该是：</p>
+<pre><code class="highlight sql">LOCK tables orders read <span class="keyword">local</span>,order_detail read <span class="keyword">local</span>;
+<span class="keyword">SELECT</span> <span class="built_in">SUM</span>(total) <span class="keyword">FROM</span> orders;
+<span class="keyword">SELECT</span> <span class="built_in">SUM</span>(subtotal) <span class="keyword">FROM</span> order_detail;
+Unlock tables;</code></pre>
+<blockquote>
+<p>要特别说明以下两点内容。<br>上面的例子在 <strong>LOCK TABLES</strong> 时加了<strong>local</strong>选项，其作用就是在满足<strong>MyISAM</strong>表并发插入条件的情况下，允许其他用户在表尾插入记录.<br>在用<strong>LOCK TABLES</strong>给表显式加表锁时，必须同时取得所有涉及表的锁，并且MySQL支持锁升级。也就是说，在执行<strong>LOCK TABLES</strong>后，只能访问显式加锁的这些表，不能访问未加锁的表；同时，如果加的是读锁，那么只能执行查询操作，而不能执行更新操作。其实，在自动加锁的情况下也基本如此，MySQL问题一次获得SQL语句所需要的全部锁。这也正是MyISAM表不会出现<strong>死锁（Deadlock Free）</strong>的原因.<br>一个session使用<strong>LOCK TABLE</strong>命令给表film_text加了读锁，这个session可以查询锁定表中的记录，但更新或访问其他表都会提示错误；同时，另外一个session可以查询表中的记录，但更新就会出现锁等待。<br>当使用<strong>LOCK TABLE</strong>时，不仅需要一次锁定用到的所有表，而且，同一个表在SQL语句中出现多少次，就要通过与SQL语句中相同的别名锁多少次，否则也会出错！</p>
+</blockquote>
+<h2><span id="并发锁">并发锁</span></h2><p>在一定条件下，MyISAM也支持查询和操作的并发进行。<br>MyISAM存储引擎有一个系统变量concurrent_insert，专门用以控制其并发插入的行为，其值分别可以为0、1或2。<br>当concurrent_insert设置为0时，不允许并发插入。<br>当concurrent_insert设置为1时，MyISAM允许在一个读表的同时，另一个进程从表尾插入记录。这也是MySQL的默认设置。<br>当concurrent_insert设置为2时，无论MyISAM表中有没有空洞，都允许在表尾插入记录，都允许在表尾并发插入记录。<br>可以利用MyISAM存储引擎的并发插入特性，来解决应用中对同一表查询和插入锁争用。例如，将concurrent_insert系统变量为2，总是允许并发插入；同时，通过定期在系统空闲时段执行OPTIONMIZE TABLE语句来整理空间碎片，收到因删除记录而产生的中间空洞。</p>
+<h2><span id="关于死锁">关于死锁</span></h2><p>ＭyISAM表锁是deadlock free的，这是因为ＭyISAM总是一次性获得所需的全部锁，要么全部满足，要么等待，因此不会出现死锁。</p>
+<h2><span id="总结">总结</span></h2><p>MyISAM在执行查询语句SELECT前，会自动给涉及的所有表加<strong>读锁</strong><br>在执行update、insert、delete操作会自动给涉及的表加<strong>写锁</strong>。</p>
+<p>对于ＭyISAM的表锁，主要有以下几点<br>（１） 共享读锁（S）之间是兼容的，但共享读锁（S）和排他写锁（X）之间，以及排他写锁之间（X）是互斥的，也就是说读和写是串行的。<br>（２） 在一定条件下，ＭyISAM允许查询和插入并发执行，我们可以利用这一点来解决应用中对同一表和插入的锁争用问题。<br>（３） ＭyISAM默认的锁调度机制是写优先，这并不一定适合所有应用，用户可以通过设置LOW_PRIPORITY_UPDATES参数，或在INSERT、UPDATE、DELETE语句中指定LOW_PRIORITY选项来调节读写锁的争用。<br>（４） 由于表锁的锁定粒度大，读写之间又是串行的，因此，如果更新操作较多，ＭyISAM表可能会出现严重的锁等待，可以考虑采用InnoDB表来减少锁冲突。</p>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2024/01/30/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E4%B8%AD%E7%9A%84%E9%94%81%E4%BA%8C/">上一篇</a><a class="next" href="/2024/01/29/talk/2024/rabbitmq%E7%AC%94%E8%AE%B0/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

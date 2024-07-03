@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Condition · mirsery</title><meta name="description" content="Condition - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Condition</h1><div class="post-info">作者: mirsery         创建日期: 2021年7月20日</div><div class="post-content"><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p>Condition 一般配合重入锁实现进程间的协作.</p>
+</blockquote>
+<!-- toc -->
+
+<ul>
+<li><a href="#condition-%E6%8E%A5%E5%8F%A3%E6%BA%90%E7%A0%81">Condition 接口源码</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="condition-接口源码">Condition 接口源码</span></h2><pre><code class="highlight java"><span class="keyword">package</span> java.util.concurrent.locks;
+
+<span class="keyword">import</span> java.util.Date;
+<span class="keyword">import</span> java.util.concurrent.TimeUnit;
+
+
+<span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Condition</span> &#123;
+  	<span class="comment">/*</span>
+<span class="comment">  	 * Causes the current thread to wait until it is signalled or</span>
+<span class="comment">     * &#123;@linkplain Thread#interrupt interrupted&#125;.</span>
+<span class="comment">     *</span>
+<span class="comment">     * &lt;p&gt;The lock associated with this &#123;@code Condition&#125; is atomically</span>
+<span class="comment">     * released and the current thread becomes disabled for thread scheduling</span>
+<span class="comment">     * purposes and lies dormant until &lt;em&gt;one&lt;/em&gt; of four things happens:</span>
+<span class="comment">     * &lt;ul&gt;</span>
+<span class="comment">     * &lt;li&gt;Some other thread invokes the &#123;@link #signal&#125; method for this</span>
+<span class="comment">     * &#123;@code Condition&#125; and the current thread happens to be chosen as the</span>
+<span class="comment">     * thread to be awakened; or</span>
+<span class="comment">     * &lt;li&gt;Some other thread invokes the &#123;@link #signalAll&#125; method for this</span>
+<span class="comment">     * &#123;@code Condition&#125;; or</span>
+<span class="comment">     * &lt;li&gt;Some other thread &#123;@linkplain Thread#interrupt interrupts&#125; the</span>
+<span class="comment">     * current thread, and interruption of thread suspension is supported; or</span>
+<span class="comment">     * &lt;li&gt;A &amp;quot;&lt;em&gt;spurious wakeup&lt;/em&gt;&amp;quot; occurs.</span>
+<span class="comment">     * &lt;/ul&gt;</span>
+<span class="comment">     *</span>
+<span class="comment">     * &lt;p&gt;In all cases, before this method can return the current thread must</span>
+<span class="comment">     * re-acquire the lock associated with this condition. When the</span>
+<span class="comment">     * thread returns it is &lt;em&gt;guaranteed&lt;/em&gt; to hold this lock.</span>
+<span class="comment">  	*/</span>
+    <span class="keyword">void</span> <span class="title function_">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException;
+  
+    <span class="keyword">void</span> <span class="title function_">awaitUninterruptibly</span><span class="params">()</span>;
+  
+    <span class="type">long</span> <span class="title function_">awaitNanos</span><span class="params">(<span class="type">long</span> nanosTimeout)</span> <span class="keyword">throws</span> InterruptedException;
+  
+  	<span class="type">boolean</span> <span class="title function_">await</span><span class="params">(<span class="type">long</span> time, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException;
+    
+  	<span class="type">boolean</span> <span class="title function_">awaitUntil</span><span class="params">(Date deadline)</span> <span class="keyword">throws</span> InterruptedException;
+    
+  	<span class="comment">/**</span>
+<span class="comment">     * Wakes up one waiting thread.</span>
+<span class="comment">     *</span>
+<span class="comment">     * &lt;p&gt;If any threads are waiting on this condition then one</span>
+<span class="comment">     * is selected for waking up. That thread must then re-acquire the</span>
+<span class="comment">     * lock before returning from &#123;<span class="doctag">@code</span> await&#125;.</span>
+<span class="comment">     *</span>
+<span class="comment">     * &lt;p&gt;&lt;b&gt;Implementation Considerations&lt;/b&gt;</span>
+<span class="comment">     *</span>
+<span class="comment">     * &lt;p&gt;An implementation may (and typically does) require that the</span>
+<span class="comment">     * current thread hold the lock associated with this &#123;<span class="doctag">@code</span></span>
+<span class="comment">     * Condition&#125; when this method is called. Implementations must</span>
+<span class="comment">     * document this precondition and any actions taken if the lock is</span>
+<span class="comment">     * not held. Typically, an exception such as &#123;<span class="doctag">@link</span></span>
+<span class="comment">     * IllegalMonitorStateException&#125; will be thrown.</span>
+<span class="comment">     */</span>
+  	<span class="keyword">void</span> <span class="title function_">signal</span><span class="params">()</span>;
+    
+  	<span class="keyword">void</span> <span class="title function_">signalAll</span><span class="params">()</span>;
+&#125;</code></pre>
+
+
+
+<p><strong>await( )</strong> 方法会使当前线程等待，自动释放当前锁。当其他线程使用 <strong>signal( )</strong> 时，该线程必须要重新再次获取锁并继续执行。</p>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReenterLockCondition</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span> &#123;
+
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">ReentrantLock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">Condition</span> <span class="variable">condition</span> <span class="operator">=</span> lock.newCondition();
+
+
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;
+        <span class="keyword">try</span> &#123;
+            lock.lock();
+            condition.await(); <span class="comment">//等待</span>
+            System.out.println(<span class="string">&quot;Thread is going on &quot;</span>);
+        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+            e.printStackTrace();
+        &#125; <span class="keyword">finally</span> &#123;
+            lock.unlock();
+        &#125;
+    &#125;
+
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;
+
+        <span class="type">ReenterLockCondition</span> <span class="variable">reenterLockCondition</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReenterLockCondition</span>();
+        <span class="type">Thread</span> <span class="variable">t</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(reenterLockCondition);
+        t.start();
+        Thread.sleep(<span class="number">2000</span>);
+        lock.lock();
+        condition.signal();
+        lock.unlock();
+    &#125;
+&#125;
+</code></pre>
+
+
+
+<p>As an example, suppose we have a bounded buffer which supports put and take methods. If a take is attempted on an empty buffer, then the thread will block until an item becomes available; if a put is attempted on a full buffer, then the thread will block until a space becomes available. We would like to keep waiting put threads and take threads in separate wait-sets so that we can use the optimization of only notifying a single thread at a time when items or spaces become available in the buffer. This can be achieved using two Condition instances.</p>
+<pre><code class="highlight java"><span class="keyword">class</span> <span class="title class_">BoundedBuffer</span>&lt;E&gt; &#123;
+    <span class="keyword">final</span> <span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();
+    <span class="keyword">final</span> <span class="type">Condition</span> <span class="variable">notFull</span>  <span class="operator">=</span> lock.newCondition(); 
+    <span class="keyword">final</span> <span class="type">Condition</span> <span class="variable">notEmpty</span> <span class="operator">=</span> lock.newCondition(); 
+ 
+    <span class="keyword">final</span> Object[] items = <span class="keyword">new</span> <span class="title class_">Object</span>[<span class="number">100</span>];
+    <span class="type">int</span> putptr, takeptr, count;
+ 
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">put</span><span class="params">(E x)</span> <span class="keyword">throws</span> InterruptedException &#123;
+      lock.lock();
+      <span class="keyword">try</span> &#123;
+        <span class="keyword">while</span> (count == items.length)
+          notFull.await();
+        items[putptr] = x;
+        <span class="keyword">if</span> (++putptr == items.length) putptr = <span class="number">0</span>;
+        ++count;
+        notEmpty.signal();
+      &#125; <span class="keyword">finally</span> &#123;
+        lock.unlock();
+      &#125;
+    &#125;
+ 
+    <span class="keyword">public</span> E <span class="title function_">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;
+      lock.lock();
+      <span class="keyword">try</span> &#123;
+        <span class="keyword">while</span> (count == <span class="number">0</span>)
+          notEmpty.await();
+        <span class="type">E</span> <span class="variable">x</span> <span class="operator">=</span> (E) items[takeptr];
+        <span class="keyword">if</span> (++takeptr == items.length) takeptr = <span class="number">0</span>;
+        --count;
+        notFull.signal();
+        <span class="keyword">return</span> x;
+      &#125; <span class="keyword">finally</span> &#123;
+        lock.unlock();
+      &#125;
+    &#125;
+  &#125;</code></pre>
+
+<p>Jdk 中 <em><strong>java.util.concurrent.ArrayBlockingQueue</strong></em> 同时也是利用Condition 来生产者和消费者队列。</p>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/07/21/java/2021/Semaphore%20%E4%BF%A1%E5%8F%B7%E9%87%8F/">上一篇</a><a class="next" href="/2021/07/20/java/2021/ReentrantLock%E9%87%8D%E5%85%A5%E9%94%81/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

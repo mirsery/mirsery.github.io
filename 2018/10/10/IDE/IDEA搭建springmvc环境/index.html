@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> IDEA搭建springmvc环境 · mirsery</title><meta name="description" content="IDEA搭建springmvc环境 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">IDEA搭建springmvc环境</h1><div class="post-info">作者: mirsery         创建日期: 2018年10月11日</div><div class="post-content"><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/fantasyxl99/article/details/79034002?utm_source=copy">原文作者：fantasyxl99 ， 转载自 CSDN。https://blog.csdn.net/fantasyxl99/article/details/79034002?utm_source&#x3D;copy</a></p>
+</blockquote>
+<!-- toc -->
+
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8spring-mvc%E6%8F%92%E4%BB%B6">使用spring mvc插件</a><ul>
+<li><a href="#%E7%A1%AE%E8%AE%A4%E8%BD%AF%E4%BB%B6%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E4%BA%86%E6%8F%92%E4%BB%B6">确认软件是否安装了插件</a></li>
+<li><a href="#%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE">新建项目</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0maven%E6%9E%84%E5%BB%BA">添加maven构建</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E9%A1%B9%E7%9B%AE%E4%BE%9D%E8%B5%96">添加项目依赖</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">配置配置文件</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0tomcat%E6%9C%8D%E5%8A%A1">添加tomcat服务</a></li>
+<li><a href="#%E7%BC%96%E5%86%99%E6%8E%A7%E5%88%B6%E5%99%A8%E5%92%8C%E9%A1%B5%E9%9D%A2">编写控制器和页面</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%BF%E7%94%A8maven%E6%90%AD%E5%BB%BAspring-mvc%E7%8E%AF%E5%A2%83">使用maven搭建spring mvc环境</a><ul>
+<li><a href="#%E9%85%8D%E7%BD%AE%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-1">配置配置文件</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="使用spring-mvc插件">使用spring mvc插件</span></h2><h3><span id="确认软件是否安装了插件">确认软件是否安装了插件</span></h3><p>点击菜单栏 File -&gt; Setting<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143943060.png"><br>点击右侧的plugins 然后在输入框中输入springmvc，将搜索出来的结果☑️。<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143949552.png"></p>
+<h3><span id="新建项目">新建项目</span></h3><p>插件安装完成之后，点击File -&gt; New -&gt; Project<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111143958150.png"><br>选择右侧的Spring 在选择中间的Spring MVC<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144006692.png"><br>点击下一步，填写项目名称<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144016971.png"></p>
+<h3><span id="添加maven构建">添加maven构建</span></h3><p>点击finish完成项目，完成项目之后右键项目添加maven框架<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144028351.png"><br>右侧选择maven 项目<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144035131.png"><br>完成之后的目录结构如下所示<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144044221.png"></p>
+<h3><span id="添加项目依赖">添加项目依赖</span></h3><p>添加项目依赖，在pom.xml文件中添加以下信息</p>
+<pre><code class="highlight plaintext">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;;
+xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;;&gt;
+&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+&lt;groupId&gt;org.py&lt;/groupId&gt;
+&lt;artifactId&gt;SpringMvcDemo&lt;/artifactId&gt;
+&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+&lt;packaging&gt;war&lt;/packaging&gt;
+&lt;build&gt;
+&lt;plugins&gt;
+&lt;plugin&gt;
+&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+&lt;configuration&gt;
+&lt;source&gt;1.7&lt;/source&gt;
+&lt;target&gt;1.7&lt;/target&gt;
+&lt;/configuration&gt;
+&lt;/plugin&gt;
+&lt;/plugins&gt;
+&lt;/build&gt;
+&lt;dependencies&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+&lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+&lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;junit&lt;/groupId&gt;
+&lt;artifactId&gt;junit&lt;/artifactId&gt;
+&lt;version&gt;4.12&lt;/version&gt;
+&lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+&lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+&lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+&lt;version&gt;4.1.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+&lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+&lt;version&gt;3.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+<p>右键pom.xml文件选择maven-&gt;reimport注入依赖<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144059094.png"></p>
+<h3><span id="配置配置文件">配置配置文件</span></h3><p>打开web&#x2F;WEB-INF&#x2F;目录下的web.xml文件配置web.xml文件</p>
+<pre><code class="highlight xml"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span>
+<span class="tag">&lt;<span class="name">web-app</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span>;</span>
+<span class="tag"><span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>;</span>
+<span class="tag"><span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaeehttp://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd&quot;</span>;</span>
+<span class="tag"><span class="attr">version</span>=<span class="string">&quot;3.1&quot;</span>&gt;</span>
+<span class="comment">&lt;!-- 配置前端控制器 --&gt;</span>
+<span class="comment">&lt;!--&lt;servlet&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;servlet-name&gt;web-dispatcher&lt;/servlet-name&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;init-param&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;param-value&gt;classpath:spring-mvc.xml&lt;/param-value&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;/init-param&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;--&gt;</span>
+<span class="comment">&lt;!--&lt;/servlet&gt;--&gt;</span>
+<span class="tag">&lt;<span class="name">servlet</span>&gt;</span>
+<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>SpringMVC<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span>
+<span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span>
+<span class="comment">&lt;!--加载前端控制器配置文件 上下文配置位置--&gt;</span>
+<span class="tag">&lt;<span class="name">init-param</span>&gt;</span>
+<span class="comment">&lt;!-- 备注：</span>
+<span class="comment">contextConfigLocation：指定 SpringMVC 配置的加载位置，如果不指定则默认加载</span>
+<span class="comment">WEB-INF/[DispatcherServlet 的 Servlet 名字]-servlet.xml</span>
+<span class="comment">--&gt;</span>
+<span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span>
+<span class="tag">&lt;<span class="name">param-value</span>&gt;</span>classpath:spring-mvc.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">init-param</span>&gt;</span>
+<span class="comment">&lt;!-- 表示随WEB服务器启动 --&gt;</span>
+<span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">servlet</span>&gt;</span>
+<span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span>
+<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>SpringMVC<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span>
+<span class="comment">&lt;!-- 备注：可以拦截三种请求</span>
+<span class="comment">第一种：拦截固定后缀的url，比如设置为 *.do、*.action，</span>
+<span class="comment"> 例如：/user/add.action 此方法最简单,不会导致静态资源（jpg,js,css）被拦截</span>
+<span class="comment">第二种：拦截所有,设置为/，例如：/user/add</span>
+<span class="comment"> /user/add.action此方法可以实现REST风格的url,</span>
+<span class="comment">很多互联网类型的应用使用这种方式.但是此方法会导致静态文件(jpg,js,css)被拦截后不能正常显示.需要特殊处理</span>
+<span class="comment">第三种：拦截所有,设置为/*，此设置方法错误,因为请求到Action,当action转到jsp时再次被拦截,提示不能根据jsp路径mapping成功</span>
+<span class="comment">--&gt;</span>
+<span class="comment">&lt;!-- 默认匹配所有的请求 --&gt;</span>
+<span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></code></pre>
+<p>配置spring mvc的配置文件，在resources下面新建一个spring-mvc.xml</p>
+<pre><code class="highlight xml"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span>
+<span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.springframework.org/schema/beans&quot;</span>;</span>
+<span class="tag"><span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>;</span>
+<span class="tag"><span class="attr">xmlns:context</span>=<span class="string">&quot;http://www.springframework.org/schema/context&quot;</span>;</span>
+<span class="tag"><span class="attr">xmlns:mvc</span>=<span class="string">&quot;http://www.springframework.org/schema/mvc&quot;</span>;</span>
+<span class="tag"><span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.springframework.org/schema/beanshttp://www.springframework.org/schema/beans/spring-beans.xsd</span></span>
+<span class="string"><span class="tag">http://www.springframework.org/schema/contexthttp://www.springframework.org/schema/context/spring-context.xsd</span></span>
+<span class="string"><span class="tag">http://www.springframework.org/schema/mvchttp://www.springframework.org/schema/mvc/spring-mvc.xsd&quot;</span>;&gt;</span>
+<span class="comment">&lt;!-- 自动加载RequestMappingHandlerMapping和RequestMappingHandlerAdapter， --&gt;</span>
+<span class="comment">&lt;!-- 可用在xml配置文件中使用&lt;mvc:annotation-driven&gt;替代注解处理器和适配器的配置。 --&gt;</span>
+<span class="tag">&lt;<span class="name">mvc:annotation-driven</span>/&gt;</span>
+<span class="comment">&lt;!-- 组件扫描器：可以扫描 @Controller、@Service、@Repository 等等 --&gt;</span>
+<span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;com.controller&quot;</span>&gt;</span>
+<span class="tag">&lt;<span class="name">context:include-filter</span> <span class="attr">type</span>=<span class="string">&quot;annotation&quot;</span> <span class="attr">expression</span>=<span class="string">&quot;org.springframework.stereotype.Controller&quot;</span>/&gt;</span>
+<span class="tag">&lt;/<span class="name">context:component-scan</span>&gt;</span>
+<span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;</span>&gt;</span>
+<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;prefix&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/WEB-INF/views/&quot;</span>/&gt;</span>
+<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;suffix&quot;</span> <span class="attr">value</span>=<span class="string">&quot;.jsp&quot;</span>/&gt;</span>
+<span class="tag">&lt;/<span class="name">bean</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">beans</span>&gt;</span></code></pre>
+<p><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144109206.png"><br>再弹出框中勾选相应的xml文件添加到context<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144114057.png"></p>
+<h3><span id="添加tomcat服务">添加tomcat服务</span></h3><p>点击右上角的编辑<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144123355.png"><br>选择添加一个tomcat服务<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144128603.png"><br>配置服务<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144141102.png"><br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144148088.png"><br>点击ok，配置完成。</p>
+<h3><span id="编写控制器和页面">编写控制器和页面</span></h3><p>在scr&#x2F;main&#x2F;java 下面创建一个新包 com.controller ，然后在包里面新建一个IndexController类<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144157485.png"><br>IndexController类</p>
+<pre><code class="highlight java"><span class="keyword">package</span> com.controller;
+
+<span class="keyword">import</span> org.springframework.stereotype.Controller;
+<span class="keyword">import</span> org.springframework.ui.Model;
+<span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;
+<span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;
+<span class="keyword">import</span> org.springframework.web.servlet.ModelAndView;
+
+
+<span class="meta">@Controller</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">IndexController</span> &#123;
+
+<span class="comment">//返回字符串</span>
+<span class="meta">@ResponseBody</span>
+<span class="meta">@RequestMapping(value = &quot;/HelloWord&quot;)</span>
+<span class="keyword">public</span> String <span class="title function_">HelloWord</span><span class="params">()</span>&#123;
+<span class="keyword">return</span> <span class="string">&quot;HelloWord&quot;</span>;
+&#125;
+<span class="comment">//返回jsp视图</span>
+<span class="meta">@RequestMapping(value = &quot;/index&quot;)</span>
+<span class="keyword">public</span> String <span class="title function_">index</span><span class="params">(Model model)</span>&#123;
+model.addAttribute(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;jsp页面展示&quot;</span>);
+<span class="keyword">return</span> <span class="string">&quot;index&quot;</span>;
+&#125;
+&#125;</code></pre>
+<p>根据spring-mvc的配置文件在&#x2F;WEB-INF&#x2F;views&#x2F;目录下创建一个index.jsp文件<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144221153.png"><br>效果如下<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144229011.png"><br>index.jsp文件</p>
+<pre><code class="highlight jsp">&lt;%@ page contentType=<span class="string">&quot;text/html;charset=UTF-8&quot;</span> language=<span class="string">&quot;java&quot;</span>
+ %&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;$Title$&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+$&#123;name&#125;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>启动项目<br> 点击运行启动项目。</p>
+<h2><span id="使用maven搭建spring-mvc环境">使用maven搭建spring mvc环境</span></h2><p>###新建项目<br>首先，跟第一种方法一样点击菜单栏File-&gt;NEW-&gt;Project选择maven，然后勾选Create form archetype 选中webapp 如图:<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144335442.png"><br>填写GroupId和ArtifactId后点击next下一步:<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144344610.png"><br>在配置里面添加archetypeCatalog&#x3D;internal (可以加快maven的生成速度，网上说的(⊙o⊙)…)<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144414964.png"><br>点击finish完成。<br>###创建项目目录结构<br>点击finish后完成的项目目录结构如下所示<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144434399.png"><br>这里我们需要在main目录下创建一个java目录，java下放置java 的源码，再在java项目创建一个包com.controller包。<br>最终项目的目录结构为<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144442903.png"><br>之后对项目的资源分类，选中项目按F4<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144450969.png"><br>在弹出界面中奖java文件夹设置为项目源码Sources<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144610012.png"><br>把resource设置为项目的资源库Resources<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144621818.png"><br>设置完后相应的文件夹颜色也会变化，且右侧也会有列表信息<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144629644.png"></p>
+<h3><span id="配置配置文件">配置配置文件</span></h3><p>之后同第一种方法一样配置web.xml，spring-mvc.xml文件，添加tomcat服务器，创建IndexController控制器，index.jsp视图文件之后就完成了springmvc环境搭建<br>启动项目就可以得到如上的结果。（注该方法无需修改iml文件里面的路径，而web.xml文件放在&#x2F;webaap&#x2F;WEB-INF&#x2F;路径下）<br>最终项目路径<br><img src="/2018/10/10/IDE/IDEA%E6%90%AD%E5%BB%BAspringmvc%E7%8E%AF%E5%A2%83/20180111144640312.png"></p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2018/10/10/IDE/IDEA搭建springmvc环境/';
+var disqus_title = 'IDEA搭建springmvc环境';
+var disqus_url = 'https://mirsery.github.io/2018/10/10/IDE/IDEA搭建springmvc环境/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2018/10/22/docker/DockerFile/">上一篇</a><a class="next" href="/2018/10/07/mac/2018/mac%E6%94%B9%E5%8F%98lauchpad%E5%9B%BE%E6%A0%87%E7%9A%84%E5%A4%A7%E5%B0%8F/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

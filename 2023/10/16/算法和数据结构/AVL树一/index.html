@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> AVL树(一) · mirsery</title><meta name="description" content="AVL树(一) - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">AVL树(一)</h1><div class="post-info">作者: mirsery         创建日期: 2023年10月16日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91-bstbinary-search-tree">二叉查找树 BST（binary search tree）</a></li>
+<li><a href="#avl%E6%A0%91%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6">AVL树时间复杂度</a></li>
+<li><a href="#%E6%A0%91%E7%9A%84%E5%B9%B3%E8%A1%A1">树的平衡</a></li>
+<li><a href="#%E5%B9%B3%E8%A1%A1%E5%9B%A0%E5%AD%90">平衡因子</a></li>
+<li><a href="#%E6%A0%91%E7%9A%84%E6%97%8B%E8%BD%AC">树的旋转</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9">删除节点</a></li>
+</ul>
+<!-- tocstop -->
+
+<p>AVL树查找、插入和删除在平均和最坏的情况下的时间复杂度均为O(logN),增加和删除元素的操作可能需要借由一次或者多次的树旋转，来实现树结构的重新平衡。</p>
+<h2><span id="二叉查找树-bstbinary-search-tree">二叉查找树 BST（binary search tree）</span></h2><p>也叫二叉排序树 BST （binary sort tree）  </p>
+<ol>
+<li>如果左子树不为空，则左子树上的所有节点均小于根节点的值</li>
+<li>如果右子树不为空，则右子树上的所有节点的值均大于根节点的值</li>
+<li>左、右子树也都是二叉查找树</li>
+</ol>
+<p>对于一个节点分布相对均衡的二叉查找树来说，如果节点的总数为n,则搜索的时间复杂度就是O（log n）和树的深度是一样的。 </p>
+<p><img src="/2023/10/16/%E7%AE%97%E6%B3%95%E5%92%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/AVL%E6%A0%91%E4%B8%80/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91.png"></p>
+<h2><span id="avl树时间复杂度">AVL树时间复杂度</span></h2><table>
+<thead>
+<tr>
+<th>算法</th>
+<th>平均</th>
+<th>最差</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>空间</td>
+<td>O(n)</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td>搜索</td>
+<td>O(log n)</td>
+<td>O(log n)</td>
+</tr>
+<tr>
+<td>插入</td>
+<td>O(log n)</td>
+<td>O(log n)</td>
+</tr>
+<tr>
+<td>删除</td>
+<td>O(log n)</td>
+<td>O(log n)</td>
+</tr>
+</tbody></table>
+<h2><span id="树的平衡">树的平衡</span></h2><p>树的平衡是指对于给定数量的节点，保证树的高度尽可能短的过程。如果可以满足树所有叶子结点都在最后两层上，且倒数第二层是满的，则这棵树是平衡的。如果一个平衡树最后一层叶子结点都在最左边的位置上，则这棵树是左平衡的。</p>
+<h2><span id="平衡因子">平衡因子</span></h2><p>某结点的左子树与右子树的高度(深度)差即为该结点的平衡因子（BF,Balance Factor）。平衡二叉树上所有结点的平衡因子只可能是 -1，0 或 1。一个结点数为n的完全二叉树的高度为 log2（n）    </p>
+<h2><span id="树的旋转">树的旋转</span></h2><pre><code>AVL树的基本操作一般涉及运作在同在不平衡的二叉查找树所引用的同样的算法。但是要进行一次或者多次的AVL旋转。以下是四种不平衡的情况以及对应的处理方式。
+</code></pre>
+<ul>
+<li>LL 情况<br>根节点平衡因子大于1，且其左子树与右子树的高度差大于等于0<br>处理LL情况，需要将树整体进行右旋转（即对根节点Y进行右旋转,顺时针），效果如下所示:</li>
+</ul>
+<p><img src="/2023/10/16/%E7%AE%97%E6%B3%95%E5%92%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/AVL%E6%A0%91%E4%B8%80/LL.png"></p>
+<ul>
+<li>RR 情况<br>根节点平衡因子小于-1，且左子树和右子树的高度差小于等于0<br>处理RR情况需要将树整体进行左旋转（即对根节点Y进行左旋转逆时针），效果如图所示:</li>
+</ul>
+<p><img src="/2023/10/16/%E7%AE%97%E6%B3%95%E5%92%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/AVL%E6%A0%91%E4%B8%80/RR.png"></p>
+<ul>
+<li>LR 情况<br>根节点平衡因子大于1,且左子树和右子树的高度差小于0<br>处理LR情况需要将其左子树进行左旋转 为LL，然后在将整体树进行右旋转，效果如图所示:</li>
+</ul>
+<p><img src="/2023/10/16/%E7%AE%97%E6%B3%95%E5%92%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/AVL%E6%A0%91%E4%B8%80/LR.png"></p>
+<ul>
+<li>RL 情况<br>根节点平衡因子小于-1，且左子树与右子树的高度差大于0<br>处理RL情况需要将其右子树进行右旋转 为RR，然后再将整体树进行左旋转，效果如图所示：</li>
+</ul>
+<p><img src="/2023/10/16/%E7%AE%97%E6%B3%95%E5%92%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/AVL%E6%A0%91%E4%B8%80/RL.png"></p>
+<h2><span id="删除节点">删除节点</span></h2><p>从AVL树中删除，可以通过把要删除的节点向下旋转成一个叶子节点，接着直接移除这个叶子节点来完成。因为在旋转成葉子節點期间最多有log n个节点被旋转，而每次AVL旋转耗费固定的时间，所以删除处理在整体上耗费O(logN)</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2023/10/16/算法和数据结构/AVL树一/';
+var disqus_title = 'AVL树(一)';
+var disqus_url = 'https://mirsery.github.io/2023/10/16/算法和数据结构/AVL树一/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2023/10/24/%E7%AE%97%E6%B3%95%E5%92%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/AVL%E6%A0%91%E4%BA%8C/">上一篇</a><a class="next" href="/2023/01/31/talk/2023/tcp%E5%8D%8F%E8%AE%AE%E5%B0%8F%E8%AE%B0%EF%BC%881%EF%BC%89/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

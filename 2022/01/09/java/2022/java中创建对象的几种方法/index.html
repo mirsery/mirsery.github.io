@@ -1,0 +1,96 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> java中创建对象的几种方法 · mirsery</title><meta name="description" content="java中创建对象的几种方法 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">java中创建对象的几种方法</h1><div class="post-info">作者: mirsery         创建日期: 2022年1月9日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81%E7%9C%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C">测试代码，看运行结果</a></li>
+<li><a href="#clone">Clone</a></li>
+</ul>
+<!-- tocstop -->
+
+<p>常见的对象常见方法有4种：</p>
+<ol>
+<li>使用<strong>new</strong>关键字</li>
+<li>使用<strong>clone</strong>方法</li>
+<li>反射机制</li>
+<li>反序列化</li>
+</ol>
+<p>其中采用1，3新建对象时会调用构造函数，2和4并不会调用构造函数</p>
+<h2><span id="测试代码看运行结果">测试代码，看运行结果</span></h2><ul>
+<li><p>简单的bean类 Car</p>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Car</span> <span class="keyword">implements</span> <span class="title class_">Cloneable</span>, Serializable &#123;
+    <span class="keyword">private</span> String name;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String name)</span> &#123;
+        <span class="built_in">this</span>.name = name;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="keyword">protected</span> Object <span class="title function_">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException &#123;
+        <span class="keyword">return</span> <span class="built_in">super</span>.clone();
+    &#125;
+
+    <span class="keyword">public</span> <span class="title function_">Car</span><span class="params">(String name)</span> &#123;
+        <span class="built_in">this</span>.name = name;
+        System.out.println(<span class="string">&quot;create car&quot;</span>);
+    &#125;
+
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;
+        System.out.println(<span class="built_in">this</span>.name + <span class="string">&quot; is run !&quot;</span>);
+    &#125;
+&#125;</code></pre>
+</li>
+<li><p>测试类的Main方法</p>
+</li>
+</ul>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throw</span> Exception &#123;
+    <span class="comment">//new 关键字创建对象</span>
+    <span class="type">Car</span> <span class="variable">car1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Car</span>(<span class="string">&quot;mike1&quot;</span>);
+    car1.run();
+    System.out.println(<span class="string">&quot;=================&quot;</span>);
+
+    <span class="comment">//序列化</span>
+    <span class="type">ObjectOutput</span> <span class="variable">objectOutput</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">&quot;Car&quot;</span>));
+    objectOutput.writeObject(car1);
+    objectOutput.close();
+    <span class="comment">//</span>
+
+    <span class="comment">//clone 创建对象</span>
+    <span class="type">Car</span> <span class="variable">car2</span> <span class="operator">=</span> (Car) car1.clone();
+    car2.setName(<span class="string">&quot;mike2&quot;</span>);
+    car2.run();
+    System.out.println(<span class="string">&quot;=================&quot;</span>);
+
+    <span class="comment">//反射创建对象</span>
+    <span class="type">Class</span> <span class="variable">carClass</span> <span class="operator">=</span> Class.forName(Car.class.getName());
+
+    <span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> carClass.getDeclaredConstructor(<span class="keyword">new</span> <span class="title class_">Class</span>[]&#123;String.class&#125;).newInstance(<span class="string">&quot;mike3&quot;</span>);
+    <span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> obj.getClass().getMethod(<span class="string">&quot;run&quot;</span>);
+    method.invoke(obj);
+
+    <span class="comment">// Car car3 = (Car) carClass.getDeclaredConstructor(new Class[]&#123;String.class&#125;).newInstance(&quot;mike3&quot;);</span>
+    <span class="comment">// car3.run();</span>
+
+    System.out.println(<span class="string">&quot;=================&quot;</span>);
+
+    <span class="comment">//反序列化创建对象</span>
+    <span class="type">ObjectInputStream</span> <span class="variable">inputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">&quot;Car&quot;</span>));
+    <span class="type">Car</span> <span class="variable">car4</span> <span class="operator">=</span> (Car) inputStream.readObject();
+    car4.setName(<span class="string">&quot;mike4&quot;</span>);
+    car4.run();
+&#125;</code></pre>
+
+<p>下面是测试代码输出结果</p>
+<pre><code class="highlight plaintext">create car
+mike1 is run !
+=================
+mike2 is run !
+=================
+create car
+mike3 is run !
+=================
+mike4 is run !</code></pre>
+<p>从结果中可以得出最直接的结论，Clone和反序列化都没有执行类的构造函数。</p>
+<h2><span id="clone">Clone</span></h2><p>clone拷贝对象返回的是一个新的对象，而不是一个对象的引用地址；拷贝对象已经包含原来对象的信息，而不是对象的初始信息，即每次拷贝动作不是针对一个全新对象的创建。</p>
+<p>利用clone，在内存中进行数据块的拷贝，复制已有的对象，也是生成对象的一种方式。前提是类实现Cloneable接口，Cloneable接口没有任何方法，是一个空接口，也可以称这样的接口为标志接口，只有实现了该接口，才会支持clone操作。有的人也许会问了，java中的对象都有一个默认的父类Object。<br>Object中有一个clone方法，为什么还必须要实现Cloneable接口呢，这就是cloneable接口这个标志接口的意义，只有实现了这个接口才能实现复制操作，因为jvm在复制对象的时候，会检查对象的类是否实现了Cloneable这个接口，如果没有实现，则会报CloneNotSupportedException异常。类似这样的接口还有Serializable接口、RandomAccess接口等。<br>还有值得一提的是在执行clone操作的时候，不会调用构造函数。</p>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2022/01/09/java/2022/springBoot%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/">上一篇</a><a class="next" href="/2022/01/07/%E5%89%8D%E7%AB%AF/vue%E6%A8%A1%E6%9D%BF%E7%9A%84%E4%BD%BF%E7%94%A8/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

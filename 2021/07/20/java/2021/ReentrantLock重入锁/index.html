@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> ReentrantLock重入锁 · mirsery</title><meta name="description" content="ReentrantLock重入锁 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">ReentrantLock重入锁</h1><div class="post-info">作者: mirsery         创建日期: 2021年7月20日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#%E4%B8%AD%E6%96%AD%E5%93%8D%E5%BA%94">中断响应</a></li>
+<li><a href="#%E9%94%81%E7%94%B3%E8%AF%B7%E7%AD%89%E5%BE%85%E9%99%90%E6%97%B6">锁申请等待限时</a></li>
+<li><a href="#%E5%85%AC%E5%B9%B3%E9%94%81">公平锁</a></li>
+</ul>
+<!-- tocstop -->
+
+<p>重入锁采用 <em><strong>java.util.concurrent.locks.ReentrantLock</strong></em>类实现，下面是一段简单的重入锁的案例:</p>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">ReentrantLock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();
+
+   <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;
+
+   <span class="meta">@Override</span>
+   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;
+       <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;<span class="number">10000000</span>;j++)&#123;
+           lock.lock();
+           <span class="keyword">try</span>&#123;
+               i++;
+           &#125;<span class="keyword">finally</span> &#123;
+               lock.unlock();
+           &#125;
+       &#125;
+   &#125;
+
+   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;
+       <span class="type">SimpleReenterLock</span> <span class="variable">simpleReenterLock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleReenterLock</span>();
+       <span class="type">Thread</span> <span class="variable">t1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(simpleReenterLock);
+       <span class="type">Thread</span> <span class="variable">t2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(simpleReenterLock);
+       t1.start();
+       t2.start();
+       t1.join();
+       t2.join();
+       System.out.println(i);
+   &#125;
+</code></pre>
+
+<h2><span id="中断响应">中断响应</span></h2><p>使用可重入锁的过程中，如果一个线程在等待锁，那么程序可以根据需求取消对锁的请求。下面是简单的例子：</p>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">ReentrantLock</span> <span class="variable">lock1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();
+   <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">ReentrantLock</span> <span class="variable">lock2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();
+   <span class="type">int</span> lock;
+
+
+   <span class="keyword">public</span> <span class="title function_">InitLock</span><span class="params">(<span class="type">int</span> lock)</span> &#123;
+       <span class="built_in">this</span>.lock = lock;
+   &#125;
+
+   <span class="meta">@Override</span>
+   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;
+       <span class="keyword">try</span> &#123;
+           <span class="keyword">if</span> (lock == <span class="number">1</span>) &#123;
+               lock1.lockInterruptibly();
+               Thread.sleep(<span class="number">500</span>);
+               lock2.lockInterruptibly();
+
+               System.out.println(<span class="string">&quot;handle &quot;</span>+lock);
+           &#125;<span class="keyword">else</span> &#123;
+               lock2.lockInterruptibly();
+               Thread.sleep(<span class="number">500</span>);
+               lock1.lockInterruptibly();
+
+               System.out.println(<span class="string">&quot;handle &quot;</span>+lock);
+           &#125;
+       &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+           e.printStackTrace();
+       &#125;<span class="keyword">finally</span> &#123;
+           <span class="keyword">if</span>(lock1.isHeldByCurrentThread())&#123;
+               lock1.unlock();
+           &#125;
+           <span class="keyword">if</span>(lock2.isHeldByCurrentThread())&#123;
+               lock2.unlock();
+               System.out.println(lock +<span class="string">&quot;-&quot;</span>+ Thread.currentThread().getId() + <span class="string">&quot;: thread exit!&quot;</span>);
+           &#125;
+       &#125;
+   &#125;
+
+   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;
+       <span class="type">InitLock</span> <span class="variable">initLock1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InitLock</span>(<span class="number">1</span>);
+       <span class="type">InitLock</span> <span class="variable">initLock2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InitLock</span>(<span class="number">2</span>);
+       <span class="type">Thread</span> <span class="variable">t1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(initLock1);
+       <span class="type">Thread</span> <span class="variable">t2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(initLock2);
+       t1.start();
+       t2.start();
+       Thread.sleep(<span class="number">1000</span>);
+       t2.interrupt();
+   &#125;</code></pre>
+
+<p>上述代码，很容易产生死锁。当t1线程申请lock1之后想申请lock2锁的时候，t2很容易提前申请到lock2，导致程序死锁。主程序触发t2的中断，使得t2线程释放资源，t1线程获得对应的lock2继续完成下面的代码任务。</p>
+<h2><span id="锁申请等待限时">锁申请等待限时</span></h2><p>除了采用中断的方式获取外部通知，避免死锁还有另一中方法就限时等待。使用 <em><strong>tryLock( )</strong></em> 方法获取锁，该方法接受2个参数，一个表示等待时长，另一个表示计时单位。如果成功获得锁就会返回true，反之返回false。  <em><strong>ReentrantLock.tryLock( )</strong></em> 方法也可以不带参数直接运行，在这种情况下，当前线程会尝试获得锁，如果锁未被其他线程占用则申请锁成功，立即返回true；反之如果被其他线程占用，则其他线程不会进行等待，而是立即返回false。这种模式不会引起线程等待，因此不会产生死锁。</p>
+<h2><span id="公平锁">公平锁</span></h2><p>一般情况下，锁的申请都是非公平的，重入锁允许我们对公平性进行设置，他的构造函数如下:</p>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="title function_">ReentrantLock</span><span class="params">(<span class="type">boolean</span>  fair)</span></code></pre>
+
+<p>fair 为true表示当前的锁是公平的。默认情况下，锁是非公平的，实现公平锁必然要求系统维护一个有序队列，因此公平锁的实现成本比较高。如果没有特殊的需求则不需要使用公平锁。</p>
+<pre><code class="highlight java"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">ReentrantLock</span> <span class="variable">fairLock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>(<span class="literal">true</span>);
+
+<span class="meta">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;
+    <span class="keyword">while</span>(<span class="literal">true</span>)&#123;
+        <span class="keyword">try</span>&#123;
+            fairLock.lock();
+            System.out.println(Thread.currentThread().getName()+<span class="string">&quot; get the lock&quot;</span>);
+        &#125;<span class="keyword">finally</span> &#123;
+            fairLock.unlock();
+        &#125;
+    &#125;
+&#125;
+
+
+<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;
+    <span class="type">FairLock</span> <span class="variable">fairLock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FairLock</span>();
+    <span class="type">Thread</span> <span class="variable">t1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(fairLock,<span class="string">&quot;t1&quot;</span>);
+    <span class="type">Thread</span> <span class="variable">t2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(fairLock,<span class="string">&quot;t2&quot;</span>);
+
+    t1.start();
+    t2.start();
+&#125;</code></pre>
+
+
+
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2021/07/20/java/2021/ReentrantLock重入锁/';
+var disqus_title = 'ReentrantLock重入锁';
+var disqus_url = 'https://mirsery.github.io/2021/07/20/java/2021/ReentrantLock重入锁/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2021/07/20/java/2021/Condition/">上一篇</a><a class="next" href="/2021/07/12/java/2021/java%E8%BF%90%E7%AE%97%E7%AC%A6/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

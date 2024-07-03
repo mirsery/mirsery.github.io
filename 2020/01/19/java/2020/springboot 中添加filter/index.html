@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 关于springboot 中添加filter的方法 · mirsery</title><meta name="description" content="关于springboot 中添加filter的方法 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">关于springboot 中添加filter的方法</h1><div class="post-info">作者: mirsery         创建日期: 2020年1月20日</div><div class="post-content"><h1><span id="关于springboot-中添加filter的方法">关于springboot 中添加filter的方法</span></h1><blockquote>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><p> 转载自(简书作者二哥很猛)[<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3d421fbce734]">https://www.jianshu.com/p/3d421fbce734]</a><br>由于springboot基于servlet3.0+,内嵌tomcat容器 因此无法像之前一样通过web.xml中配置Filter,本文基于springboot1.5.6</p>
+</blockquote>
+<ul>
+<li><p>第一种方法</p>
+<pre><code class="highlight java"><span class="meta">@WebFilter(filterName = &quot;myFilter&quot;,urlPatterns = &quot;/*&quot;)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span> &#123;
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> &#123;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;
+    &#125;
+&#125;
+
+<span class="meta">@SpringBootApplication</span>
+<span class="meta">@EnableAutoConfiguration</span>
+<span class="meta">@EnableWebMvc</span>
+<span class="meta">@ServletComponentScan(basePackages = &quot;com.fanyin.eghm&quot;)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EghmApplication</span> &#123;
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;
+        SpringApplication.run(EghmApplication.class, args);
+    &#125;
+&#125;</code></pre>
+<p>@ServletComponentScan 所扫描的包路径必须包含该Filter</p>
+</li>
+<li><p>第二种</p>
+<pre><code class="highlight java"><span class="meta">@Configuration</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FilterConfig</span> &#123;
+    <span class="meta">@Bean</span>
+    <span class="keyword">public</span> FilterRegistrationBean <span class="title function_">filterRegistrationBean</span><span class="params">()</span>&#123;
+        <span class="type">FilterRegistrationBean</span> <span class="variable">bean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FilterRegistrationBean</span>();
+        bean.setFilter(<span class="keyword">new</span> <span class="title class_">MyFilter2</span>());
+        bean.addUrlPatterns(<span class="string">&quot;/*&quot;</span>);
+        <span class="keyword">return</span> bean;
+    &#125;
+&#125;</code></pre></li>
+<li><p>第三种</p>
+<pre><code class="highlight java"><span class="meta">@Bean(&quot;proxyFilter&quot;)</span>
+    <span class="keyword">public</span> Filter <span class="title function_">filter</span> <span class="params">()</span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Filter</span>() &#123;
+            <span class="meta">@Override</span>
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(javax.servlet.FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;
+            &#125;
+
+            <span class="meta">@Override</span>
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> &#123;
+            &#125;
+
+            <span class="meta">@Override</span>
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;
+            &#125;
+        &#125;;
+    &#125;
+
+    <span class="meta">@Bean</span>
+    <span class="keyword">public</span> DelegatingFilterProxyRegistrationBean <span class="title function_">delegatingFilterProxyRegistrationBean</span><span class="params">()</span>&#123;
+        <span class="type">DelegatingFilterProxyRegistrationBean</span> <span class="variable">bean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DelegatingFilterProxyRegistrationBean</span>(<span class="string">&quot;proxyFilter&quot;</span>);
+        bean.addUrlPatterns(<span class="string">&quot;/*&quot;</span>);
+        <span class="keyword">return</span> bean;
+    &#125;</code></pre>
+</li>
+<li><p>第四种</p>
+<pre><code class="highlight java"><span class="meta">@Bean(&quot;myFilter&quot;)</span>
+    <span class="keyword">public</span> Filter <span class="title function_">filter</span> <span class="params">()</span>&#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Filter</span>() &#123;
+            <span class="meta">@Override</span>
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(javax.servlet.FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;
+            &#125;
+
+            <span class="meta">@Override</span>
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> &#123;
+            &#125;
+
+            <span class="meta">@Override</span>
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;
+            &#125;
+        &#125;;
+    &#125;</code></pre>
+<p>说明<br> 第二种和第三种类似,均实现了AbstractFilterRegistrationBean接口,而该接口间接实现了ServletContextInitializer，springboot在启动容器后会查找实现该接口的bean，并调用onStartup()方法添加自定义的Filter。<br>两者的区别 DelegatingFilterProxyRegistrationBean 通过传入的proxyFilter名字,在WebApplicationContext查找该Fillter Bean，并通过DelegatingFilterProxy生成基于该Bean的代理Filter对象，而 FilterRegistrationBean 则是直接设置一个Filter，因此该Filter可以有spring容器管理,也可不用spring管理。<br>注意：如果Filter声明为一个Bean，则不需要定义为FilterRegistrationBean，也会被spring发现并添加。<br>方法四 该方式无法定义拦截规则等，默认全局。</p>
+</li>
+</ul>
+<p>EmbeddedWebApplicationContext 容器启动后执行 springboot 2.0 变更为ServletWebServerApplicationContext 。</p>
+<pre><code class="highlight java"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">selfInitialize</span><span class="params">(ServletContext servletContext)</span> <span class="keyword">throws</span> ServletException &#123;
+        prepareEmbeddedWebApplicationContext(servletContext);
+        <span class="type">ConfigurableListableBeanFactory</span> <span class="variable">beanFactory</span> <span class="operator">=</span> getBeanFactory();
+        <span class="type">ExistingWebApplicationScopes</span> <span class="variable">existingScopes</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExistingWebApplicationScopes</span>(
+                beanFactory);
+        WebApplicationContextUtils.registerWebApplicationScopes(beanFactory,
+                getServletContext());
+        existingScopes.restore();
+        WebApplicationContextUtils.registerEnvironmentBeans(beanFactory,
+                getServletContext());
+        <span class="keyword">for</span> (ServletContextInitializer beans : getServletContextInitializerBeans()) &#123;
+            beans.onStartup(servletContext);
+        &#125;
+    &#125;</code></pre>
+<p>getServletContextInitializerBeans() 会返回实现了ServletContextInitializer接口的集合,同时初始化一些数据,如下:</p>
+<pre><code class="highlight java"><span class="keyword">public</span> <span class="title function_">ServletContextInitializerBeans</span><span class="params">(ListableBeanFactory beanFactory)</span> &#123;
+        <span class="built_in">this</span>.initializers = <span class="keyword">new</span> <span class="title class_">LinkedMultiValueMap</span>&lt;Class&lt;?&gt;, ServletContextInitializer&gt;();
+        addServletContextInitializerBeans(beanFactory);
+        addAdaptableBeans(beanFactory);
+        List&lt;ServletContextInitializer&gt; sortedInitializers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;ServletContextInitializer&gt;();
+        <span class="keyword">for</span> (Map.Entry&lt;?, List&lt;ServletContextInitializer&gt;&gt; entry : <span class="built_in">this</span>.initializers
+                .entrySet()) &#123;
+            AnnotationAwareOrderComparator.sort(entry.getValue());
+            sortedInitializers.addAll(entry.getValue());
+        &#125;
+        <span class="built_in">this</span>.sortedList = Collections.unmodifiableList(sortedInitializers);
+    &#125;</code></pre>
+<p>addAdaptableBeans addServletContextInitializerBeans 在调用onStartup()方法之前会添加Filter与Servlet,注意Filter与Servlet必须已经声明为Bean<br>第一种则最终也是采用第二种方式,区别就是在springboot启动时将扫描到的包路径作为入参传递给ServletComponentRegisteringPostProcessor 而该类实现了BeanFactoryPostProcessor接口,因此在BeanFactory初始化后,会调用postProcessBeanFactory()方法,在该方法中通过之前传入的包来扫描相应的类,并将@WebFilter的类由相应的处理器转换为FilterRegistrationBean。<br>ServletComponentRegisteringPostProcessor</p>
+<pre><code class="highlight java">ServletComponentRegisteringPostProcessor(Set&lt;String&gt; packagesToScan) &#123;
+    <span class="built_in">this</span>.packagesToScan = packagesToScan;
+&#125;
+
+<span class="meta">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postProcessBeanFactory</span><span class="params">(ConfigurableListableBeanFactory beanFactory)</span>
+        <span class="keyword">throws</span> BeansException &#123;
+    <span class="keyword">if</span> (isRunningInEmbeddedContainer()) &#123;
+        <span class="type">ClassPathScanningCandidateComponentProvider</span> <span class="variable">componentProvider</span> <span class="operator">=</span> createComponentProvider();
+        <span class="keyword">for</span> (String packageToScan : <span class="built_in">this</span>.packagesToScan) &#123;
+            scanPackage(componentProvider, packageToScan);
+        &#125;
+    &#125;
+&#125;
+
+<span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">scanPackage</span><span class="params">(</span>
+<span class="params">        ClassPathScanningCandidateComponentProvider componentProvider,</span>
+<span class="params">        String packageToScan)</span> &#123;
+    <span class="keyword">for</span> (BeanDefinition candidate : componentProvider
+            .findCandidateComponents(packageToScan)) &#123;
+        <span class="keyword">if</span> (candidate <span class="keyword">instanceof</span> ScannedGenericBeanDefinition) &#123;
+            <span class="keyword">for</span> (ServletComponentHandler handler : handlers) &#123;
+                handler.handle(((ScannedGenericBeanDefinition) candidate),
+                        (BeanDefinitionRegistry) <span class="built_in">this</span>.applicationContext);
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
+<p>WebFilterHandler</p>
+<pre><code class="highlight java">WebFilterHandler() &#123;
+    <span class="built_in">super</span>(WebFilter.class);
+&#125;
+
+<span class="meta">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doHandle</span><span class="params">(Map&lt;String, Object&gt; attributes,</span>
+<span class="params">        ScannedGenericBeanDefinition beanDefinition,</span>
+<span class="params">        BeanDefinitionRegistry registry)</span> &#123;
+    <span class="type">BeanDefinitionBuilder</span> <span class="variable">builder</span> <span class="operator">=</span> BeanDefinitionBuilder
+            .rootBeanDefinition(FilterRegistrationBean.class);
+    builder.addPropertyValue(<span class="string">&quot;asyncSupported&quot;</span>, attributes.get(<span class="string">&quot;asyncSupported&quot;</span>));
+    builder.addPropertyValue(<span class="string">&quot;dispatcherTypes&quot;</span>, extractDispatcherTypes(attributes));
+    builder.addPropertyValue(<span class="string">&quot;filter&quot;</span>, beanDefinition);
+    builder.addPropertyValue(<span class="string">&quot;initParameters&quot;</span>, extractInitParameters(attributes));
+    <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> determineName(attributes, beanDefinition);
+    builder.addPropertyValue(<span class="string">&quot;name&quot;</span>, name);
+    builder.addPropertyValue(<span class="string">&quot;servletNames&quot;</span>, attributes.get(<span class="string">&quot;servletNames&quot;</span>));
+    builder.addPropertyValue(<span class="string">&quot;urlPatterns&quot;</span>,
+            extractUrlPatterns(<span class="string">&quot;urlPatterns&quot;</span>, attributes));
+    registry.registerBeanDefinition(name, builder.getBeanDefinition());
+&#125;</code></pre>
+<p>添加自定义Servlet 也可采用方法一@WebServlet 或者ServletRegistrationBean<br>添加自定义Listener也可以采用方法一 @WebListener或者ServletListenerRegistrationBean ,注意监听事件是泛型</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2020/01/19/java/2020/springboot 中添加filter/';
+var disqus_title = '关于springboot 中添加filter的方法';
+var disqus_url = 'https://mirsery.github.io/2020/01/19/java/2020/springboot 中添加filter/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2020/02/04/java/2020/springboot%E4%B8%AD%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E7%9A%84%E4%BD%BF%E7%94%A8/">上一篇</a><a class="next" href="/2020/01/02/java/2020/springboot%E4%B8%AD%E7%9A%84%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E4%BD%BF%E7%94%A8/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

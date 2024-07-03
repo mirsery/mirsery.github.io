@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> mysql中的锁二 · mirsery</title><meta name="description" content="mysql中的锁二 - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">mysql中的锁二</h1><div class="post-info">作者: mirsery         创建日期: 2024年1月30日</div><div class="post-content"><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#innodb-%E9%94%81">InnoDB 锁</a><ul>
+<li><a href="#%E4%BA%8B%E5%8A%A1transaction%E5%8F%8A%E5%85%B6acid%E5%B1%9E%E6%80%A7">事务（Transaction）及其ACID属性</a></li>
+<li><a href="#%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98">事务并发问题</a></li>
+<li><a href="#%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB">事务隔离级别</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96inonodb%E8%A1%8C%E9%94%81%E4%BA%89%E7%94%A8%E6%83%85%E5%86%B5">获取InonoDB行锁争用情况</a></li>
+<li><a href="#innodb%E7%9A%84%E8%A1%8C%E9%94%81%E6%A8%A1%E5%BC%8F%E5%8F%8A%E5%8A%A0%E9%94%81%E6%96%B9%E6%B3%95">InnoDB的行锁模式及加锁方法</a></li>
+<li><a href="#innodb%E8%A1%8C%E9%94%81%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F">InnoDB行锁实现方式</a></li>
+<li><a href="#%E9%97%B4%E9%9A%99%E9%94%81next-key%E9%94%81">间隙锁（Next-Key锁）</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BD%BF%E7%94%A8%E8%A1%A8%E9%94%81">什么时候使用表锁</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E6%AD%BB%E9%94%81">关于死锁</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+
+<h1><span id="innodb-锁">InnoDB 锁</span></h1><p>InnoDB与MyISAM的最大不同有两点：</p>
+<ul>
+<li>一是支持事务（TRANSACTION）</li>
+<li>二是采用了行级锁。</li>
+</ul>
+<h2><span id="事务transaction及其acid属性">事务（Transaction）及其ACID属性</span></h2><p>事务是由一组SQL语句组成的逻辑处理单元，事务具有4属性，通常称为事务的ACID属性。</p>
+<ul>
+<li>原性性（Actomicity）：事务是一个原子操作单元，其对数据的修改，要么全都执行，要么全都不执行。</li>
+<li>一致性（Consistent）：在事务开始和完成时，数据都必须保持一致状态。这意味着所有相关的数据规则都必须应用于事务的修改，以操持完整性；事务结束时，所有的内部数据结构（如B树索引或双向链表）也都必须是正确的。</li>
+<li>隔离性（Isolation）：数据库系统提供一定的隔离机制，保证事务在不受外部并发操作影响的“独立”环境执行。这意味着事务处理过程中的中间状态对外部是不可见的，反之亦然。</li>
+<li>持久性（Durable）：事务完成之后，它对于数据的修改是永久性的，即使出现系统故障也能够保持。</li>
+</ul>
+<h2><span id="事务并发问题">事务并发问题</span></h2><pre><code>相对于串行处理来说，并发事务处理能大大增加数据库资源的利用率，提高数据库系统的事务吞吐量，从而可以支持可以支持更多的用户。
+</code></pre>
+<p>并发事务处理也会带来一些问题，主要包括以下几种情况：</p>
+<ol>
+<li>更新丢失（Lost Update）<br>当两个或多个事务选择同一行，然后基于最初选定的值更新该行时，由于每个事务都不知道其他事务的存在，就会发生丢失更新问题——最后的更新覆盖了其他事务所做的更新。<br>例如，两个编辑人员制作了同一文档的电子副本。每个编辑人员独立地更改其副本，然后保存更改后的副本，这样就覆盖了原始文档。最后保存其更改保存其更改副本的编辑人员覆盖另一个编辑人员所做的修改。<br>如果在一个编辑人员完成并提交事务之前，另一个编辑人员不能访问同一文件，则可避免此问题。</li>
+<li>脏读（Dirty Reads）<br>一个事务正在对一条记录做修改，在这个事务并提交前，这条记录的数据就处于不一致状态；这时，另一个事务也来读取同一条记录，如果不加控制，第二个事务读取了这些“脏”的数据，并据此做进一步的处理，就会产生未提交的数据依赖关系。这种现象被形象地叫做“脏读”。</li>
+<li>不可重复读（Non-Repeatable Reads）<br> 一个事务在读取某些数据已经发生了改变、或某些记录已经被删除了！这种现象叫做“不可重复读”。</li>
+<li>幻读（Phantom Reads）<br>一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为“幻读”。</li>
+</ol>
+<h2><span id="事务隔离级别">事务隔离级别</span></h2><p>在并发事务处理带来的问题中，“更新丢失”通常应该是完全避免的。但防止更新丢失，并不能单靠数据库事务控制器来解决，需要应用程序对要更新的数据加必要的锁来解决，因此，防止更新丢失应该是应用的责任。<br>“脏读”、“不可重复读”和“幻读”，其实都是数据库读一致性问题，必须由数据库提供一定的事务隔离机制来解决。<br>数据库实现事务隔离的方式，基本可以分为以下两种。</p>
+<ol>
+<li>一种是在读取数据前，对其加锁，阻止其他事务对数据进行修改。</li>
+<li>另一种是不用加任何锁，通过一定机制生成一个数据请求时间点的一致性数据快照（Snapshot），并用这个快照来提供一定级别（语句级或事务级）的一致性读取。从用户的角度，好像是数据库可以提供同一数据的多个版本，因此，这种技术叫做数据多版本并发控制（ＭultiVersion Concurrency Control，简称MVCC或MCC），也经常称为多版本数据库。</li>
+</ol>
+<p>数据库的事务隔离级别越严格，并发副作用越小，但付出的代价也就越大，因为事务隔离实质上就是使事务在一定程度上“串行化”进行，这显然与“并发”是矛盾的，同时，不同的应用对读一致性和事务隔离程度的要求也是不同的，比如许多应用对“不可重复读”和“幻读”并不敏感，可能更关心数据并发访问的能力。<br>为了解决“隔离”与“并发”的矛盾，ISO&#x2F;ANSI SQL92定义了４个事务隔离级别，每个级别的隔离程度不同，允许出现的副作用也不同，应用可以根据自己业务逻辑要求，通过选择不同的隔离级别来平衡＂隔离＂与＂并发＂的矛盾。</p>
+<table>
+<thead>
+<tr>
+<th align="left">隔离级别&#x2F;读数据一致性及允许的并发副作用</th>
+<th align="left">读数据一致性</th>
+<th align="center">脏读</th>
+<th align="center">不可重复读</th>
+<th align="center">幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">未提交读（Read uncommitted）</td>
+<td align="left">最低级别，只能保证不读取物理上损坏的数据</td>
+<td align="center">是</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="left">已提交读（Read committed）</td>
+<td align="left">语句级</td>
+<td align="center">否</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="left">可重复读（Repeatable read）</td>
+<td align="left">事务级</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="left">可序列化（Serializable）</td>
+<td align="left">最高级别事务级</td>
+<td align="center">否</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<h2><span id="获取inonodb行锁争用情况">获取InonoDB行锁争用情况</span></h2><p>可以通过检查InnoDB_row_lock状态变量来分析系统上的行锁的争夺情况：</p>
+<pre><code class="highlight sql"><span class="keyword">show</span> status <span class="keyword">like</span> <span class="string">&#x27;innodb_row_lock%&#x27;</span>;</code></pre>
+
+<p><img src="/2024/01/30/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E4%B8%AD%E7%9A%84%E9%94%81%E4%BA%8C/InnoDB_row_lock.png"></p>
+<table>
+<thead>
+<tr>
+<th align="center">Innodb_row_lock_current_waits</th>
+<th align="center">当前正在等待锁定的数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Innodb_row_lock_time</td>
+<td align="center">从系统启动到现在锁定总时间长度</td>
+</tr>
+<tr>
+<td align="center">Innodb_row_lock_time_avg</td>
+<td align="center">每次等待所花平均时间</td>
+</tr>
+<tr>
+<td align="center">Innodb_row_lock_time_max</td>
+<td align="center">从系统启动到现在等待最长的一次所花时间</td>
+</tr>
+<tr>
+<td align="center">Innodb_row_lock_waits</td>
+<td align="center">系统启动后到现在总共等待的次数</td>
+</tr>
+</tbody></table>
+<p>如果发现争用比较严重，如Innodb_row_lock_waits和Innodb_row_lock_time_avg的值比较高。<br>还可以通过设置InnoDB Monitors来进一步观察发生锁冲突的表、数据行等，并分析锁争用的原因。</p>
+<h2><span id="innodb的行锁模式及加锁方法">InnoDB的行锁模式及加锁方法</span></h2><p>InnoDB实现了以下两种类型的<strong>行锁</strong>。</p>
+<ul>
+<li>共享锁（s）：允许一个事务去读一行，阻止其他事务获得相同数据集的排他锁。</li>
+<li>排他锁（Ｘ）：允许获取排他锁的事务更新数据，阻止其他事务取得相同的数据集共享读锁和排他写锁。</li>
+</ul>
+<p>意向锁（Intention Lock）：又称I锁，针对表锁，主要是为了提高加表锁的效率，是mysql数据库自己加的。当有事务给表的数据行加了共享锁或排他锁，同时会给表设置一个标识，代表已经有行锁了，其他事务要想对表加表锁时，就不必逐行判断有没有行锁可能跟表锁冲突了，直接读这个标识就可以确定自己该不该加表锁。特别是表中的记录很多时，逐行判断加表锁的方式效率很低。而这个标识就是意向锁。<br>意向共享锁，IS锁，对整个表加共享锁之前，需要先获取到意向共享锁。<br>意向排他锁，IX锁，对整个表加排他锁之前，需要先获取到意向排他锁。</p>
+<p>另外，为了允许行锁和表锁共存，实现多粒度锁机制。InnoDB还有两种内部使用的意向锁（Intention Locks），这两种意向锁都是<strong>表锁</strong>。</p>
+<ul>
+<li>意向共享锁（IS）：事务打算给数据行共享锁，事务在给一个数据行加共享锁前必须先取得该表的IS锁。</li>
+<li>意向排他锁（IX）：事务打算给数据行加排他锁，事务在给一个数据行加排他锁前必须先取得该表的IX锁。</li>
+</ul>
+<p>InnoDB行锁模式兼容性列表</p>
+<table>
+<thead>
+<tr>
+<th align="left">当前锁模式&#x2F;是否兼容&#x2F;请求锁模式</th>
+<th align="center">X</th>
+<th align="center">IX</th>
+<th align="center">S</th>
+<th align="center">IS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">X</td>
+<td align="center">冲突</td>
+<td align="center">冲突</td>
+<td align="center">冲突</td>
+<td align="center">冲突</td>
+</tr>
+<tr>
+<td align="left">IX</td>
+<td align="center">冲突</td>
+<td align="center">兼容</td>
+<td align="center">冲突</td>
+<td align="center">兼容</td>
+</tr>
+<tr>
+<td align="left">S</td>
+<td align="center">冲突</td>
+<td align="center">冲突</td>
+<td align="center">兼容</td>
+<td align="center">兼容</td>
+</tr>
+<tr>
+<td align="left">IS</td>
+<td align="center">冲突</td>
+<td align="center">兼容</td>
+<td align="center">兼容</td>
+<td align="center">兼容</td>
+</tr>
+</tbody></table>
+<p>如果一个事务请求的锁模式与当前的锁兼容，InnoDB就请求的锁授予该事务；反之，如果两者不兼容，该事务就要等待锁释放。意向锁是InnoDB自动加的，不需用户干预。</p>
+<p>对于<strong>UPDATE</strong>、<strong>DELETE</strong>和<strong>INSERT</strong>语句，InnoDB会自动给涉及及数据集加排他锁（Ｘ）；</p>
+<p>对于普通<strong>SELECT</strong>语句，InnoDB不会加任何锁；</p>
+<p>事务可以通过以下语句显示给记录集加共享锁或排锁。<br>共享锁（Ｓ）：<code>SELECT * FROM table_name WHERE ... LOCK IN SHARE MODE</code><br>排他锁（X）：<code>SELECT * FROM table_name WHERE ... FOR UPDATE</code></p>
+<p>用<code>SELECT .. IN SHARE MODE</code>获得共享锁，主要用在需要数据依存关系时确认某行记录是否存在，并确保没有人对这个记录进行UPDATE或者DELETE操作。但是如果当前事务也需要对该记录进行更新操作，则很有可能造成死锁，对于锁定行记录后需要进行更新操作的应用，应该使用SELECT … FOR UPDATE方式获取排他锁。</p>
+<h2><span id="innodb行锁实现方式">InnoDB行锁实现方式</span></h2><p>InnoDB行锁是通过<strong>索引上的索引项</strong>来实现的。InnoDB这种行锁实现特点意味者：只有通过索引条件检索数据，InnoDB才会使用行级锁，否则，InnoDB将使用表锁。在实际应用中，要特别注意InnoDB行锁的这一特性，不然的话，可能导致大量的锁冲突，从而影响并发性能。</p>
+<h2><span id="间隙锁next-key锁">间隙锁（Next-Key锁）</span></h2><p>当我们用范围条件而不是相等条件检索数据，并请求共享或排他锁时，InnoDB会给符合条件的已有数据的索引项加锁；</p>
+<p>对于键值在条件范围内但并不存在的记录，叫做“<strong>间隙(GAP)<strong>”，InnoDB也会对这个“</strong>间隙</strong>”加锁，这种锁机制就是所谓的间隙锁（Next-Key锁）。</p>
+<p>举例来说，假如emp表中只有101条记录，其empid的值分别是1,2,…,100,101，下面的SQL：</p>
+<pre><code class="highlight sql"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> emp <span class="keyword">WHERE</span> empid <span class="operator">&gt;</span> <span class="number">100</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span></code></pre>
+<ul>
+<li><strong>FOR UPDATE</strong>：表示对查询结果进行加锁，其他事务不能修改或删除查询结果中涉及到的行。</li>
+<li><strong>FOR SHARE</strong>：表示对查询结果进行共享锁，其他事务可以读取查询结果中涉及到的行，但不能修改或删除。</li>
+</ul>
+<p>上面 sql 语句是一个范围条件的检索，InnoDB不仅会对符合条件的empid值为101的记录加锁，也会对empid大于101（这些记录并不存在）的“间隙”加锁。</p>
+<p>InnoDB使用间隙锁的目的：<br>    - 一方面是为了防止幻读，以满足相关隔离级别的要求；对于上面的例子，要是不使用间隙锁，如果其他事务插入了empid大于100的任何记录，那么本事务如果再次执行上述语句，就会发生幻读；<br>    - 另一方面，是为了满足其恢复和复制的需要。有关其恢复和复制对机制的影响，以及不同隔离级别下InnoDB使用间隙锁的情况。</p>
+<blockquote>
+<p>很显然，在使用范围条件检索并锁定记录时，InnoDB这种加锁机制会阻塞符合条件范围内键值的并发插入，这往往会造成严重的锁等待。<br>因此，在实际开发中，尤其是并发插入比较多的应用，我们要尽量优化业务逻辑，尽量使用相等条件来访问更新数据，避免使用范围条件。</p>
+</blockquote>
+<h2><span id="什么时候使用表锁">什么时候使用表锁</span></h2><p>对于InnoDB表，在绝大部分情况下都应该使用行级锁，因为事务和行锁往往是我们之所以选择InnoDB表的理由。但在个别特殊事务中，也可以考虑使用表级锁。</p>
+<p>第一种情况是：事务需要更新大部分或全部数据，表又比较大，如果使用默认的行锁，不仅这个事务执行效率低，而且可能造成其他事务长时间锁等待和锁冲突，这种情况下可以考虑使用表锁来提高该事务的执行速度。</p>
+<p>第二种情况是：事务涉及多个表，比较复杂，很可能引起死锁，造成大量事务回滚。这种情况也可以考虑一次性锁定事务涉及的表，从而避免死锁、减少数据库因事务回滚带来的开销。</p>
+<p>当然，应用中这两种事务不能太多，否则，就应该考虑使用ＭyISAＭ表。<br>在InnoDB下 ，使用表锁要注意以下两点。<br>（１） 使用<strong>LOCK TALBES</strong>虽然可以给<strong>InnoDB</strong>加表级锁，但必须说明的是，表锁不是由InnoDB存储引擎层管理的，而是由其上一层ＭySQL Server负责的，仅当autocommit&#x3D;0、innodb_table_lock&#x3D;1（默认设置）时，InnoDB层才能知道MySQL加的表锁，ＭySQL Server才能感知InnoDB加的行锁，这种情况下，InnoDB才能自动识别涉及表级锁的死锁；否则，InnoDB将无法自动检测并处理这种死锁。<br>（２） 在用<strong>LOCAK TABLES</strong>对<strong>InnoDB</strong>加锁时要注意，要将<strong>AUTOCOMMIT设为0</strong>，否则ＭySQL不会给表加锁；事务结束前，不要用<strong>UNLOCAK TABLES</strong>释放表锁，因为<strong>UNLOCK TABLES</strong>会隐含地提交事务；<br>COMMIT或ROLLBACK不能释放用LOCAK TABLES加的表级锁，必须用UNLOCK TABLES释放表锁，正确的方式见如下语句. 例如，如果需要写表t1并从表t读，可以按如下做：</p>
+<pre><code class="highlight sql"><span class="keyword">SET</span> AUTOCOMMIT<span class="operator">=</span><span class="number">0</span>;
+LOCAK TABLES t1 WRITE, t2 READ, ...;
+[do something <span class="keyword">with</span> tables t1 <span class="keyword">and</span> here];
+<span class="keyword">COMMIT</span>;
+UNLOCK TABLES;</code></pre>
+
+<h2><span id="关于死锁">关于死锁</span></h2><p>在InnoDB中，除单个SQL组成的事务外，锁是逐步获得的，这就决定了InnoDB发生死锁是可能的。发生死锁后，InnoDB一般都能自动检测到，并使一个事务释放锁并退回，另一个事务获得锁，继续完成事务。<br>但在涉及外部锁，或涉及表锁的情况下，InnoDB并不能完全自动检测到死锁，这需要通过设置锁等待超时参数innodb_lock_wait_timeout来解决。<br>需要说明的是，这个参数并不是只用来解决死锁问题，在并发访问比较高的情况下，如果大量事务因无法立即获取所需的锁而挂起，会占用大量计算机资源，造成严重性能问题，甚至拖垮数据库。<br>我们通过设置合适的锁等待超时阈值，可以避免这种情况发生。通常来说，死锁都是应用设计的问题，通过调整业务流程、数据库对象设计、事务大小、以及访问数据库的SQL语句，绝大部分都可以避免。<br>下面就通过实例来介绍几种避免死锁的常用方法:<br>（１） 在应用中，如果不同的程序会并发存取多个表，应尽量约定以相同的顺序为访问表，这样可以大大降低产生死锁的机会。如果两个session访问两个表的顺序不同，发生死锁的机会就非常高！但如果以相同的顺序来访问，死锁就可能避免。<br>（２） 在程序以批量方式处理数据的时候，如果事先对数据排序，保证每个线程按固定的顺序来处理记录，也可以大大降低死锁的可能。<br>（３） 在事务中，如果要更新记录，应该直接申请足够级别的锁，即排他锁，而不应该先申请共享锁，更新时再申请排他锁。<br>（４） 在<strong>REPEATEABLE-READ</strong>隔离级别下，如果两个线程同时对相同条件记录用<code>SELECT...ROR UPDATE</code>加排他锁，在没有符合该记录情况下，两个线程都会加锁成功。程序发现记录尚不存在，就试图插入一条新记录，如果两个线程都这么做，就会出现死锁。这种情况下，将隔离级别改成<code>READ COMMITTED</code>，就可以避免问题。<br>（５） 当隔离级别为<strong>READ COMMITED</strong>时，如果两个线程都先执行<code>SELECT...FOR UPDATE</code>，判断是否存在符合条件的记录，如果没有，就插入记录。此时，只有一个线程能插入成功，另一个线程会出现锁等待，当第１个线程提交后，第２个线程会因主键重出错，但虽然这个线程出错了，却会获得一个排他锁！这时如果有第３个线程又来申请排他锁，也会出现死锁。对于这种情况，可以直接做插入操作，然后再捕获主键重异常，或者在遇到主键重错误时，总是执行ROLLBACK释放获得的排他锁。</p>
+<p>尽管通过上面的设计和优化等措施，可以大减少死锁，但死锁很难完全避免。因此，在程序设计中总是捕获并处理死锁异常是一个很好的编程习惯。<br>如果出现死锁，可以用SHOW INNODB STATUS命令来确定最后一个死锁产生的原因和改进措施。</p>
+<h2><span id="总结">总结</span></h2><p>InnoDB在执行查询语句SELECT时，因为有mvcc机制不会加锁。但是update、insert、delete操作会加行锁。<br>简而言之，就是读锁会阻塞写，但是不会阻塞读。而写锁则会把读和写都阻塞。<br>无索引行锁会升级为表锁(RR级别会升级为表锁，RC级别不会升级为表锁)。<br>锁定某一行还可以用lock in share mode(共享锁) 和for update(排它锁)，例如：<code>select * from test_innodb_lock where a = 2 for update;</code><br>这样其他session只能读这行数据，修改则会被阻塞，直到锁定行的session提交</p>
+<p>Innodb存储引擎由于实现了行级锁定，虽然在锁定机制的实现方面所带来的性能损耗可能比表级锁定会要更高一下，但是在整体并发处理能力方面要远远优于MYISAM的表级锁定的。当系统并发量高的时候，Innodb的整体性能和MYISAM相比就会有比较明显的优势了。但是，Innodb的行级锁定同样也有其脆弱的一面，当我们使用不当的时候，可能会让Innodb的整体性能表现不仅不能比MYISAM高，甚至可能会更差。</p>
+<p>对于InnoDB表，主要有以下几点:<br>（１） InnoDB的行锁是基于索引实现的，如果不通过索引访问数据，InnoDB会使用表锁。<br>（２） InnoDB间隙锁机制，以及InnoDB使用间隙锁的原因。<br>（３） 在不同的隔离级别下，InnoDB的锁机制和一致性读策略不同。<br>（４） ＭySQL的恢复和复制对InnoDB锁机制和一致性读策略也有较大影响。<br>（５） 锁冲突甚至死锁很难完全避免。</p>
+<p>在了解InnoDB的锁特性后，用户可以通过设计和SQL调整等措施减少锁冲突和死锁，包括：</p>
+<ol>
+<li>尽量使用较低的隔离级别</li>
+<li>精心设计索引，并尽量使用索引访问数据，使加锁更精确，从而减少锁冲突的机会。</li>
+<li>选择合理的事务大小，小事务发生锁冲突的几率也更小。</li>
+<li>给记录集显示加锁时，最好一次性请求足够级别的锁。比如要修改数据的话，最好直接申请排他锁，而不是先申请共享锁，修改时再请求排他锁，这样容易产生死锁。</li>
+<li>不同的程序访问一组表时，应尽量约定以相同的顺序访问各表，对一个表而言，尽可能以固定的顺序存取表中的行。这样可以大减少死锁的机会。</li>
+<li>尽量用相等条件访问数据，这样可以避免间隙锁对并发插入的影响。</li>
+<li>不要申请超过实际需要的锁级别；除非必须，查询时不要显示加锁。</li>
+<li>对于一些特定的事务，可以使用表锁来提高处理速度或减少死锁的可能。</li>
+</ol>
+</div></div></div></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2024/02/03/java/2024/netty-%E9%AB%98%E6%80%A7%E8%83%BD%E6%A1%86%E6%9E%B6%E7%9A%84%E5%8E%9F%E7%90%86/">上一篇</a><a class="next" href="/2024/01/30/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql%E4%B8%AD%E7%9A%84%E9%94%81%E4%B8%80/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>

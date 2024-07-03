@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Grouping threads into a group · mirsery</title><meta name="description" content="Grouping threads into a group - mirsery"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/css/prontera.css"><link rel="stylesheet" href="/css/dracula.css"><link rel="search" type="application/opensearchdescription+xml" href="https://mirsery.github.io/atom.xml" title="mirsery"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="mirsery" type="application/atom+xml">
+<!-- hexo-inject:begin --><script src='https://unpkg.com/echarts@3.3.2/dist/echarts.min.js'></script><!-- hexo-inject:end --></head><body><header class="feature-header"><nav class="component-nav"><ul><div class="logo-container"><a href="/"><h2 class="title">mirsery</h2></a></div><a class="li component-nav-item" href="/" target="_self"><p>首页</p></a><a class="li component-nav-item" href="/archives" target="_self"><p>归档</p></a><a class="li component-nav-item" href="/categories" target="_self"><p>分类</p></a><a class="li component-nav-item" href="/tags" target="_self"><p>标签</p></a><ul class="shortcut-icons"><a href="https://github.com/mirsery" target="_blank"><img class="icon" src="/images/github.svg"></a><a href="/atom.xml" target="_blank"><img class="icon" src="/images/rss.svg"></a><a href="https://www.zhihu.com/people/mirsery" target="_blank"><img class="icon" src="/images/zhihu.svg"></a></ul></ul></nav></header><main class="container"><div id="post-container"><div class="post article post-block"><h1 class="post-title">Grouping threads into a group</h1><div class="post-info">作者: mirsery         创建日期: 2016年7月18日</div><div class="post-content"><h1><span id="grouping-threads-into-a-group">Grouping threads into a group</span></h1><!-- toc -->
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ul>
+<li><a href="#how-to-do">How to do</a></li>
+<li><a href="#code">code</a><ul>
+<li><a href="#the-code-about-the-thread-class">the code about the thread class</a></li>
+<li><a href="#the-code-about-main-methods">the code about Main() methods</a></li>
+</ul>
+</li>
+<li><a href="#how-it-works">How it works</a></li>
+</ul>
+<!-- tocstop -->
+
+<p>An interesting functionality offered by the concurrency API of Java is the ability to group the threads. This allows us to treat the threads of a group as a single unit and provides access to the Thread objects that belong to a group to do an operation with them. For example, you have some threads doing the same task and you want to control them, irrespective of how many threads are still running, the status of each one will interrupt all of them with a single call.<br>Java provides the ThreadGroup class to work with groups of threads. A ThreadGroup object can be formed by Thread objects and by another ThreadGroup object, generating a tree structure of threads.<br>In this recipe, we will learn to work with ThreadGroup objects developing a simple example. We will have 10 threads sleeping during a random period of time (simulating a search, for example) and, when one of them finishes, we are going to interrupt the rest.</p>
+<h2><span id="how-to-do">How to do</span></h2><ul>
+<li>First, create a class called Result. It will store the name of Thread that finishes first. Declare a privateString attribute called name and the methods to read and set the value.</li>
+<li>Create a class called SearchTask and specify that it implements the Runnable interface.</li>
+<li>Declare a private attribute of the Result class and implement the constructor of the class that initializes this attribute.</li>
+<li>Implement the run() method. It will call the doTask() method and wait for it to finish or for a InterruptedException exception. The method will write messages to indicate the start, end, or interruption of this Thread.</li>
+<li>Implement the doTask() method. It will create a Random object to generate a random number and call the sleep() method with that random number.</li>
+<li>Now, create the main class of the example by creating a class called Main and implement the main() method.</li>
+<li>First, create a ThreadGroup object and call them Searcher.</li>
+<li>Then, create a SearchTask object and a Result object.</li>
+<li>Now, create 10 Thread objects using the SearchTask object. When you call the constructor of the Thread class, pass it as the first argument of the ThreadGroup object.</li>
+<li>Write information about the ThreadGroup object using the list() method.</li>
+<li>Use the activeCount() and enumerate() methods to know how many Thread objects are associated with the ThreadGroup objects and get a list of them. We can use this method to get, for example, the state of each Thread.</li>
+<li>Call the method waitFinish(). We will implement this method later. It will wait until one of the threads of the ThreadGroup objects ends.</li>
+<li>Interrupt the rest of the threads of the group using the interrupt() method.</li>
+<li>Implement the waitFinish() method. It will use the activeCount() method to control the end of one of the threads.</li>
+</ul>
+<h2><span id="code">code</span></h2><h3><span id="the-code-about-the-thread-class">the code about the thread class</span></h3><pre><code class="highlight java"><span class="keyword">import</span> java.util.Date;
+<span class="keyword">import</span> java.util.Random;
+<span class="keyword">import</span> java.util.concurrent.TimeUnit;
+
+<span class="keyword">import</span> javax.xml.transform.Result;
+
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SearchTask</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span>&#123;
+	
+	<span class="keyword">private</span> Result result;
+	
+	<span class="keyword">public</span> <span class="title function_">SearchTask</span><span class="params">(Result result)</span> &#123;
+		<span class="built_in">this</span>.result = result;
+	&#125;
+
+	<span class="meta">@Override</span>
+	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;
+		<span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> Thread.currentThread().getName();
+		System.out.printf(<span class="string">&quot;Thread %s: Start\n&quot;</span>,name);
+		<span class="keyword">try</span>&#123;
+			doTask();
+			result.setSystemId(name);
+		&#125;<span class="keyword">catch</span>(InterruptedException e)&#123;
+			System.out.printf(<span class="string">&quot;Thread %s: Interrupted\n&quot;</span>,name);
+			<span class="keyword">return</span>;
+		&#125;
+		System.out.printf(<span class="string">&quot;Thread %s: End\n&quot;</span>,name);
+	&#125;
+	
+	<span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">doTask</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException&#123;
+		<span class="type">Random</span> <span class="variable">random</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>((<span class="keyword">new</span> <span class="title class_">Date</span>()).getTime());
+		<span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> (<span class="type">int</span>)(random.nextDouble()*<span class="number">100</span>);
+		System.out.printf(<span class="string">&quot;Thread %s: %d\n&quot;</span>,
+		  Thread.currentThread().getName(),value);
+		TimeUnit.SECONDS.sleep(value);
+	&#125;
+	
+&#125;</code></pre>
+
+<h3><span id="the-code-about-main-methods">the code about Main() methods</span></h3><pre><code class="highlight java">
+<span class="keyword">import</span> java.util.concurrent.TimeUnit;
+
+<span class="keyword">import</span> javax.xml.transform.Result;
+
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;
+	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;
+		<span class="type">ThreadGroup</span> <span class="variable">threadGroup</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadGroup</span>(<span class="string">&quot;Searcher&quot;</span>);
+		<span class="type">Result</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Result</span>() &#123;
+			<span class="keyword">private</span> String systemId;
+
+			<span class="meta">@Override</span>
+			<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setSystemId</span><span class="params">(String systemId)</span> &#123;
+				<span class="built_in">this</span>.systemId = systemId;
+			&#125;
+
+			<span class="meta">@Override</span>
+			<span class="keyword">public</span> String <span class="title function_">getSystemId</span><span class="params">()</span> &#123;
+				<span class="keyword">return</span> systemId;
+			&#125;
+		&#125;;
+
+		<span class="type">SearchTask</span> <span class="variable">searchTask</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SearchTask</span>(result);
+
+		<span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;
+			<span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(threadGroup, searchTask);
+			thread.start();
+			<span class="keyword">try</span> &#123;
+				TimeUnit.SECONDS.sleep(<span class="number">1</span>);
+			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+				e.printStackTrace();
+			&#125;
+		&#125;
+		System.out.printf(<span class="string">&quot;Number of Threads:%d\n&quot;</span>, threadGroup.activeCount());
+		System.out.printf(<span class="string">&quot;Information about the Thread Group\n&quot;</span>);
+		threadGroup.list();
+
+		Thread[] threads = <span class="keyword">new</span> <span class="title class_">Thread</span>[threadGroup.activeCount()];
+		threadGroup.enumerate(threads);
+		<span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; threadGroup.activeCount(); i++) &#123;
+			System.out.printf(<span class="string">&quot;thread %s: %s\n&quot;</span>, threads[i].getName(), 
+			threads[i].getState());
+		&#125;
+		waitFinish(threadGroup);
+		threadGroup.interrupt();
+	&#125;
+
+	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">waitFinish</span><span class="params">(ThreadGroup threadGroup)</span> &#123;
+		<span class="keyword">while</span> (threadGroup.activeCount() &gt; <span class="number">9</span>) &#123;
+			<span class="keyword">try</span> &#123;
+				TimeUnit.SECONDS.sleep(<span class="number">1</span>);
+			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+				e.printStackTrace();
+			&#125;
+		&#125;
+		System.out.printf(<span class="string">&quot;The threadGroup has %d threads.\n&quot;</span>, 
+		threadGroup.activeCount());
+	&#125;
+
+&#125;
+</code></pre>
+<h2><span id="how-it-works">How it works</span></h2><p>In the following screenshot, you can see the output of the list() method and the output generated when we write the status of each Thread object, as shown in the following screenshot:</p>
+<p>The ThreadGroup class stores the Thread objects and the other ThreadGroup objects associated with it, so it can access all of their information (status, for example) and perform operations over all its members (interrupt, for example).</p>
+</div></div><div id="disqus_thread"></div></div><script>var disqus_shortname = 'mirsery';
+var disqus_identifier = '2016/07/18/java/2016/Grouping threads into a group/';
+var disqus_title = 'Grouping threads into a group';
+var disqus_url = 'https://mirsery.github.io/2016/07/18/java/2016/Grouping threads into a group/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></main><footer class="footer-container"><div class="paginator"><a class="prev" href="/2016/07/24/java/2016/Thread%20Synchronization%20Utilities/">上一篇</a><a class="next" href="/2016/07/12/git/git%20stash/">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://mirsery.github.io">mirsery</a> </p><p>powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and  <a href="https://github.com/AngryPowman/hexo-theme-prontera" target="_blank">hexo-theme-prontera</a></p></div></footer><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"mirsery",'auto');ga('send','pageview');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7201423389984397" crossorigin="anonymous"></script><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>
