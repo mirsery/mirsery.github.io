@@ -18,3 +18,11 @@ nav.component-nav
             each nav_item in theme.nav_icons
                 a(href=nav_item[1] target="_blank")
                     img.icon(src=nav_item[0])
+
+//- 页头右上角的浅色/深色切换按钮，点击逻辑在 source/script/theme.js
+button.theme-toggle(type="button" aria-label="切换浅色/深色主题" title="切换浅色/深色主题")
+    svg.icon-sun(viewBox="0 0 24 24" aria-hidden="true")
+        circle(cx="12" cy="12" r="4")
+        path(d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77")
+    svg.icon-moon(viewBox="0 0 24 24" aria-hidden="true")
+        path(d="M20.5 11.7A8.5 8.5 0 1 1 12.3 3.5a6 6 0 0 0 8.2 8.2z")

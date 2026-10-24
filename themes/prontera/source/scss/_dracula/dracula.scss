@@ -4,32 +4,32 @@
 @import "colorspaces.scss";
 
 body {
-  color:$foreground;
-  background: $background;
+  color: var(--fg);
+  background: var(--bg);
   background-attachment: fixed !important;
   background: linear_gradient($background, lighten($background, 20%));
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: $cyan;
+  color: var(--cyan);
 }
 
 h1 {
-  color:$green;
+  color: var(--green);
 
 }
 
 
 h4, h5, h6 {
-  color:$yellow;
+  color: var(--yellow);
 }
 
 
 a {
-  color:$white;
+  color: var(--link);
   text-decoration:none;
   &:hover {
-    color: darken($yellow, 20%);
+    color: var(--link-hover);
   }
 }
 
@@ -56,7 +56,7 @@ section img {
 }
 
 blockquote {
-  border-left:3px solid $green;
+  border-left:3px solid var(--green);
   margin:0;
   padding:0 0 0 20px;
   font-style:italic;
@@ -64,8 +64,8 @@ blockquote {
 
 code {
   font-family: $mono-fonts;
-  color:$foreground;
-  background: $current;
+  color: var(--fg);
+  background: var(--current);
   font-size:13px;
   margin: 0 4px;
   padding: 4px 6px;
@@ -73,14 +73,14 @@ code {
 
 pre {
   padding:8px 15px;
-  background: $background;
-  border:1px solid $pink;
+  background: var(--bg);
+  border:1px solid var(--pink);
   overflow: auto;
   overflow-y: hidden;
 
   code {
-    color: $foreground;
-    background: $background;
+    color: var(--fg);
+    background: var(--bg);
     margin: 0;
     padding: 0;
   }
@@ -94,15 +94,15 @@ table {
 th {
   text-align:left;
   padding:5px 10px;
-  background: $comment;
-  color: $foreground;
+  background: var(--th-bg);
+  color: var(--th-fg);
   font-weight: 600;
 }
 
 td {
   text-align:left;
   padding:5px 10px;
-  border-bottom:1px solid $purple;
+  border-bottom:1px solid var(--purple);
 }
 
 hr {
@@ -110,11 +110,11 @@ hr {
   outline: none;
   height: 3px;
   margin: 0 0 20px;
-  background: $green;
+  background: var(--green);
 }
 
 dt {
-  color:$yellow;
+  color: var(--yellow);
   font-weight: 600;
 }
 

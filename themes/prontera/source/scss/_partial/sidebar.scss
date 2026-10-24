@@ -9,7 +9,7 @@
 
 #about-panel {
     display: flex;
-    border-bottom: 1px solid #eeeeee;
+    border-bottom: 1px solid var(--divider-soft);
     padding-bottom: 10px;
     .info {
         .title {
@@ -20,15 +20,15 @@
             font-size: 16px;
             font-weight: 200;
             &:hover {
-                color: #50fa7b;
-                border-bottom: #f1fa8c 2px solid;
+                color: var(--green);
+                border-bottom: var(--yellow) 2px solid;
             } 
         }
         .bio {
             padding-top: 14px;
             font-size: 15px;
             font-weight: 200;
-            color: #ffb86c;
+            color: var(--orange);
         }
     }
     .avatar {
@@ -59,11 +59,11 @@
             }
             .site-desc {
                 font-weight: 200;
-                color: #ff5555;
+                color: var(--red);
                 font-size: 14px;
             }
             &:hover {
-                background: #44475a;
+                background: var(--current);
             }
         }
     }

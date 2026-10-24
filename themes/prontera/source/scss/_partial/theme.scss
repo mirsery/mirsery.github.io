@@ -1,0 +1,111 @@
+// 浅色 / 深色主题的配色。
+// 深色沿用原来的 Dracula 配色；浅色取 Dracula 官方浅色版 Alucard（https://draculatheme.com/spec）。
+// <html> 上的 data-theme 由 layout/partial/head.pug 里的脚本在首屏渲染前设置：
+// 访客点过页头右上角的切换按钮就按其选择，否则跟随系统；脚本没执行时按系统偏好显示。
+
+@mixin theme-dark {
+    --bg: #282a36;
+    --fg: #f8f8f2;
+    --link: #f2f2f2;
+    --link-hover: #{darken(#f1fa8c, 20%)};
+    --current: #44475a;
+    --cyan: #8be9fd;
+    --green: #50fa7b;
+    --orange: #ffb86c;
+    --pink: #ff79c6;
+    --purple: #bd93f9;
+    --red: #ff5555;
+    --yellow: #f1fa8c;
+
+    --selection-fg: #000;
+    --selection-bg: #bd93f9;
+    --header-shadow: #ccc;
+    --divider: #ddd;
+    --divider-soft: #eee;
+    --footer-text: #aaa;
+    --footer-text-hover: #888;
+    --th-bg: #6272a4;
+    --th-fg: #f8f8f2;
+    --button-hover-bg: #bd93f9;
+
+    --code-keyword: #e96900;
+    --code-function: #0092db;
+    --code-number: #ae81ff;
+    --code-tag: #2973b7;
+    --code-string: #42b983;
+    --code-comment: #b3b3b3;
+}
+
+@mixin theme-light {
+    --bg: #fffbeb;
+    --fg: #1f1f1f;
+    --link: #1f1f1f;
+    --link-hover: #846e15;
+    --current: #ece9df;
+    --cyan: #036a96;
+    --green: #14710a;
+    --orange: #a34d14;
+    --pink: #a3144d;
+    --purple: #644ac9;
+    --red: #cb3a2a;
+    --yellow: #846e15;
+
+    --selection-fg: #1f1f1f;
+    --selection-bg: #cfcfde;
+    --header-shadow: #bcbab3;
+    --divider: #ceccc0;
+    --divider-soft: #dedccf;
+    --footer-text: #6c664b;
+    --footer-text-hover: #1f1f1f;
+    --th-bg: #dedccf;
+    --th-fg: #1f1f1f;
+    --button-hover-bg: #cfcfde;
+
+    --code-keyword: #a34d14;
+    --code-function: #036a96;
+    --code-number: #644ac9;
+    --code-tag: #036a96;
+    --code-string: #14710a;
+    --code-comment: #6c664b;
+}
+
+// 浅色下不能只换变量的部分：列表符号图片原本是浅灰色，换一张深色的
+@mixin theme-light-rules {
+    ul {
+        list-style-image: url('../images/bullet-light.png');
+    }
+}
+
+:root {
+    @include theme-dark;
+}
+
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+        @include theme-light;
+        @include theme-light-rules;
+    }
+}
+
+:root[data-theme="light"] {
+    @include theme-light;
+    @include theme-light-rules;
+}
+
+// 页头右上角的切换按钮：深色时显示太阳（点了变浅色），浅色时显示月亮。
+// 脚本没执行时 <html> 上没有 data-theme，按钮点了也没用，干脆不显示。
+.theme-toggle {
+    display: none;
+    svg {
+        display: none;
+    }
+}
+
+:root[data-theme] .theme-toggle {
+    display: flex;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-sun,
+:root[data-theme="light"] .theme-toggle .icon-moon {
+    display: block;
+}
