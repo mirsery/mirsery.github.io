@@ -2,8 +2,8 @@
 header {
     &.feature-header {
         @include size(100%, 70px);
-        background-color: #282a36;
-        box-shadow: 0px 0px 1px #ccc;
+        background-color: var(--bg);
+        box-shadow: 0px 0px 1px var(--header-shadow);
         padding: 0px 128px;
         display: flex;
         justify-content: space-between;
@@ -26,8 +26,43 @@ header {
             @include animate(hover, transform, scale(1.2), 0.3s);
         }
     }
+    .theme-toggle {
+        flex: none;
+        align-self: center;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        margin: 0 0 0 16px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--link);
+        line-height: 1;
+        cursor: pointer;
+        transition: color 0.2s, background-color 0.2s;
+        &:hover {
+            color: var(--yellow);
+            background: var(--current);
+        }
+        &:focus-visible {
+            outline: 2px solid var(--purple);
+            outline-offset: 2px;
+        }
+        svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    }
     .component-nav {
         @include size(100%, 100%);
+        min-width: 0; // 窄屏上给右边的切换按钮让出位置
         display: inline-block;
         & > ul {
             display: flex;
@@ -54,12 +89,12 @@ header {
             font-size: 18px;
             box-sizing: border-box;
             &:hover {
-                color:#f1fa8c;
-                border-bottom: #f1fa8c 2px solid;
+                color: var(--yellow);
+                border-bottom: var(--yellow) 2px solid;
             };
             &.selected {
-                color:#f1fa8c;
-                border-bottom: #f1fa8c 2px solid;
+                color: var(--yellow);
+                border-bottom: var(--yellow) 2px solid;
             }
         }
     }

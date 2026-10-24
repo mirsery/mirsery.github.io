@@ -4,7 +4,7 @@
     .post-item {
         padding: 2px 0 0 50px;
         &:hover {
-            background: #44475a;
+            background: var(--current);
         }
     }
     .post-title-link {
@@ -19,14 +19,14 @@
     .post-info {
         float: left;
         width: 125px;
-        color: #ff79c6;
+        color: var(--pink);
     }
 
 
     .category-list-item {
         padding: 2px 0 0 50px;
         &:hover {
-            background: #44475a;
+            background: var(--current);
         }
     }
     .category-list-link {
@@ -41,14 +41,14 @@
     .category-list-count {
         margin-left: 50px;
         width: 50px;
-        color: #ff79c6;;
+        color: var(--pink);
     }
 
 
     .tag-list-item {
         padding: 2px 0 0 50px;
         &:hover {
-            background: #44475a;
+            background: var(--current);
         }
     }
     .tag-list-link {
@@ -63,7 +63,7 @@
     .tag-list-count {
         margin-left: 50px;
         width: 50px;
-        color: #ff79c6;;
+        color: var(--pink);
     }
 
 

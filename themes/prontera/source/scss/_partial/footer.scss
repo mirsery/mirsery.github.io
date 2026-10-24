@@ -9,10 +9,10 @@
         padding: 4px 12px;
         border-radius: 2px;
         font-size: 14px;
-        color: #ffb86c;
-        background-color: #44475a;
+        color: var(--orange);
+        background-color: var(--current);
         &:hover {
-            background-color: #bd93f9;
+            background-color: var(--button-hover-bg);
         }
     }
 }

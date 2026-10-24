@@ -28,7 +28,9 @@ jobs:
         npm install hexo-cli -g
         npm install
     
+    # 只有推到 main（含合并 PR）才部署；PR 只构建，确认能生成成功，免得没合并就发布到线上
     - name: Setup Deploy Private Key
+      if: github.event_name == 'push'
       env:
         HEXO_DEPLOY_PRIVATE_KEY: ${{ secrets.HEXO_DEPLOY_PRIVATE_KEY }}
       run: |
@@ -38,12 +40,16 @@ jobs:
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         
     - name: Setup Git Infomation
-      run: | 
+      if: github.event_name == 'push'
+      run: |
         git config --global user.name 'mirsery' 
         git config --global user.email 'mirsery@163.com'
         
-    - name: Deploy Hexo 
+    - name: Build Hexo
       run: |
         npm run clean
         npm run build
-        npm run deploy
+
+    - name: Deploy Hexo
+      if: github.event_name == 'push'
+      run: npm run deploy

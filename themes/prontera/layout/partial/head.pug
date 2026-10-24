@@ -13,6 +13,13 @@ block description
 
 meta(name="viewport", content="width=device-width, initial-scale=1")
 link(rel="icon", href=url_for(theme.favicon))
+
+//- 首屏渲染前定好浅色/深色，避免先闪一下另一套配色：点过切换按钮就按选择，否则跟随系统（不支持时用深色）。
+//- 脚本里不能有换行（所以用 | 而不是 script.）：hexo-inject 把注入内容插在 <head> 所在行的最后一个标签后面，
+//- 有换行就会被插进脚本中间。
+script
+    | (function () { var t; try { t = localStorage.getItem('theme'); } catch (e) {} if (t !== 'light' && t !== 'dark') { t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; } document.documentElement.setAttribute('data-theme', t); })();
+
 link(rel="stylesheet", href=url_for("css/prontera.css"))
 link(rel="stylesheet", href=url_for("css/dracula.css"))
 
